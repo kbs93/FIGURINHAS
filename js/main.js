@@ -51,7 +51,6 @@ const state = {
   busca: '',
   stickerSelecionado: null
 };
-
 document.addEventListener('DOMContentLoaded', () => {
   renderizarGrade();
   iniciarFiltros();
@@ -61,7 +60,9 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarMenu();
   iniciarModais();
   inicializarStudio();
+  iniciarBuscaMobileFlutuante(); /* <-- ESSA LINHA FALTAVA CHAMAR! */
 });
+
 
 /**
  * 1. Renderiza a grade de figurinhas
@@ -377,4 +378,56 @@ function mostrarToast(texto) {
   toast.textContent = texto;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+
+/**
+ * Controle do Botão Flutuante e Busca Rápida Mobile
+ */
+function iniciarBuscaMobileFlutuante() {
+  const fabBtn = document.getElementById('fabSearchBtn');
+  const overlay = document.getElementById('mobileSearchOverlay');
+  const inputMobile = document.getElementById('mobileSearchInput');
+  const inputDesktop = document.getElementById('searchInput');
+  const btnClose = document.getElementById('btnCloseMobileSearch');
+  const btnClearMobile = document.getElementById('mobileClearBtn');
+
+  if (!fabBtn || !overlay || !inputMobile) return;
+
+  function abrirBuscaMobile() {
+    overlay.classList.add('active');
+    inputMobile.value = state.busca || '';
+    setTimeout(() => inputMobile.focus(), 150);
+  }
+
+  function fecharBuscaMobile() {
+    overlay.classList.remove('active');
+    inputMobile.blur();
+  }
+
+  function sincronizarBusca(termo) {
+    state.busca = termo.trim().toLowerCase();
+    if (inputDesktop) inputDesktop.value = termo;
+    renderizarGrade();
+    if (typeof atualizarBotaoLimpar === 'function') atualizarBotaoLimpar();
+  }
+
+  fabBtn.addEventListener('click', abrirBuscaMobile);
+  btnClose.addEventListener('click', fecharBuscaMobile);
+
+  inputMobile.addEventListener('input', (e) => {
+    sincronizarBusca(e.target.value);
+    if (btnClearMobile) {
+      btnClearMobile.style.display = e.target.value ? 'block' : 'none';
+    }
+  });
+
+  if (btnClearMobile) {
+    btnClearMobile.addEventListener('click', () => {
+      inputMobile.value = '';
+      sincronizarBusca('');
+      btnClearMobile.style.display = 'none';
+      inputMobile.focus();
+    });
+  }
 }

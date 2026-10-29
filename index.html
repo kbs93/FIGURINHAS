@@ -167,6 +167,24 @@
     </div>
   </div>
 
+
+
+  <!-- Botão Flutuante (FAB) de Busca - Visível apenas no Mobile -->
+  <button type="button" class="fab-search-btn mobile-only-fab" id="fabSearchBtn" aria-label="Abrir Pesquisa">
+    <i class="bi bi-search"></i>
+  </button>
+
+  <!-- Barra de Busca Rápida Suspensa no Mobile -->
+  <div class="mobile-search-overlay" id="mobileSearchOverlay">
+    <div class="mobile-search-container">
+      <div class="search-pill">
+        <input type="text" id="mobileSearchInput" placeholder="Pesquisar figurinha..." autocomplete="off">
+        <button type="button" class="clear-btn" id="mobileClearBtn" aria-label="Limpar"><i class="bi bi-trash"></i></button>
+      </div>
+      <button type="button" class="btn-close-mobile-search" id="btnCloseMobileSearch">Cancelar</button>
+    </div>
+  </div>
+
   <!-- Mensagens Toast -->
   <div class="toast" id="toastMessage"></div>
 
