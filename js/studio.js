@@ -31,7 +31,7 @@ export function inicializarStudio() {
   const canvas = document.getElementById('studioCanvas');
   const modal = document.getElementById('modalStudio');
   const btnAbrir = document.getElementById('btnCreateSticker');
-  const btnFechar = document.getElementById('studioCloseBtn');
+
 
   if (!canvas || !modal) return;
 
@@ -42,12 +42,28 @@ export function inicializarStudio() {
     });
   }
 
-  function fecharModal() {
+const btnFechar = document.getElementById('studioCloseBtn');
+  const btnVoltar = document.getElementById('studioBackBtn');
+
+  // Função para fechar o estúdio por completo (botão X)
+  function fecharModalCompleto() {
     modal.classList.remove('active');
     fecharGavetas();
+    studioState.textoAtivoId = null;
+    desenharNoCanvas();
   }
 
-  if (btnFechar) btnFechar.addEventListener('click', fecharModal);
+  // O botão X fecha o estúdio
+  if (btnFechar) btnFechar.addEventListener('click', fecharModalCompleto);
+
+  // A SETA volta sempre para a tela inicial do estúdio (mostra Escolher Imagem, Texto, Fundo)
+  if (btnVoltar) {
+    btnVoltar.addEventListener('click', () => {
+      fecharGavetas(); // Fecha qualquer aba/gaveta aberta e reexibe o dock principal
+      studioState.textoAtivoId = null; // Tira qualquer foco/borda do texto
+      desenharNoCanvas();
+    });
+  }
 
   modal.addEventListener('click', (e) => {
     if (e.target === modal) fecharModal();
@@ -74,12 +90,17 @@ export function inicializarStudio() {
   const btnAddMoreText = document.getElementById('btnAddMoreText');
   const btnDeleteSelectedText = document.getElementById('btnDeleteSelectedText');
 
+
 function fecharGavetas() {
     if (sheetText) sheetText.classList.add('hidden');
     if (sheetBg) sheetBg.classList.add('hidden');
     if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
-    if (mainDock) mainDock.style.display = 'flex';
-    studioState.textoAtivoId = null; // Tira a borda ao fechar a gaveta
+
+    // Remove o destaque dos botões do dock
+    if (btnOpenText) btnOpenText.classList.remove('active');
+    if (btnOpenBg) btnOpenBg.classList.remove('active');
+
+    studioState.textoAtivoId = null;
     desenharNoCanvas();
   }
 
@@ -90,30 +111,50 @@ function fecharGavetas() {
     if (verticalFontSizeSlider) verticalFontSizeSlider.value = t.tamanho;
   }
 
+  // Clicou no botão TEXTO
   if (btnOpenText) {
     btnOpenText.addEventListener('click', () => {
-      if (sheetBg) sheetBg.classList.add('hidden');
-      if (sheetText) sheetText.classList.remove('hidden');
-      if (verticalSliderWrap) verticalSliderWrap.classList.remove('hidden');
-      if (mainDock) mainDock.style.display = 'none';
-      sincronizarCamposComTextoAtivo();
-      if (inputCaption) inputCaption.focus();
+      const estaAberto = !sheetText.classList.contains('hidden');
+
+      if (estaAberto) {
+        fecharGavetas();
+      } else {
+        if (sheetBg) sheetBg.classList.add('hidden');
+        if (btnOpenBg) btnOpenBg.classList.remove('active');
+
+        sheetText.classList.remove('hidden');
+        btnOpenText.classList.add('active'); // Adiciona a moldura de seleção
+        if (verticalSliderWrap) verticalSliderWrap.classList.remove('hidden');
+
+        sincronizarCamposComTextoAtivo();
+        if (inputCaption) inputCaption.focus();
+      }
     });
   }
 
   if (btnCloseText) btnCloseText.addEventListener('click', fecharGavetas);
 
+  // Clicou no botão FUNDO
   if (btnOpenBg) {
     btnOpenBg.addEventListener('click', () => {
-      if (sheetText) sheetText.classList.add('hidden');
-      if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
-      if (sheetBg) sheetBg.classList.remove('hidden');
-      if (mainDock) mainDock.style.display = 'none';
+      const estaAberto = !sheetBg.classList.contains('hidden');
+
+      if (estaAberto) {
+        fecharGavetas();
+      } else {
+        if (sheetText) sheetText.classList.add('hidden');
+        if (btnOpenText) btnOpenText.classList.remove('active');
+        if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
+
+        sheetBg.classList.remove('hidden');
+        btnOpenBg.classList.add('active');
+      }
     });
   }
 
   if (btnCloseBg) btnCloseBg.addEventListener('click', fecharGavetas);
   if (btnApplyBg) btnApplyBg.addEventListener('click', fecharGavetas);
+
 
 if (btnAddMoreText) {
     btnAddMoreText.addEventListener('click', () => {
@@ -409,6 +450,7 @@ function processarArquivoLocal(file) {
   reader.readAsDataURL(file);
 }
 
+
 export function carregarImagemNoStudio(src, filename) {
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -448,18 +490,31 @@ export function desenharNoCanvas() {
 
   ctx.clearRect(0, 0, W, H);
 
+// 1. Fundo Base Colorido
   if (studioState.corFundo && studioState.corFundo !== 'transparent') {
     ctx.fillStyle = studioState.corFundo;
     ctx.fillRect(0, 0, W, H);
   }
 
+  // 2. Imagem Centralizada
   if (img) {
-    const scale = Math.min(W / img.width, H / img.height);
-    const nw = img.width * scale;
-    const nh = img.height * scale;
-    const nx = (W - nw) / 2;
-    const ny = (H - nh) / 2;
-    ctx.drawImage(img, nx, ny, nw, nh);
+    const larguraImg = img.naturalWidth || img.width;
+    const alturaImg = img.naturalHeight || img.height;
+    const minDim = Math.min(larguraImg, alturaImg);
+
+    const sx = (larguraImg - minDim) / 2;
+    const sy = (alturaImg - minDim) / 2;
+
+    ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, W, H);
+
+    // 3. Se escolheu uma cor de fundo, aplica a tonalidade diretamente na imagem
+    if (studioState.corFundo && studioState.corFundo !== 'transparent') {
+      ctx.save();
+      ctx.globalCompositeOperation = 'color'; // Tinge a imagem com a cor escolhida
+      ctx.fillStyle = studioState.corFundo;
+      ctx.fillRect(0, 0, W, H);
+      ctx.restore();
+    }
   }
 
   studioState.textos.forEach(t => {

@@ -638,14 +638,108 @@ body {
    ESTÚDIO DE FIGURINHAS TOTALMENTE VISÍVEL (DESKTOP E MOBILE)
    ========================================================================== */
 
+/* Modal em tela cheia */
 .modal-studio-app {
-  padding: 12px !important;
+  padding: 12px;
   background-color: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+/* Barra de Ações: fica visível acima da gaveta aberta */
+.studio-bottom-dock {
+  height: 56px;
+  min-height: 56px;
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 4px 10px;
+  z-index: 10;
+}
+
+.dock-action-item {
+  background: transparent;
+  border: 1.5px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  color: #1f2937;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 10px;
+  transition: all 0.15s ease;
+}
+
+.dock-action-item i {
+  font-size: 1.25rem;
+}
+
+/* Destaque com borda preta arredondada e ícone/texto verde (como na imagem) */
+.dock-action-item.active {
+  border-color: #111827;
+  color: #00d592;
+  background-color: #ffffff;
+}
+
+.dock-action-item.active i {
+  color: #00d592;
+}
+
+/* Gaveta de ferramentas montada logo abaixo do dock */
+.studio-bottom-sheet {
+  background-color: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  z-index: 9;
+  flex-shrink: 0;
+}
+
+.studio-bottom-sheet.hidden {
+  display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* Janela Principal com altura calculada para caber em qualquer monitor ou celular */
 .studio-app-viewport {
@@ -700,14 +794,29 @@ body {
   text-overflow: ellipsis;
 }
 
-.btn-app-action-create {
-  background: transparent;
+/* Botão X Circular com fundo cinza no topo */
+.btn-app-close-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #e5e7eb;
   border: none;
-  color: #00d592;
-  font-size: 1.05rem;
-  font-weight: 800;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
   cursor: pointer;
-  padding: 4px 8px;
+  transition: all 0.15s ease;
+}
+
+.btn-app-close-circle:hover {
+  background-color: #d1d5db;
+  color: #111827;
+}
+
+.btn-app-close-circle:active {
+  transform: scale(0.92);
 }
 
 /* 2. Área Central (Canvas que encolhe automaticamente quando as gavetas abrem) */
@@ -782,18 +891,6 @@ body {
   color: #6b7280;
 }
 
-.btn-pill-upload {
-  background-color: #111827;
-  color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
 
 /* Botões Flutuantes (Remover e Download) */
 .btn-floating-trash {
@@ -862,60 +959,7 @@ body {
   cursor: pointer;
 }
 
-/* 3. Barra Inferior Fixa (Escolher imagem, TEXTO, FUNDO) */
-.studio-bottom-dock {
-  height: 64px;
-  min-height: 64px;
-  background-color: #ffffff;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 0 8px;
-  z-index: 5;
-}
 
-.dock-action-item {
-  background: transparent;
-  border: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  cursor: pointer;
-  color: #1f2937;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  padding: 6px 14px;
-  border-radius: 8px;
-}
-
-.dock-action-item i {
-  font-size: 1.2rem;
-}
-
-.dock-action-item:hover,
-.dock-action-item:active {
-  color: #00d592;
-}
-
-/* 4. Painéis Inferiores que NÃO cortam conteúdo */
-.studio-bottom-sheet {
-  background-color: #ffffff;
-  border-top: 1px solid #e5e7eb;
-  display: flex;
-  flex-direction: column;
-  z-index: 20;
-  max-height: 310px;
-  min-height: 220px;
-  flex-shrink: 0;
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
-}
-
-.studio-bottom-sheet.hidden {
-  display: none;
-}
 
 /* Abas de Navegação (Teclado, Aa, Cores) */
 .sheet-tabs-header {

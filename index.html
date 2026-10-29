@@ -17,7 +17,7 @@
     <div class="header-container">
       <div class="logo">
         <span class="logo-bolt">⚡</span>
-        <span class="logo-name">Zap<span class="logo-green">Stickers</span></span>
+        <span class="logo-name">Figurando<span class="logo-green">Sim</span></span>
       </div>
 
       <div class="mobile-header-actions">
@@ -52,7 +52,7 @@
       <div class="left-content">
         <div class="logo brand-logo">
           <span class="logo-bolt">⚡</span>
-          <span class="logo-name">Zap<span class="logo-green">Stickers</span></span>
+          <span class="logo-name">Figurando<span class="logo-green">Sim</span></span>
         </div>
 
         <!-- Ação Principal: Criar Figurinha -->
@@ -142,20 +142,19 @@
     <div class="studio-app-viewport">
       
       <!-- 1. Topo: Voltar e Criar (Imagem 1) -->
+
+<!-- 1. Topo: Voltar pra tela inicial e Fechar com X circular -->
       <header class="studio-nav-header">
-        <button type="button" class="btn-app-icon" id="studioCloseBtn" aria-label="Voltar">
+        <button type="button" class="btn-app-icon" id="studioBackBtn" aria-label="Voltar para a tela inicial">
           <i class="bi bi-arrow-left"></i>
         </button>
-
         <div class="studio-header-center-info">
           <span class="studio-status-pill" id="studioStatus">Nenhum arquivo ativo</span>
         </div>
-
-        <button type="button" class="btn-app-action-create" id="btnStudioSend">
-          Criar
+        <button type="button" class="btn-app-close-circle" id="studioCloseBtn" aria-label="Fechar Estúdio">
+          <i class="bi bi-x-lg"></i>
         </button>
       </header>
-
       <!-- 2. Área Central de Edição (Canvas com Slider Vertical da Imagem 2) -->
       <main class="studio-stage-workspace" id="dropArea">
         
@@ -167,16 +166,12 @@
         <!-- Área de Enquadramento do Canvas 512x512 -->
         <div class="canvas-viewport-frame" id="canvasViewportFrame">
           <canvas id="studioCanvas" width="512" height="512"></canvas>
-
-          <!-- Placeholder Vazio para Arrastar ou Carregar Foto -->
+<!-- Placeholder Vazio para Arrastar ou Carregar Foto -->
           <div class="canvas-placeholder-card" id="canvasPlaceholder">
             <div class="placeholder-icon-bubble">
               <i class="bi bi-image"></i>
             </div>
-            <p class="placeholder-text">Arraste sua foto aqui</p>
-            <label for="imageUploadInput" class="btn-pill-upload">
-              <i class="bi bi-cloud-arrow-up-fill"></i> Selecionar Imagem
-            </label>
+            <p class="placeholder-text">Clica no Botão, escolher uma imagem</p>
           </div>
         </div>
 
@@ -190,6 +185,7 @@
           <i class="bi bi-download"></i>
         </button>
       </main>
+
 
       <!-- 3. Barra Inferior Principal (Dock Imagem 1: Escolher Imagem, TEXTO, FUNDO) -->
       <nav class="studio-bottom-dock" id="studioMainDock">
@@ -210,7 +206,7 @@
         <!-- Botão 3: Fundo -->
         <button type="button" class="dock-action-item" id="btnOpenBgSheet">
           <i class="bi bi-aspect-ratio"></i>
-          <span>FUNDO</span>
+          <span>Cor por cima</span>
         </button>
       </nav>
 
@@ -240,10 +236,6 @@
               <i class="bi bi-check-lg"></i>
             </button>
           </div>
-
-
-
-
 <!-- Ações de Multi-Texto -->
           <div class="multi-text-actions-bar">
             <button type="button" class="btn-multi-text add" id="btnAddMoreText">
@@ -253,15 +245,6 @@
               <i class="bi bi-trash3-fill"></i> Excluir
             </button>
           </div>
-
-
-
-
-
-
-
-
-
           <!-- Posição Rápida Topo / Centro / Base -->
           <div class="sheet-quick-actions text-pos-group">
             <span class="sheet-section-title">Posição:</span>
@@ -371,7 +354,7 @@
           <button type="button" class="btn-sheet-close" id="btnCloseBgSheet" aria-label="Cancelar">
             <i class="bi bi-x-lg"></i>
           </button>
-          <span class="sheet-header-title">FUNDO</span>
+          <span class="sheet-header-title">Cor por cima</span>
           <button type="button" class="btn-sheet-check" id="btnApplyBgSheet" aria-label="Confirmar">
             <i class="bi bi-check-lg"></i>
           </button>
@@ -391,17 +374,17 @@
           <button type="button" class="bg-circle-btn" data-bg="#d2c4f5" style="background-color: #d2c4f5;" title="Lavanda"></button>
           <button type="button" class="bg-circle-btn" data-bg="#ffd1dc" style="background-color: #ffd1dc;" title="Rosa Pastel"></button>
           <button type="button" class="bg-circle-btn" data-bg="#c1f0d0" style="background-color: #c1f0d0;" title="Verde Menta"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#00eeff" style="background-color: #00eeff;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#ae00ff" style="background-color: #ae00ff;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#2f00ff" style="background-color: #2f00ff;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#00501b" style="background-color: #00501b;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#f8a100" style="background-color: #f8a100;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#ac8f0e" style="background-color: #ac8f0e;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#ff02dd" style="background-color: #ff02dd;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#6b1919" style="background-color: #6b1919;"></button>
+          <button type="button" class="bg-circle-btn" data-bg="#791c33" style="background-color: #791c33;"></button>
         </div>
 
-        <!-- Opções de Enquadramento da Foto (Compatibilidade com main.js) -->
-        <div class="bg-mode-row">
-          <button type="button" class="btn-mode-pill active" id="btnModeOriginal">
-            <i class="bi bi-aspect-ratio"></i> Proporcional
-          </button>
-          <button type="button" class="btn-mode-pill" id="btnModeSquare">
-            <i class="bi bi-crop"></i> Preencher
-          </button>
-        </div>
       </section>
 
       <!-- Elementos ocultos para manter compatibilidade total com main.js existente -->
