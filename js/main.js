@@ -1,6 +1,50 @@
 import { categoriasMap, gerarFallback } from './data.js';
 import { compartilharSticker } from './share.js';
 import { inicializarStudio } from './studio.js';
+import { CustomColorPicker } from './cor.js';
+
+// Função para calcular luminosidade e ajustar o texto claro/escuro automaticamente
+function getContrastColor(hex) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+  return (yiq >= 150) ? '#1a202c' : '#e9edef';
+}
+
+function applySiteTheme(hex) {
+  const textColor = getContrastColor(hex);
+  const isLight = textColor === '#1a202c';
+
+  document.documentElement.style.setProperty('--bg-dark', hex);
+  document.documentElement.style.setProperty('--bg-sidebar', hex);
+  document.documentElement.style.setProperty('--bg-header', isLight ? '#eae6df' : '#0f1c24');
+  document.documentElement.style.setProperty('--bg-pill', isLight ? '#dfdad0' : '#1a2a34');
+  document.documentElement.style.setProperty('--bg-chip', isLight ? '#d8d2c6' : '#101d24');
+  document.documentElement.style.setProperty('--border-subtle', isLight ? '#cac3b5' : '#1e2c35');
+  document.documentElement.style.setProperty('--text-main', textColor);
+  document.documentElement.style.setProperty('--text-dim', isLight ? '#4a5568' : '#8696a0');
+
+  localStorage.setItem('zapstickers_custom_theme', hex);
+}
+
+// Inicializa o seletor do projeto
+const savedTheme = localStorage.getItem('zapstickers_custom_theme') || '#0b141a';
+
+new CustomColorPicker({
+  triggerId: 'themeColorTrigger',
+  previewId: 'themeColorPreview',
+  labelId: 'themeColorLabel',
+  initialColor: savedTheme,
+  onChange: (hex) => {
+    applySiteTheme(hex);
+  }
+});
+
+// Aplica a cor salva logo ao carregar a página
+if (savedTheme !== '#0b141a') {
+  applySiteTheme(savedTheme);
+}
 
 const state = {
   categoria: 'todos',
@@ -25,8 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function renderizarGrade() {
   const grid = document.getElementById('stickersGrid');
   const empty = document.getElementById('emptyState');
+  const statusCount = document.getElementById('catalogStatusCount');
   if (!grid) return;
 
+  const totalGeral = (categoriasMap['todos'] || []).length;
   const lista = categoriasMap[state.categoria] || [];
 
   const filtrados = lista.filter(nome => {
@@ -34,13 +80,20 @@ function renderizarGrade() {
     return nome.toLowerCase().includes(state.busca);
   });
 
-  if (filtrados.length === 0) {
+if (filtrados.length === 0) {
     grid.innerHTML = '';
     empty.classList.remove('hidden');
+    if (statusCount) {
+      statusCount.innerHTML = `Nenhuma figurinha encontrada para esta pesquisa`;
+    }
     return;
   }
 
   empty.classList.add('hidden');
+
+  if (statusCount) {
+    statusCount.innerHTML = `Mostrando <strong>${filtrados.length}</strong> de <strong>${totalGeral}</strong> figurinhas`;
+  }
 
   grid.innerHTML = filtrados.map(nome => {
     const filename = `${nome}.webp`;
@@ -69,27 +122,7 @@ function renderizarGrade() {
 /**
  * 2. Filtro por Chips de Categoria
  */
-function iniciarFiltros() {
-  const container = document.getElementById('categoriesContainer');
-  if (!container) return;
 
-  container.addEventListener('click', (e) => {
-    const chip = e.target.closest('.chip');
-    if (!chip) return;
-
-    container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-
-    chip.scrollIntoView({
-      behavior: 'smooth',
-      inline: 'center',
-      block: 'nearest'
-    });
-
-    state.categoria = chip.getAttribute('data-category');
-    renderizarGrade();
-  });
-}
 
 /**
  * 3. Clique na grade: abre o modal de envio no WhatsApp
@@ -185,64 +218,137 @@ function iniciarModalPreview() {
 /**
  * 5. Busca em tempo real
  */
+/**
+ * Controla o estado (aceso/apagado) do botão Limpar
+ */
+function atualizarBotaoLimpar() {
+  const btnClear = document.getElementById('btnClearAllFilters');
+  if (!btnClear) return;
+
+  const temFiltroAtivo = state.categoria !== 'todos' || Boolean(state.busca);
+
+  if (temFiltroAtivo) {
+    btnClear.removeAttribute('disabled');
+    btnClear.classList.add('active');
+  } else {
+    btnClear.setAttribute('disabled', 'true');
+    btnClear.classList.remove('active');
+  }
+}
+
+/**
+ * 2. Filtro por Chips de Categoria
+ */
+function iniciarFiltros() {
+  const container = document.getElementById('categoriesContainer');
+  if (!container) return;
+
+  container.addEventListener('click', (e) => {
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+
+    container.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+
+    chip.scrollIntoView({
+      behavior: 'smooth',
+      inline: 'center',
+      block: 'nearest'
+    });
+
+    state.categoria = chip.getAttribute('data-category');
+    renderizarGrade();
+    atualizarBotaoLimpar();
+  });
+}
+
+/**
+ * 5. Busca em tempo real com Botões Buscar e Limpar
+ */
 function iniciarBusca() {
   const input = document.getElementById('searchInput');
-  const clear = document.getElementById('clearSearch');
+  const btnSubmit = document.getElementById('btnSubmitSearch');
+  const btnClear = document.getElementById('btnClearAllFilters');
   const btnReset = document.getElementById('btnResetSearch');
 
   if (!input) return;
 
   function filtrar(val) {
     state.busca = val.trim().toLowerCase();
-    if (clear) clear.style.display = val ? 'block' : 'none';
     renderizarGrade();
+    atualizarBotaoLimpar();
   }
 
   input.addEventListener('input', (e) => filtrar(e.target.value));
 
-  if (clear) {
-    clear.addEventListener('click', () => {
-      input.value = '';
-      filtrar('');
+  // Tecla Enter dispara busca
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      filtrar(input.value);
+    }
+  });
+
+  if (btnSubmit) {
+    btnSubmit.addEventListener('click', () => filtrar(input.value));
+  }
+
+  function resetarTudo() {
+    input.value = '';
+    state.busca = '';
+    state.categoria = 'todos';
+
+    document.querySelectorAll('.chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.category === 'todos');
     });
+
+    const todosChip = document.querySelector('.chip[data-category="todos"]');
+    if (todosChip) {
+      todosChip.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+
+    renderizarGrade();
+    atualizarBotaoLimpar();
+  }
+
+  if (btnClear) {
+    btnClear.addEventListener('click', resetarTudo);
   }
 
   if (btnReset) {
-    btnReset.addEventListener('click', () => {
-      input.value = '';
-      state.categoria = 'todos';
-      document.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.category === 'todos'));
-      filtrar('');
-    });
+    btnReset.addEventListener('click', resetarTudo);
   }
 }
 
 /**
- * 6. Menu Gaveta Mobile
+ * 6. Menu Gaveta Mobile (Utiliza o painel lateral único)
+ */
+/**
+ * 6. Menu Gaveta Mobile (Utiliza o painel lateral único e trava fundo)
  */
 function iniciarMenu() {
   const btn = document.getElementById('menuToggle');
-  const drawer = document.getElementById('navMenu');
+  const panel = document.getElementById('splitLeftPanel');
   const overlay = document.getElementById('navOverlay');
-  const close = document.getElementById('navCloseBtn');
+  const close = document.getElementById('sidebarCloseBtn');
 
-  if (!btn || !drawer) return;
+  if (!btn || !panel) return;
 
   function fechar() {
-    drawer.classList.remove('open');
-    overlay.classList.remove('visible');
+    panel.classList.remove('open');
+    if (overlay) overlay.classList.remove('visible');
+    document.body.classList.remove('menu-open');
   }
 
   function abrir() {
-    drawer.classList.add('open');
-    overlay.classList.add('visible');
+    panel.classList.add('open');
+    if (overlay) overlay.classList.add('visible');
+    document.body.classList.add('menu-open');
   }
 
   btn.addEventListener('click', abrir);
   if (close) close.addEventListener('click', fechar);
   if (overlay) overlay.addEventListener('click', fechar);
 }
-
 /**
  * 7. Modais Institucionais
  */

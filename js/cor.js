@@ -9,9 +9,12 @@ export class CustomColorPicker {
     this.color = initialColor;
     this.onChange = onChange;
 
+ // Todas as cores presentes no seu projeto/estúdio
     this.palette = [
-      '#ffffff', '#000000', '#ffeb3b', '#ff5722', 
-      '#00d592', '#00e5ff', '#e91e63', '#9c27b0'
+      '#000000', , '#222222','#f1dcbb', '#f0f0f0', '#b2aafc', '#707070', '#aafccc',
+      '#bb06f125', '#fcca60', '#ff3366', '#00d592', '#2196f3', '#00eeff',
+      '#f1f0a8', '#2f00ff', '#00501b', '#f8a100', '#ac8f0e', '#b38bad',
+      '#6b1919', '#ee04a83b'
     ];
 
     this.popup = null;

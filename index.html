@@ -21,52 +21,71 @@
       </div>
 
       <div class="mobile-header-actions">
-        <button class="menu-btn" id="menuToggle" aria-label="Menu">
+        <button class="menu-btn" id="menuToggle" aria-label="Abrir Menu">
           <span class="bar"></span>
           <span class="bar"></span>
           <span class="bar"></span>
         </button>
       </div>
     </div>
-
-    <!-- Gaveta Mobile -->
-    <div class="nav-overlay" id="navOverlay"></div>
-    <nav class="nav-drawer" id="navMenu">
-      <div class="drawer-header">
-        <span>Menu</span>
-        <button id="navCloseBtn" class="close-drawer">&times;</button>
-      </div>
-      <ul class="drawer-links">
-        <li><a href="#quem-somos" class="modal-trigger" data-modal="modalQuemSomos">Quem Somos</a></li>
-        <li><a href="#duvidas" class="modal-trigger" data-modal="modalDuvidas">Dúvidas Frequentes</a></li>
-        <li><a href="#contato" class="modal-trigger" data-modal="modalContato">Contato</a></li>
-      </ul>
-    </nav>
   </header>
+
+  <!-- Fundo escuro ao abrir menu no mobile -->
+  <div class="nav-overlay" id="navOverlay"></div>
 
   <!-- Container Principal Dividido -->
   <div class="split-layout">
 
-    <!-- LADO ESQUERDO: Painel Lateral -->
+    <!-- PAINEL LATERAL ÚNICO (Fixo no Desktop / Gaveta no Mobile) -->
     <aside class="split-left" id="splitLeftPanel">
       <div class="left-content">
-        <div class="logo brand-logo">
-          <span class="logo-bolt">⚡</span>
-          <span class="logo-name">Figurando<span class="logo-green">Sim</span></span>
+        
+        <!-- Cabeçalho do Painel com botão fechar visível apenas no mobile -->
+        <div class="sidebar-top-bar">
+          <div class="logo brand-logo">
+            <span class="logo-bolt">⚡</span>
+            <span class="logo-name">Figurando<span class="logo-green">Sim</span></span>
+          </div>
+          <button type="button" class="close-sidebar-mobile-btn" id="sidebarCloseBtn" aria-label="Fechar Painel">&times;</button>
         </div>
 
-        <!-- Ação Principal: Criar Figurinha -->
-        <div class="actions-panel">
-          <button type="button" class="btn-create-sticker" id="btnCreateSticker">
-            <i class="bi bi-pencil-fill btn-icon"></i>
-            <span class="btn-label">Criar Figurinhas</span>
-          </button>
+        <!-- Seletor Único de Tema do Projeto -->
+        <div class="theme-picker-container">
+          <span class="theme-label-header">Cor do Tema</span>
+          <div class="clean-color-trigger" id="themeColorTrigger" title="Escolher cor do tema">
+            <span class="color-disc" id="themeColorPreview"></span>
+            <span class="color-name" id="themeColorLabel">#0B141A</span>
+          </div>
+        </div>
+
+        <!-- Secção Institucional / Utilidades -->
+        <div class="sidebar-info-block">
+          <h4 class="sidebar-block-title">FigurandoSim</h4>
+          <ul class="sidebar-links-list">
+            <li><a href="#quem-somos" class="modal-trigger" data-modal="modalQuemSomos">Sobre Nós</a></li>
+            <li><a href="#como-baixar" class="modal-trigger" data-modal="modalComoBaixar">Como baixar figurinhas?</a></li>
+            <li><a href="#termos" class="modal-trigger" data-modal="modalTermos">Termos de Uso</a></li>
+            <li><a href="#privacidade" class="modal-trigger" data-modal="modalPrivacidade">Política de Privacidade</a></li>
+          </ul>
+
+          <div class="sidebar-contact">
+            <a href="mailto:contato@zapfigurinhas.com" class="sidebar-email-link">contato@zapfigurinhas.com</a>
+          </div>
+
+          <div class="sidebar-social-actions">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-circle-btn facebook" aria-label="Facebook">
+              <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-circle-btn instagram" aria-label="Instagram">
+              <i class="bi bi-instagram"></i>
+            </a>
+          </div>
         </div>
       </div>
 
       <!-- Rodapé Compacto -->
       <footer class="footer-sidebar">
-        <p class="footer-copy-text">&copy; 2026 ZapStickers. Todos os direitos reservados.</p>
+        <p class="footer-copy-text">FigurandoSim - As melhores figurinhas para o seu whatsapp!</p>
       </footer>
     </aside>
 
@@ -74,10 +93,17 @@
     <main class="split-right">
       
       <!-- 1. Campo de Busca -->
+     <!-- 1. Campo de Busca com Botões Buscar e Limpar -->
+    <!-- 1. Campo de Busca com Botões Buscar e Limpar -->
       <section class="search-section">
-        <div class="search-pill">
-          <input type="text" id="searchInput" placeholder="Pesquisar figurinha na grade..." autocomplete="off">
-          <button id="clearSearch" class="clear-btn" aria-label="Limpar">&times;</button>
+        <label class="search-helper-label" for="searchInput">palavras-chave: meme, bebe, feliz, bom dia, cachorro, gato etc.</label>
+        <div class="search-container-bar">
+          
+          <div class="search-pill">
+            <input type="text" id="searchInput" placeholder="Pesquisar figurinha na grade..." autocomplete="off">
+          </div>
+          <button type="button" class="btn-search-action" id="btnSubmitSearch">Buscar</button>
+          <button type="button" class="btn-clear-action" id="btnClearAllFilters" disabled title="Limpar filtros e busca">Limpar</button>
         </div>
       </section>
 
@@ -102,8 +128,14 @@
         </div>
       </nav>
 
-      <!-- 3. Grade de Figurinhas -->
+   <!-- 3. Grade de Figurinhas com Contador em Tempo Real -->
       <section class="gallery-wrapper">
+        <div class="catalog-status-bar">
+          <span class="status-count-text" id="catalogStatusCount">
+            Mostrando <strong>0</strong> de <strong>0</strong> figurinhas
+          </span>
+        </div>
+
         <div class="stickers-sheet" id="stickersGrid">
           <!-- Renderizado pelo JS -->
         </div>
@@ -135,282 +167,7 @@
     </div>
   </div>
 
-  <!-- ========================================================================= -->
-  <!-- NOVO ESTÚDIO MOBILE NATIVO (ARQUITETURA DAS IMAGENS 1, 2 E 3)             -->
-  <!-- ========================================================================= -->
-  <div class="modal modal-studio-app" id="modalStudio">
-    <div class="studio-app-viewport">
-      
-      <!-- 1. Topo: Voltar e Criar (Imagem 1) -->
-
-<!-- 1. Topo: Voltar pra tela inicial e Fechar com X circular -->
-      <header class="studio-nav-header">
-        <button type="button" class="btn-app-icon" id="studioBackBtn" aria-label="Voltar para a tela inicial">
-          <i class="bi bi-arrow-left"></i>
-        </button>
-        <div class="studio-header-center-info">
-          <span class="studio-status-pill" id="studioStatus">Nenhum arquivo ativo</span>
-        </div>
-        <button type="button" class="btn-app-close-circle" id="studioCloseBtn" aria-label="Fechar Estúdio">
-          <i class="bi bi-x-lg"></i>
-        </button>
-      </header>
-      <!-- 2. Área Central de Edição (Canvas com Slider Vertical da Imagem 2) -->
-      <main class="studio-stage-workspace" id="dropArea">
-        
-        <!-- Slider Vertical de Tamanho da Fonte (Imagem 2) -->
-        <div class="vertical-size-slider-wrap hidden" id="verticalSliderWrap">
-          <input type="range" id="verticalFontSizeSlider" min="20" max="90" value="44" orient="vertical">
-        </div>
-
-        <!-- Área de Enquadramento do Canvas 512x512 -->
-        <div class="canvas-viewport-frame" id="canvasViewportFrame">
-          <canvas id="studioCanvas" width="512" height="512"></canvas>
-<!-- Placeholder Vazio para Arrastar ou Carregar Foto -->
-          <div class="canvas-placeholder-card" id="canvasPlaceholder">
-            <div class="placeholder-icon-bubble">
-              <i class="bi bi-image"></i>
-            </div>
-            <p class="placeholder-text">Clica no Botão, escolher uma imagem</p>
-          </div>
-        </div>
-
-        <!-- Botão Flutuante de Excluir Foto Atual -->
-        <button type="button" class="btn-floating-trash hidden" id="btnDeleteImage" title="Remover imagem">
-          <i class="bi bi-trash3-fill"></i>
-        </button>
-
-        <!-- Botão Flutuante Secundário: Download Local -->
-        <button type="button" class="btn-floating-download" id="btnStudioDownload" title="Baixar figurinha .webp">
-          <i class="bi bi-download"></i>
-        </button>
-      </main>
-
-
-      <!-- 3. Barra Inferior Principal (Dock Imagem 1: Escolher Imagem, TEXTO, FUNDO) -->
-      <nav class="studio-bottom-dock" id="studioMainDock">
-        <input type="file" id="imageUploadInput" accept="image/png, image/jpeg, image/webp" hidden>
-
-        <!-- Botão 1: Escolher Imagem -->
-        <label for="imageUploadInput" class="dock-action-item">
-          <i class="bi bi-image"></i>
-          <span>escolher imagem</span>
-        </label>
-
-        <!-- Botão 2: Texto -->
-        <button type="button" class="dock-action-item" id="btnOpenTextSheet">
-          <i class="bi bi-textarea-t"></i>
-          <span>TEXTO</span>
-        </button>
-
-        <!-- Botão 3: Fundo -->
-        <button type="button" class="dock-action-item" id="btnOpenBgSheet">
-          <i class="bi bi-aspect-ratio"></i>
-          <span>Cor por cima</span>
-        </button>
-      </nav>
-
-      <!-- ===================================================================== -->
-      <!-- GAVETA INFERIOR (BOTTOM SHEET): EDIÇÃO DE TEXTO (IMAGEM 2)           -->
-      <!-- ===================================================================== -->
-      <section class="studio-bottom-sheet hidden" id="sheetText">
-        
-        <!-- Barra de Navegação das Sub-abas da Gaveta de Texto -->
-        <div class="sheet-tabs-header">
-          <button type="button" class="sheet-tab-btn active" data-tab="tab-input" title="Digitar Texto">
-            <i class="bi bi-keyboard-fill"></i>
-          </button>
-          <button type="button" class="sheet-tab-btn" data-tab="tab-fonts" title="Fontes">
-            <span class="tab-label-text">Aa</span>
-          </button>
-          <button type="button" class="sheet-tab-btn" data-tab="tab-colors" title="Cores e Contorno">
-            <i class="bi bi-palette-fill"></i>
-          </button>
-        </div>
-
-        <!-- Conteúdo 1: Teclado & Digitação com Atalhos de Posição -->
-        <div class="sheet-tab-content active" id="pane-tab-input">
-          <div class="sheet-input-box">
-            <input type="text" id="stickerCaptionInput" placeholder="Digite algo..." autocomplete="off">
-            <button type="button" class="btn-sheet-apply" id="btnCloseTextSheet">
-              <i class="bi bi-check-lg"></i>
-            </button>
-          </div>
-<!-- Ações de Multi-Texto -->
-          <div class="multi-text-actions-bar">
-            <button type="button" class="btn-multi-text add" id="btnAddMoreText">
-              <i class="bi bi-plus-lg"></i> + Adicionar Outro Texto
-            </button>
-            <button type="button" class="btn-multi-text delete" id="btnDeleteSelectedText" title="Remover este texto">
-              <i class="bi bi-trash3-fill"></i> Excluir
-            </button>
-          </div>
-          <!-- Posição Rápida Topo / Centro / Base -->
-          <div class="sheet-quick-actions text-pos-group">
-            <span class="sheet-section-title">Posição:</span>
-
-          </div>
-        </div>
-
-        <!-- Conteúdo 2: Grade de Cartões de Fonte (Aa - Imagem 2) -->
-        <div class="sheet-tab-content" id="pane-tab-fonts">
-          <div class="fonts-cards-grid">
-            <button type="button" class="font-card-item active" data-font="Impact">
-              <span class="font-preview" style="font-family: Impact;">Font</span>
-              <span class="font-name">Impact</span>
-            </button>
-            <button type="button" class="font-card-item" data-font="Montserrat">
-              <span class="font-preview" style="font-family: 'Montserrat', sans-serif; font-weight: 900;">Font</span>
-              <span class="font-name">Montserrat</span>
-            </button>
-            <button type="button" class="font-card-item" data-font="Poppins">
-              <span class="font-preview" style="font-family: 'Poppins', sans-serif; font-weight: 800;">Font</span>
-              <span class="font-name">Poppins</span>
-            </button>
-            <button type="button" class="font-card-item" data-font="Anton">
-              <span class="font-preview" style="font-family: 'Anton', sans-serif;">Font</span>
-              <span class="font-name">Anton</span>
-            </button>
-            <button type="button" class="font-card-item" data-font="Bebas Neue">
-              <span class="font-preview" style="font-family: 'Bebas Neue', sans-serif;">Font</span>
-              <span class="font-name">Bebas Neue</span>
-            </button>
-            <button type="button" class="font-card-item" data-font="Fredoka">
-              <span class="font-preview" style="font-family: 'Fredoka', sans-serif;">Font</span>
-              <span class="font-name">Fredoka</span>
-            </button>
-            <button type="button" class="font-card-item" data-font="Arial Black">
-              <span class="font-preview" style="font-family: 'Arial Black', sans-serif;">Font</span>
-              <span class="font-name">Arial Black</span>
-            </button>
-            <button type="button" class="font-card-item" data-font="Comic Sans MS">
-              <span class="font-preview" style="font-family: 'Comic Sans MS', cursive;">Font</span>
-              <span class="font-name">Comic</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Conteúdo 3: Paleta de Cores e Estilos de Contorno (Imagem 2) -->
-  <!-- Conteúdo 3: Paleta de Cores e Estilos de Contorno -->
-        <div class="sheet-tab-content" id="pane-tab-colors">
-          
-          <!-- Alternador: Mudar Cor do Texto OU Cor do Contorno -->
-          <div class="color-target-selector">
-            <button type="button" class="btn-target-tab active" id="btnTargetText">
-              <i class="bi bi-fonts"></i> Cor do Texto
-            </button>
-            <button type="button" class="btn-target-tab" id="btnTargetStroke">
-              <i class="bi bi-border-width"></i> Cor da Borda
-            </button>
-            <button type="button" class="btn-target-tab" id="btnToggleOutline" title="Ligar/Desligar Borda">
-              <span class="outline-toggle-glyph">Sem Borda</span>
-            </button>
-          </div>
-
-          <!-- Carrossel de Cores do Texto -->
-          <div class="colors-carousel-bar">
-            <div class="clean-color-trigger" id="textColorTrigger" title="Seletor Livre">
-              <span class="color-disc" id="textColorPreview"></span>
-              <span class="color-name" id="textColorLabel">#FFFFFF</span>
-            </div>
-            <button type="button" class="color-circle-btn active" data-color="#ffffff" style="background-color: #ffffff;"></button>
-            <button type="button" class="color-circle-btn" data-color="#f0f0f0" style="background-color: #f0f0f0;"></button>
-            <button type="button" class="color-circle-btn" data-color="#c4c4c4" style="background-color: #c4c4c4;"></button>
-            <button type="button" class="color-circle-btn" data-color="#707070" style="background-color: #707070;"></button>
-            <button type="button" class="color-circle-btn" data-color="#333333" style="background-color: #333333;"></button>
-            <button type="button" class="color-circle-btn" data-color="#000000" style="background-color: #000000;"></button>
-            <button type="button" class="color-circle-btn" data-color="#ffe600" style="background-color: #ffe600;"></button>
-            <button type="button" class="color-circle-btn" data-color="#ff3366" style="background-color: #ff3366;"></button>
-            <button type="button" class="color-circle-btn" data-color="#00d592" style="background-color: #00d592;"></button>
-            <button type="button" class="color-circle-btn" data-color="#2196f3" style="background-color: #2196f3;"></button>
-
-            <button type="button" class="color-circle-btn" data-color="#00eeff" style="background-color: #00eeff;"></button>
-            <button type="button" class="color-circle-btn" data-color="#ae00ff" style="background-color: #ae00ff;"></button>
-            <button type="button" class="color-circle-btn" data-color="#2f00ff" style="background-color: #2f00ff;"></button>
-            <button type="button" class="color-circle-btn" data-color="#00501b" style="background-color: #00501b;"></button>
-            <button type="button" class="color-circle-btn" data-color="#f8a100" style="background-color: #f8a100;"></button>
-            <button type="button" class="color-circle-btn" data-color="#ac8f0e" style="background-color: #ac8f0e;"></button>
-            <button type="button" class="color-circle-btn" data-color="#ff02dd" style="background-color: #ff02dd;"></button>
-            <button type="button" class="color-circle-btn" data-color="#6b1919" style="background-color: #6b1919;"></button>
-            <button type="button" class="color-circle-btn" data-color="#791c33" style="background-color: #791c33;"></button>
-          </div>
-
-          <!-- Contorno Cor Trigger Oculto/Compatível -->
-          <div class="clean-color-trigger hidden" id="outlineColorTrigger">
-            <span class="color-disc" id="outlineColorPreview"></span>
-            <span class="color-name" id="outlineColorLabel">#000000</span>
-          </div>
-        </div>
-
-      </section>
-
-      <!-- ===================================================================== -->
-      <!-- GAVETA INFERIOR (BOTTOM SHEET): FUNDO DA FIGURINHA (IMAGEM 3)        -->
-      <!-- ===================================================================== -->
-      <section class="studio-bottom-sheet hidden" id="sheetBg">
-        
-        <!-- Cabeçalho da Gaveta de Fundo com Fechar, Título e Salvar (Imagem 3) -->
-        <div class="sheet-title-header">
-          <button type="button" class="btn-sheet-close" id="btnCloseBgSheet" aria-label="Cancelar">
-            <i class="bi bi-x-lg"></i>
-          </button>
-          <span class="sheet-header-title">Cor por cima</span>
-          <button type="button" class="btn-sheet-check" id="btnApplyBgSheet" aria-label="Confirmar">
-            <i class="bi bi-check-lg"></i>
-          </button>
-        </div>
-
-        <!-- Carrossel de Cores de Fundo (Imagem 3) -->
-        <div class="bg-colors-carousel-bar">
-          <button type="button" class="bg-circle-btn active" data-bg="transparent" title="Transparente (Sem Fundo)">
-            <i class="bi bi-slash-circle"></i>
-          </button>
-          <button type="button" class="bg-circle-btn" data-bg="#ffffff" style="background-color: #ffffff;" title="Branco"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#000000" style="background-color: #000000;" title="Preto"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#8ca0b3" style="background-color: #8ca0b3;" title="Azul Acinzentado"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#b5b5b5" style="background-color: #b5b5b5;" title="Cinza Médio"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#e6e6e6" style="background-color: #e6e6e6;" title="Cinza Claro"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#e8e5d8" style="background-color: #e8e5d8;" title="Creme Suave"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#d2c4f5" style="background-color: #d2c4f5;" title="Lavanda"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#ffd1dc" style="background-color: #ffd1dc;" title="Rosa Pastel"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#c1f0d0" style="background-color: #c1f0d0;" title="Verde Menta"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#00eeff" style="background-color: #00eeff;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#ae00ff" style="background-color: #ae00ff;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#2f00ff" style="background-color: #2f00ff;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#00501b" style="background-color: #00501b;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#f8a100" style="background-color: #f8a100;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#ac8f0e" style="background-color: #ac8f0e;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#ff02dd" style="background-color: #ff02dd;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#6b1919" style="background-color: #6b1919;"></button>
-          <button type="button" class="bg-circle-btn" data-bg="#791c33" style="background-color: #791c33;"></button>
-        </div>
-
-      </section>
-
-      <!-- Elementos ocultos para manter compatibilidade total com main.js existente -->
-      <div class="compatibility-hidden-bridge" style="display: none;" aria-hidden="true">
-        <select id="fontSelect">
-          <option value="Impact" selected>Impact</option>
-          <option value="Montserrat">Montserrat</option>
-          <option value="Poppins">Poppins</option>
-          <option value="Anton">Anton</option>
-          <option value="Bebas Neue">Bebas Neue</option>
-          <option value="Fredoka">Fredoka</option>
-          <option value="Arial Black">Arial Black</option>
-          <option value="Comic Sans MS">Comic</option>
-        </select>
-        <select id="fontSizeSelect">
-          <option value="28">28</option>
-          <option value="44" selected>44</option>
-          <option value="56">56</option>
-          <option value="68">68</option>
-          <option value="80">80</option>
-        </select>
-      </div>
-
-    </div>
-  </div>
-
+  <!-- Mensagens Toast -->
   <div class="toast" id="toastMessage"></div>
 
   <script type="module" src="js/main.js"></script>

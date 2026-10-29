@@ -17,8 +17,10 @@ export const studioState = {
       semContorno: false
     }
   ],
+  adesivos: [],
   textoAtivoId: 1,
-  arrastandoIndex: null,
+  adesivoAtivoId: null,
+  arrastandoAlvo: null, // { tipo: 'texto' | 'adesivo', index: number }
   dragOffsetX: 0,
   dragOffsetY: 0
 };
@@ -32,7 +34,6 @@ export function inicializarStudio() {
   const modal = document.getElementById('modalStudio');
   const btnAbrir = document.getElementById('btnCreateSticker');
 
-
   if (!canvas || !modal) return;
 
   if (btnAbrir) {
@@ -42,31 +43,30 @@ export function inicializarStudio() {
     });
   }
 
-const btnFechar = document.getElementById('studioCloseBtn');
+  const btnFechar = document.getElementById('studioCloseBtn');
   const btnVoltar = document.getElementById('studioBackBtn');
 
-  // Função para fechar o estúdio por completo (botão X)
   function fecharModalCompleto() {
     modal.classList.remove('active');
     fecharGavetas();
     studioState.textoAtivoId = null;
+    studioState.adesivoAtivoId = null;
     desenharNoCanvas();
   }
 
-  // O botão X fecha o estúdio
   if (btnFechar) btnFechar.addEventListener('click', fecharModalCompleto);
 
-  // A SETA volta sempre para a tela inicial do estúdio (mostra Escolher Imagem, Texto, Fundo)
   if (btnVoltar) {
     btnVoltar.addEventListener('click', () => {
-      fecharGavetas(); // Fecha qualquer aba/gaveta aberta e reexibe o dock principal
-      studioState.textoAtivoId = null; // Tira qualquer foco/borda do texto
+      fecharGavetas();
+      studioState.textoAtivoId = null;
+      studioState.adesivoAtivoId = null;
       desenharNoCanvas();
     });
   }
 
   modal.addEventListener('click', (e) => {
-    if (e.target === modal) fecharModal();
+    if (e.target === modal) fecharModalCompleto();
   });
 
   const inputCaption = document.getElementById('stickerCaptionInput');
@@ -75,32 +75,40 @@ const btnFechar = document.getElementById('studioCloseBtn');
   const btnDelete = document.getElementById('btnDeleteImage');
   const btnSend = document.getElementById('btnStudioSend');
   const btnDownload = document.getElementById('btnStudioDownload');
-  const mainDock = document.getElementById('studioMainDock');
 
   const btnOpenText = document.getElementById('btnOpenTextSheet');
   const btnOpenBg = document.getElementById('btnOpenBgSheet');
+  const btnOpenStickers = document.getElementById('btnOpenStickersSheet');
+
   const sheetText = document.getElementById('sheetText');
   const sheetBg = document.getElementById('sheetBg');
+  const sheetStickers = document.getElementById('sheetStickers');
+
   const btnCloseText = document.getElementById('btnCloseTextSheet');
   const btnCloseBg = document.getElementById('btnCloseBgSheet');
   const btnApplyBg = document.getElementById('btnApplyBgSheet');
+  const btnCloseStickers = document.getElementById('btnCloseStickersSheet');
+  const btnApplyStickers = document.getElementById('btnApplyStickersSheet');
+
   const verticalSliderWrap = document.getElementById('verticalSliderWrap');
   const verticalFontSizeSlider = document.getElementById('verticalFontSizeSlider');
 
   const btnAddMoreText = document.getElementById('btnAddMoreText');
   const btnDeleteSelectedText = document.getElementById('btnDeleteSelectedText');
 
-
-function fecharGavetas() {
+  // Fecha rigorosamente todas as gavetas e remove seleções ativas do dock
+  function fecharGavetas() {
     if (sheetText) sheetText.classList.add('hidden');
     if (sheetBg) sheetBg.classList.add('hidden');
+    if (sheetStickers) sheetStickers.classList.add('hidden');
     if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
 
-    // Remove o destaque dos botões do dock
     if (btnOpenText) btnOpenText.classList.remove('active');
     if (btnOpenBg) btnOpenBg.classList.remove('active');
+    if (btnOpenStickers) btnOpenStickers.classList.remove('active');
 
     studioState.textoAtivoId = null;
+    studioState.adesivoAtivoId = null;
     desenharNoCanvas();
   }
 
@@ -121,9 +129,11 @@ function fecharGavetas() {
       } else {
         if (sheetBg) sheetBg.classList.add('hidden');
         if (btnOpenBg) btnOpenBg.classList.remove('active');
+        if (sheetStickers) sheetStickers.classList.add('hidden');
+        if (btnOpenStickers) btnOpenStickers.classList.remove('active');
 
         sheetText.classList.remove('hidden');
-        btnOpenText.classList.add('active'); // Adiciona a moldura de seleção
+        btnOpenText.classList.add('active');
         if (verticalSliderWrap) verticalSliderWrap.classList.remove('hidden');
 
         sincronizarCamposComTextoAtivo();
@@ -134,7 +144,7 @@ function fecharGavetas() {
 
   if (btnCloseText) btnCloseText.addEventListener('click', fecharGavetas);
 
-  // Clicou no botão FUNDO
+  // Clicou no botão FUNDO / COR POR CIMA
   if (btnOpenBg) {
     btnOpenBg.addEventListener('click', () => {
       const estaAberto = !sheetBg.classList.contains('hidden');
@@ -144,6 +154,8 @@ function fecharGavetas() {
       } else {
         if (sheetText) sheetText.classList.add('hidden');
         if (btnOpenText) btnOpenText.classList.remove('active');
+        if (sheetStickers) sheetStickers.classList.add('hidden');
+        if (btnOpenStickers) btnOpenStickers.classList.remove('active');
         if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
 
         sheetBg.classList.remove('hidden');
@@ -155,10 +167,56 @@ function fecharGavetas() {
   if (btnCloseBg) btnCloseBg.addEventListener('click', fecharGavetas);
   if (btnApplyBg) btnApplyBg.addEventListener('click', fecharGavetas);
 
+  // Clicou no botão ADESIVOS
+  if (btnOpenStickers) {
+    btnOpenStickers.addEventListener('click', () => {
+      const estaAberto = !sheetStickers.classList.contains('hidden');
 
-if (btnAddMoreText) {
+      if (estaAberto) {
+        fecharGavetas();
+      } else {
+        if (sheetText) sheetText.classList.add('hidden');
+        if (btnOpenText) btnOpenText.classList.remove('active');
+        if (sheetBg) sheetBg.classList.add('hidden');
+        if (btnOpenBg) btnOpenBg.classList.remove('active');
+        if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
+
+        sheetStickers.classList.remove('hidden');
+        btnOpenStickers.classList.add('active');
+      }
+    });
+  }
+
+  if (btnCloseStickers) btnCloseStickers.addEventListener('click', fecharGavetas);
+  if (btnApplyStickers) btnApplyStickers.addEventListener('click', fecharGavetas);
+
+  // Adicionar Adesivo ao clicar no emoji
+  document.querySelectorAll('.sticker-emoji-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (studioState.adesivos.length >= 15) {
+        mostrarToast('Limite de 15 adesivos atingido!');
+        return;
+      }
+
+      const emoji = btn.getAttribute('data-emoji');
+      const novoAdesivo = {
+        id: Date.now(),
+        emoji: emoji,
+        x: 256,
+        y: 256,
+        tamanho: 64
+      };
+
+      studioState.adesivos.push(novoAdesivo);
+      studioState.adesivoAtivoId = novoAdesivo.id;
+      studioState.textoAtivoId = null;
+      desenharNoCanvas();
+      mostrarToast(`Adesivo ${emoji} adicionado!`);
+    });
+  });
+
+  if (btnAddMoreText) {
     btnAddMoreText.addEventListener('click', () => {
-      // Trava de segurança: máximo 10 camadas de texto
       if (studioState.textos.length >= 10) {
         mostrarToast('Limite máximo de 10 textos atingido!');
         return;
@@ -179,6 +237,7 @@ if (btnAddMoreText) {
 
       studioState.textos.push(novoTexto);
       studioState.textoAtivoId = novoId;
+      studioState.adesivoAtivoId = null;
 
       sincronizarCamposComTextoAtivo();
       desenharNoCanvas();
@@ -318,12 +377,31 @@ if (btnAddMoreText) {
     };
   }
 
-function startDrag(e) {
+  function startDrag(e) {
     const coords = getCanvasCoords(e);
     const ctx = canvas.getContext('2d');
-    let clicouEmTexto = false;
 
-    // Percorre os textos para verificar se o clique foi em algum deles
+    // 1. Verifica clique em Adesivos / Emojis (topo da pilha primeiro)
+    for (let i = studioState.adesivos.length - 1; i >= 0; i--) {
+      const a = studioState.adesivos[i];
+      const r = a.tamanho / 2 + 10;
+      if (
+        coords.x >= a.x - r &&
+        coords.x <= a.x + r &&
+        coords.y >= a.y - r &&
+        coords.y <= a.y + r
+      ) {
+        studioState.adesivoAtivoId = a.id;
+        studioState.textoAtivoId = null;
+        studioState.arrastandoAlvo = { tipo: 'adesivo', index: i };
+        studioState.dragOffsetX = coords.x - a.x;
+        studioState.dragOffsetY = coords.y - a.y;
+        desenharNoCanvas();
+        return;
+      }
+    }
+
+    // 2. Verifica clique em Textos
     for (let i = studioState.textos.length - 1; i >= 0; i--) {
       const t = studioState.textos[i];
       if (!t.legenda) continue;
@@ -339,10 +417,10 @@ function startDrag(e) {
         coords.y <= t.y + altura / 2 + 20
       ) {
         studioState.textoAtivoId = t.id;
-        studioState.arrastandoIndex = i;
+        studioState.adesivoAtivoId = null;
+        studioState.arrastandoAlvo = { tipo: 'texto', index: i };
         studioState.dragOffsetX = coords.x - t.x;
         studioState.dragOffsetY = coords.y - t.y;
-        clicouEmTexto = true;
 
         sincronizarCamposComTextoAtivo();
         desenharNoCanvas();
@@ -350,27 +428,37 @@ function startDrag(e) {
       }
     }
 
-    // Se clicou fora de todos os textos, remove a seleção e a borda roxa
-    if (!clicouEmTexto) {
-      studioState.textoAtivoId = null;
-      studioState.arrastandoIndex = null;
-      desenharNoCanvas();
-    }
+    // Clique fora: desseleciona
+    studioState.textoAtivoId = null;
+    studioState.adesivoAtivoId = null;
+    studioState.arrastandoAlvo = null;
+    desenharNoCanvas();
   }
 
   function moveDrag(e) {
-    if (studioState.arrastandoIndex === null) return;
+    if (!studioState.arrastandoAlvo) return;
     const coords = getCanvasCoords(e);
-    const t = studioState.textos[studioState.arrastandoIndex];
-    if (t) {
-      t.x = coords.x - studioState.dragOffsetX;
-      t.y = coords.y - studioState.dragOffsetY;
-      desenharNoCanvas();
+    const { tipo, index } = studioState.arrastandoAlvo;
+
+    if (tipo === 'texto') {
+      const t = studioState.textos[index];
+      if (t) {
+        t.x = coords.x - studioState.dragOffsetX;
+        t.y = coords.y - studioState.dragOffsetY;
+        desenharNoCanvas();
+      }
+    } else if (tipo === 'adesivo') {
+      const a = studioState.adesivos[index];
+      if (a) {
+        a.x = coords.x - studioState.dragOffsetX;
+        a.y = coords.y - studioState.dragOffsetY;
+        desenharNoCanvas();
+      }
     }
   }
 
   function stopDrag() {
-    studioState.arrastandoIndex = null;
+    studioState.arrastandoAlvo = null;
   }
 
   canvas.addEventListener('mousedown', startDrag);
@@ -450,7 +538,6 @@ function processarArquivoLocal(file) {
   reader.readAsDataURL(file);
 }
 
-
 export function carregarImagemNoStudio(src, filename) {
   const img = new Image();
   img.crossOrigin = 'anonymous';
@@ -490,7 +577,7 @@ export function desenharNoCanvas() {
 
   ctx.clearRect(0, 0, W, H);
 
-// 1. Fundo Base Colorido
+  // 1. Fundo Base Colorido
   if (studioState.corFundo && studioState.corFundo !== 'transparent') {
     ctx.fillStyle = studioState.corFundo;
     ctx.fillRect(0, 0, W, H);
@@ -507,23 +594,42 @@ export function desenharNoCanvas() {
 
     ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, W, H);
 
-    // 3. Se escolheu uma cor de fundo, aplica a tonalidade diretamente na imagem
+    // Cor por cima / tonalidade
     if (studioState.corFundo && studioState.corFundo !== 'transparent') {
       ctx.save();
-      ctx.globalCompositeOperation = 'color'; // Tinge a imagem com a cor escolhida
+      ctx.globalCompositeOperation = 'color';
       ctx.fillStyle = studioState.corFundo;
       ctx.fillRect(0, 0, W, H);
       ctx.restore();
     }
   }
 
+  // 3. Adesivos / Emojis
+  studioState.adesivos.forEach(a => {
+    ctx.font = `${a.tamanho}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(a.emoji, a.x, a.y);
+
+    if (a.id === studioState.adesivoAtivoId) {
+      ctx.save();
+      ctx.strokeStyle = '#9d4edd';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.strokeRect(a.x - a.tamanho / 2 - 4, a.y - a.tamanho / 2 - 4, a.tamanho + 8, a.tamanho + 8);
+      ctx.restore();
+    }
+  });
+
+  // 4. Textos
   studioState.textos.forEach(t => {
     if (!t.legenda) return;
 
     ctx.font = `900 ${t.tamanho}px "${t.fonte}", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-// Borda sólida com alças nos cantos e laterais (Estilo Imagem 2)
+
+    // Borda sólida com alças no texto ativo
     if (t.id === studioState.textoAtivoId) {
       const largura = ctx.measureText(t.legenda).width;
       const padX = 14;
@@ -534,14 +640,11 @@ export function desenharNoCanvas() {
       const bh = t.tamanho + padY * 2;
 
       ctx.save();
-      
-      // 1. Linha contínua roxa
       ctx.setLineDash([]);
       ctx.strokeStyle = '#9d4edd';
       ctx.lineWidth = 2;
       ctx.strokeRect(bx, by, bw, bh);
 
-      // Função auxiliar para desenhar os círculos brancos dos cantos
       function desenharAlcaCirculo(x, y) {
         ctx.beginPath();
         ctx.arc(x, y, 5, 0, Math.PI * 2);
@@ -552,7 +655,6 @@ export function desenharNoCanvas() {
         ctx.stroke();
       }
 
-      // Função auxiliar para as alças retangulares do meio das laterais
       function desenharAlcaPilar(x, y) {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(x - 2, y - 6, 4, 12);
@@ -561,7 +663,13 @@ export function desenharNoCanvas() {
         ctx.strokeRect(x - 2, y - 6, 4, 12);
       }
 
-    
+      desenharAlcaCirculo(bx, by);
+      desenharAlcaCirculo(bx + bw, by);
+      desenharAlcaCirculo(bx, by + bh);
+      desenharAlcaCirculo(bx + bw, by + bh);
+      desenharAlcaPilar(bx, by + bh / 2);
+      desenharAlcaPilar(bx + bw, by + bh / 2);
+      ctx.restore();
     }
 
     if (!t.semContorno) {
@@ -584,12 +692,15 @@ function exportarECompartilhar(tipoAcao) {
     return;
   }
 
-  const idOriginal = studioState.textoAtivoId;
+  const idOriginalTexto = studioState.textoAtivoId;
+  const idOriginalAdesivo = studioState.adesivoAtivoId;
   studioState.textoAtivoId = null;
+  studioState.adesivoAtivoId = null;
   desenharNoCanvas();
 
   canvas.toBlob(async (blob) => {
-    studioState.textoAtivoId = idOriginal;
+    studioState.textoAtivoId = idOriginalTexto;
+    studioState.adesivoAtivoId = idOriginalAdesivo;
     desenharNoCanvas();
 
     if (!blob) {
