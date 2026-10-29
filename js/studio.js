@@ -1,25 +1,32 @@
 import { compartilharSticker } from './share.js';
-import { CustomColorPicker } from './cor.js';
 
 export const studioState = {
   imagemAtual: null,
-  modo: 'original',
   corFundo: 'transparent',
-  legenda: '',
-  fonte: 'Impact',
-  tamanho: 44,
-  corTexto: '#ffffff',
-  corContorno: '#000000',
-  semContorno: false,
-  textX: 256,
-  textY: 450,
-  isDragging: false,
-  filename: 'minha-figurinha.webp'
+  filename: 'minha-figurinha.webp',
+  textos: [
+    {
+      id: 1,
+      legenda: 'Digite algo',
+      x: 256,
+      y: 256,
+      tamanho: 44,
+      fonte: 'Impact',
+      corTexto: '#ffffff',
+      corContorno: '#000000',
+      semContorno: false
+    }
+  ],
+  textoAtivoId: 1,
+  arrastandoIndex: null,
+  dragOffsetX: 0,
+  dragOffsetY: 0
 };
 
-/**
- * Inicializa os ouvintes e lógica de interface do Estúdio
- */
+function getTextoAtivo() {
+  return studioState.textos.find(t => t.id === studioState.textoAtivoId) || studioState.textos[0];
+}
+
 export function inicializarStudio() {
   const canvas = document.getElementById('studioCanvas');
   const modal = document.getElementById('modalStudio');
@@ -28,7 +35,6 @@ export function inicializarStudio() {
 
   if (!canvas || !modal) return;
 
-  // Abertura e fechamento do modal
   if (btnAbrir) {
     btnAbrir.addEventListener('click', () => {
       modal.classList.add('active');
@@ -47,17 +53,14 @@ export function inicializarStudio() {
     if (e.target === modal) fecharModal();
   });
 
-  // Elementos do estúdio
   const inputCaption = document.getElementById('stickerCaptionInput');
-  const btnOriginal = document.getElementById('btnModeOriginal');
-  const btnSquare = document.getElementById('btnModeSquare');
   const fileInput = document.getElementById('imageUploadInput');
   const dropArea = document.getElementById('dropArea');
   const btnDelete = document.getElementById('btnDeleteImage');
   const btnSend = document.getElementById('btnStudioSend');
   const btnDownload = document.getElementById('btnStudioDownload');
+  const mainDock = document.getElementById('studioMainDock');
 
-  // Gavetas inferiores (Bottom Sheets)
   const btnOpenText = document.getElementById('btnOpenTextSheet');
   const btnOpenBg = document.getElementById('btnOpenBgSheet');
   const sheetText = document.getElementById('sheetText');
@@ -68,42 +71,97 @@ export function inicializarStudio() {
   const verticalSliderWrap = document.getElementById('verticalSliderWrap');
   const verticalFontSizeSlider = document.getElementById('verticalFontSizeSlider');
 
-  function fecharGavetas() {
+  const btnAddMoreText = document.getElementById('btnAddMoreText');
+  const btnDeleteSelectedText = document.getElementById('btnDeleteSelectedText');
+
+function fecharGavetas() {
     if (sheetText) sheetText.classList.add('hidden');
     if (sheetBg) sheetBg.classList.add('hidden');
     if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
+    if (mainDock) mainDock.style.display = 'flex';
+    studioState.textoAtivoId = null; // Tira a borda ao fechar a gaveta
+    desenharNoCanvas();
   }
 
-  // Alternar gaveta de TEXTO
+  function sincronizarCamposComTextoAtivo() {
+    const t = getTextoAtivo();
+    if (!t) return;
+    if (inputCaption) inputCaption.value = t.legenda;
+    if (verticalFontSizeSlider) verticalFontSizeSlider.value = t.tamanho;
+  }
+
   if (btnOpenText) {
     btnOpenText.addEventListener('click', () => {
       if (sheetBg) sheetBg.classList.add('hidden');
       if (sheetText) sheetText.classList.remove('hidden');
       if (verticalSliderWrap) verticalSliderWrap.classList.remove('hidden');
+      if (mainDock) mainDock.style.display = 'none';
+      sincronizarCamposComTextoAtivo();
       if (inputCaption) inputCaption.focus();
     });
   }
 
-  if (btnCloseText) {
-    btnCloseText.addEventListener('click', () => {
-      if (sheetText) sheetText.classList.add('hidden');
-      if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
-    });
-  }
+  if (btnCloseText) btnCloseText.addEventListener('click', fecharGavetas);
 
-  // Alternar gaveta de FUNDO
   if (btnOpenBg) {
     btnOpenBg.addEventListener('click', () => {
       if (sheetText) sheetText.classList.add('hidden');
       if (verticalSliderWrap) verticalSliderWrap.classList.add('hidden');
       if (sheetBg) sheetBg.classList.remove('hidden');
+      if (mainDock) mainDock.style.display = 'none';
     });
   }
 
   if (btnCloseBg) btnCloseBg.addEventListener('click', fecharGavetas);
   if (btnApplyBg) btnApplyBg.addEventListener('click', fecharGavetas);
 
-  // Sub-abas da gaveta de texto (Teclado, Aa, Cores)
+if (btnAddMoreText) {
+    btnAddMoreText.addEventListener('click', () => {
+      // Trava de segurança: máximo 10 camadas de texto
+      if (studioState.textos.length >= 10) {
+        mostrarToast('Limite máximo de 10 textos atingido!');
+        return;
+      }
+
+      const novoId = Date.now();
+      const novoTexto = {
+        id: novoId,
+        legenda: `Texto ${studioState.textos.length + 1}`,
+        x: 256,
+        y: Math.min(450, 150 + studioState.textos.length * 30),
+        tamanho: 44,
+        fonte: 'Impact',
+        corTexto: '#ffffff',
+        corContorno: '#000000',
+        semContorno: false
+      };
+
+      studioState.textos.push(novoTexto);
+      studioState.textoAtivoId = novoId;
+
+      sincronizarCamposComTextoAtivo();
+      desenharNoCanvas();
+      if (inputCaption) {
+        inputCaption.focus();
+        inputCaption.select();
+      }
+    });
+  }
+
+  if (btnDeleteSelectedText) {
+    btnDeleteSelectedText.addEventListener('click', () => {
+      if (studioState.textos.length <= 1) {
+        const t = getTextoAtivo();
+        if (t) t.legenda = '';
+      } else {
+        studioState.textos = studioState.textos.filter(t => t.id !== studioState.textoAtivoId);
+        studioState.textoAtivoId = studioState.textos[studioState.textos.length - 1].id;
+      }
+      sincronizarCamposComTextoAtivo();
+      desenharNoCanvas();
+    });
+  }
+
   document.querySelectorAll('.sheet-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.sheet-tab-btn').forEach(b => b.classList.remove('active'));
@@ -116,27 +174,29 @@ export function inicializarStudio() {
     });
   });
 
-  // Slider vertical de tamanho
   if (verticalFontSizeSlider) {
     verticalFontSizeSlider.addEventListener('input', (e) => {
-      studioState.tamanho = parseInt(e.target.value, 10) || 44;
-      desenharNoCanvas();
+      const t = getTextoAtivo();
+      if (t) {
+        t.tamanho = parseInt(e.target.value, 10) || 44;
+        desenharNoCanvas();
+      }
     });
   }
 
-  // Seletor de fontes (Aa)
   document.querySelectorAll('.font-card-item').forEach(card => {
     card.addEventListener('click', () => {
       document.querySelectorAll('.font-card-item').forEach(c => c.classList.remove('active'));
       card.classList.add('active');
-      studioState.fonte = card.getAttribute('data-font') || 'Impact';
-      desenharNoCanvas();
+      const t = getTextoAtivo();
+      if (t) {
+        t.fonte = card.getAttribute('data-font') || 'Impact';
+        desenharNoCanvas();
+      }
     });
   });
 
-// --- CONTROLE DE ALVO: TEXTO OU CONTORNO ---
-  let alvoCorAtual = 'texto'; // 'texto' ou 'contorno'
-
+  let alvoCorAtual = 'texto';
   const btnTargetText = document.getElementById('btnTargetText');
   const btnTargetStroke = document.getElementById('btnTargetStroke');
   const btnToggleOutline = document.getElementById('btnToggleOutline');
@@ -159,33 +219,35 @@ export function inicializarStudio() {
 
   if (btnToggleOutline) {
     btnToggleOutline.addEventListener('click', () => {
-      studioState.semContorno = !studioState.semContorno;
-      btnToggleOutline.classList.toggle('active', studioState.semContorno);
-      desenharNoCanvas();
+      const t = getTextoAtivo();
+      if (t) {
+        t.semContorno = !t.semContorno;
+        btnToggleOutline.classList.toggle('active', t.semContorno);
+        desenharNoCanvas();
+      }
     });
   }
 
-  // --- CARROSSEL DE CORES (ALTERA TEXTO OU CONTORNO CONFORME A ABA ATIVA) ---
   document.querySelectorAll('.color-circle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.color-circle-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      
-      const corSelecionada = btn.getAttribute('data-color') || '#ffffff';
 
+      const t = getTextoAtivo();
+      if (!t) return;
+
+      const cor = btn.getAttribute('data-color') || '#ffffff';
       if (alvoCorAtual === 'texto') {
-        studioState.corTexto = corSelecionada;
+        t.corTexto = cor;
       } else {
-        studioState.corContorno = corSelecionada;
-        studioState.semContorno = false;
+        t.corContorno = cor;
+        t.semContorno = false;
         if (btnToggleOutline) btnToggleOutline.classList.remove('active');
       }
-
       desenharNoCanvas();
     });
   });
 
-  // Carrossel de cores de fundo
   document.querySelectorAll('.bg-circle-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.bg-circle-btn').forEach(b => b.classList.remove('active'));
@@ -195,31 +257,16 @@ export function inicializarStudio() {
     });
   });
 
-  // Input de legenda
   if (inputCaption) {
     inputCaption.addEventListener('input', (e) => {
-      studioState.legenda = e.target.value;
-      desenharNoCanvas();
+      const t = getTextoAtivo();
+      if (t) {
+        t.legenda = e.target.value;
+        desenharNoCanvas();
+      }
     });
   }
 
-  // Posição rápida (Topo, Centro, Base)
-  document.querySelectorAll('.text-pos-group .btn-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.text-pos-group .btn-toggle').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const pos = btn.getAttribute('data-pos');
-      studioState.textX = 256;
-      if (pos === 'top') studioState.textY = studioState.tamanho + 30;
-      if (pos === 'center') studioState.textY = 256;
-      if (pos === 'bottom') studioState.textY = 512 - studioState.tamanho - 20;
-
-      desenharNoCanvas();
-    });
-  });
-
-  // Arrastar texto no canvas
   function getCanvasCoords(e) {
     const rect = canvas.getBoundingClientRect();
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -230,25 +277,59 @@ export function inicializarStudio() {
     };
   }
 
-  function startDrag(e) {
-    if (!studioState.legenda.trim()) return;
-    studioState.isDragging = true;
+function startDrag(e) {
     const coords = getCanvasCoords(e);
-    studioState.textX = coords.x;
-    studioState.textY = coords.y;
-    desenharNoCanvas();
+    const ctx = canvas.getContext('2d');
+    let clicouEmTexto = false;
+
+    // Percorre os textos para verificar se o clique foi em algum deles
+    for (let i = studioState.textos.length - 1; i >= 0; i--) {
+      const t = studioState.textos[i];
+      if (!t.legenda) continue;
+
+      ctx.font = `900 ${t.tamanho}px "${t.fonte}", sans-serif`;
+      const largura = ctx.measureText(t.legenda).width;
+      const altura = t.tamanho;
+
+      if (
+        coords.x >= t.x - largura / 2 - 20 &&
+        coords.x <= t.x + largura / 2 + 20 &&
+        coords.y >= t.y - altura / 2 - 20 &&
+        coords.y <= t.y + altura / 2 + 20
+      ) {
+        studioState.textoAtivoId = t.id;
+        studioState.arrastandoIndex = i;
+        studioState.dragOffsetX = coords.x - t.x;
+        studioState.dragOffsetY = coords.y - t.y;
+        clicouEmTexto = true;
+
+        sincronizarCamposComTextoAtivo();
+        desenharNoCanvas();
+        return;
+      }
+    }
+
+    // Se clicou fora de todos os textos, remove a seleção e a borda roxa
+    if (!clicouEmTexto) {
+      studioState.textoAtivoId = null;
+      studioState.arrastandoIndex = null;
+      desenharNoCanvas();
+    }
   }
 
   function moveDrag(e) {
-    if (!studioState.isDragging) return;
+    if (studioState.arrastandoIndex === null) return;
     const coords = getCanvasCoords(e);
-    studioState.textX = coords.x;
-    studioState.textY = coords.y;
-    desenharNoCanvas();
+    const t = studioState.textos[studioState.arrastandoIndex];
+    if (t) {
+      t.x = coords.x - studioState.dragOffsetX;
+      t.y = coords.y - studioState.dragOffsetY;
+      desenharNoCanvas();
+    }
   }
 
   function stopDrag() {
-    studioState.isDragging = false;
+    studioState.arrastandoIndex = null;
   }
 
   canvas.addEventListener('mousedown', startDrag);
@@ -259,7 +340,6 @@ export function inicializarStudio() {
   window.addEventListener('touchmove', moveDrag, { passive: true });
   window.addEventListener('touchend', stopDrag);
 
-  // Remover foto ativa
   if (btnDelete) {
     btnDelete.addEventListener('click', () => {
       studioState.imagemAtual = null;
@@ -279,24 +359,6 @@ export function inicializarStudio() {
     });
   }
 
-  // Modos de enquadramento
-  if (btnOriginal && btnSquare) {
-    btnOriginal.addEventListener('click', () => {
-      btnOriginal.classList.add('active');
-      btnSquare.classList.remove('active');
-      studioState.modo = 'original';
-      desenharNoCanvas();
-    });
-
-    btnSquare.addEventListener('click', () => {
-      btnSquare.classList.add('active');
-      btnOriginal.classList.remove('active');
-      studioState.modo = 'square';
-      desenharNoCanvas();
-    });
-  }
-
-  // Upload de arquivo
   if (fileInput) {
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -304,7 +366,6 @@ export function inicializarStudio() {
     });
   }
 
-  // Drag & Drop
   if (dropArea) {
     ['dragenter', 'dragover'].forEach(name => {
       dropArea.addEventListener(name, (e) => {
@@ -328,7 +389,6 @@ export function inicializarStudio() {
     });
   }
 
-  // Botões de exportação
   if (btnSend) {
     btnSend.addEventListener('click', () => exportarECompartilhar('whatsapp'));
   }
@@ -337,12 +397,8 @@ export function inicializarStudio() {
     btnDownload.addEventListener('click', () => exportarECompartilhar('download'));
   }
 
-
-// Habilita rolagem arrastável nas duas barras de cores
   habilitarRolagemArrastavel(document.querySelector('.colors-carousel-bar'));
   habilitarRolagemArrastavel(document.querySelector('.bg-colors-carousel-bar'));
-
-
 }
 
 function processarArquivoLocal(file) {
@@ -392,53 +448,78 @@ export function desenharNoCanvas() {
 
   ctx.clearRect(0, 0, W, H);
 
-  // 1. Fundo colorido
   if (studioState.corFundo && studioState.corFundo !== 'transparent') {
     ctx.fillStyle = studioState.corFundo;
     ctx.fillRect(0, 0, W, H);
   }
 
-  // 2. Imagem base
   if (img) {
-    if (studioState.modo === 'square') {
-      const minDim = Math.min(img.naturalWidth || img.width, img.naturalHeight || img.height);
-      const sx = ((img.naturalWidth || img.width) - minDim) / 2;
-      const sy = ((img.naturalHeight || img.height) - minDim) / 2;
-      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, W, H);
-    } else {
-      const scale = Math.min(W / img.width, H / img.height);
-      const nw = img.width * scale;
-      const nh = img.height * scale;
-      const nx = (W - nw) / 2;
-      const ny = (H - nh) / 2;
-      ctx.drawImage(img, nx, ny, nw, nh);
-    }
+    const scale = Math.min(W / img.width, H / img.height);
+    const nw = img.width * scale;
+    const nh = img.height * scale;
+    const nx = (W - nw) / 2;
+    const ny = (H - nh) / 2;
+    ctx.drawImage(img, nx, ny, nw, nh);
   }
 
-  // 3. Legenda com contorno
-  if (studioState.legenda.trim()) {
-    const texto = studioState.legenda;
-    const tamanho = studioState.tamanho;
-    const fonte = studioState.fonte;
+  studioState.textos.forEach(t => {
+    if (!t.legenda) return;
 
-    ctx.font = `900 ${tamanho}px "${fonte}", sans-serif`;
+    ctx.font = `900 ${t.tamanho}px "${t.fonte}", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
+// Borda sólida com alças nos cantos e laterais (Estilo Imagem 2)
+    if (t.id === studioState.textoAtivoId) {
+      const largura = ctx.measureText(t.legenda).width;
+      const padX = 14;
+      const padY = 8;
+      const bx = t.x - largura / 2 - padX;
+      const by = t.y - t.tamanho / 2 - padY;
+      const bw = largura + padX * 2;
+      const bh = t.tamanho + padY * 2;
 
-    const posX = studioState.textX;
-    const posY = studioState.textY;
+      ctx.save();
+      
+      // 1. Linha contínua roxa
+      ctx.setLineDash([]);
+      ctx.strokeStyle = '#9d4edd';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(bx, by, bw, bh);
 
-    if (!studioState.semContorno) {
-      ctx.strokeStyle = studioState.corContorno;
-      ctx.lineWidth = Math.max(4, Math.round(tamanho / 6));
-      ctx.lineJoin = 'round';
-      ctx.miterLimit = 2;
-      ctx.strokeText(texto, posX, posY);
+      // Função auxiliar para desenhar os círculos brancos dos cantos
+      function desenharAlcaCirculo(x, y) {
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.strokeStyle = '#9d4edd';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      }
+
+      // Função auxiliar para as alças retangulares do meio das laterais
+      function desenharAlcaPilar(x, y) {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(x - 2, y - 6, 4, 12);
+        ctx.strokeStyle = '#9d4edd';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x - 2, y - 6, 4, 12);
+      }
+
+    
     }
 
-    ctx.fillStyle = studioState.corTexto;
-    ctx.fillText(texto, posX, posY);
-  }
+    if (!t.semContorno) {
+      ctx.strokeStyle = t.corContorno;
+      ctx.lineWidth = Math.max(4, Math.round(t.tamanho / 6));
+      ctx.lineJoin = 'round';
+      ctx.miterLimit = 2;
+      ctx.strokeText(t.legenda, t.x, t.y);
+    }
+
+    ctx.fillStyle = t.corTexto;
+    ctx.fillText(t.legenda, t.x, t.y);
+  });
 }
 
 function exportarECompartilhar(tipoAcao) {
@@ -448,7 +529,14 @@ function exportarECompartilhar(tipoAcao) {
     return;
   }
 
+  const idOriginal = studioState.textoAtivoId;
+  studioState.textoAtivoId = null;
+  desenharNoCanvas();
+
   canvas.toBlob(async (blob) => {
+    studioState.textoAtivoId = idOriginal;
+    desenharNoCanvas();
+
     if (!blob) {
       mostrarToast('Erro ao exportar a imagem.');
       return;
@@ -476,17 +564,6 @@ function exportarECompartilhar(tipoAcao) {
   }, 'image/webp', 0.9);
 }
 
-function mostrarToast(texto) {
-  const toast = document.getElementById('toastMessage');
-  if (!toast) return;
-  toast.textContent = texto;
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2400);
-}
-
-/**
- * Habilita arraste com mouse para simular a rolagem de toque no desktop
- */
 function habilitarRolagemArrastavel(elemento) {
   if (!elemento) return;
 
@@ -508,7 +585,15 @@ function habilitarRolagemArrastavel(elemento) {
     if (!isDown) return;
     e.preventDefault();
     const x = e.pageX - elemento.offsetLeft;
-    const walk = (x - startX) * 1.5; // Multiplicador de velocidade
+    const walk = (x - startX) * 1.5;
     elemento.scrollLeft = scrollLeft - walk;
   });
+}
+
+function mostrarToast(texto) {
+  const toast = document.getElementById('toastMessage');
+  if (!toast) return;
+  toast.textContent = texto;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2400);
 }
