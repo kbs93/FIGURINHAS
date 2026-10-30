@@ -2,6 +2,7 @@ import { categoriasMap, gerarFallback } from './data.js';
 import { compartilharSticker } from './share.js';
 import { inicializarStudio } from './studio.js';
 import { CustomColorPicker } from './cor.js';
+import { inicializarApresentacao } from './intro.js';
 
 // Função para calcular luminosidade e ajustar o texto claro/escuro automaticamente
 function getContrastColor(hex) {
@@ -78,9 +79,10 @@ const state = {
   stickerSelecionado: null
 };
 document.addEventListener('DOMContentLoaded', () => {
+  inicializarApresentacao();
   renderizarGrade();
   iniciarFiltros();
-  renderizarCategoriasBottomSheet(); /* Renderiza a lista com badges de contagem */
+  renderizarCategoriasBottomSheet();
   iniciarBusca();
   iniciarCliquesGrade();
   iniciarModalPreview();
@@ -89,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
   inicializarStudio();
   iniciarBuscaMobileFlutuante();
 });
-
 /**
  * 1. Renderiza a grade de figurinhas
  */
@@ -528,4 +529,19 @@ renderizarGrade();
       document.body.classList.remove('menu-open');
     }
   });
+}
+
+
+
+
+
+//just for reloading animation ;)
+
+var elem = document.getElementById("root")
+
+window.onclick = function(){
+  document.body.removeChild(elem)
+  setTimeout(function(){
+      document.body.prepend(elem)
+  }, 100)
 }

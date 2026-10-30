@@ -21,73 +21,22 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 /* Alinha o logo e o botão X perfeitamente na mesma linha */
 /* Topo com Logo e Seletor Tema alinhados à esquerda e botão X à direita */
-.sidebar-top-bar { 
-  display: flex; 
-  align-items: center; 
-  justify-content: space-between; 
-  width: 100%; 
-  gap: 12px;
-}
+.sidebar-top-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 12px; }
 
-.sidebar-brand-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
+.sidebar-brand-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 
-.close-sidebar-mobile-btn { 
-  display: none; 
-  background: transparent; 
-  border: none; 
-  color: var(--text-main); 
-  font-size: 2rem; 
-  line-height: 1; 
-  cursor: pointer; 
-  padding: 4px; 
-}
+.close-sidebar-mobile-btn { display: none; background: transparent; border: none; color: var(--text-main); font-size: 2rem; line-height: 1; cursor: pointer; padding: 4px; }
 
 /* Botão Pílula "Tema ●" */
-.compact-theme-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--bg-pill);
-  border: 1px solid var(--border-subtle);
-  padding: 5px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
 
-.compact-theme-pill:hover {
-  border-color: var(--accent-green);
-}
+.compact-theme-pill:hover { border-color: var(--accent-green); }
 
-.theme-pill-text {
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-main);
-  letter-spacing: 0.2px;
-}
+.theme-pill-text { font-size: 0.88rem; font-weight: 600; color: var(--text-main); letter-spacing: 0.2px; }
 
-.compact-theme-pill .color-disc {
-  width: 14px;
-  height: 14px;
-  min-width: 14px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  display: inline-block;
-}
-.left-content { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 12px; 
-  flex: 1; 
-  min-height: 0; /* Essencial no flexbox para permitir rolagem dos elementos internos */
-  overflow: hidden;
-}
+.compact-theme-pill .color-disc { width: 14px; height: 14px; min-width: 14px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.2); display: inline-block; }
+
+.left-content { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; /* Essencial no flexbox para permitir rolagem dos elementos internos */ overflow: hidden; }
+
 /* ================= BOTÃO CRIAR FIGURINHA ================= */
 .actions-panel { display: flex; flex-direction: column; margin-top: 24px; }
 
@@ -122,7 +71,7 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 .logo-bolt { color: #f6c343; }
 
-.logo-green { color: var(--accent-green); }
+.logo-green { color: rgb(0, 135, 245); }
 
 .mobile-header-actions { display: flex; align-items: center; gap: 12px; }
 
@@ -249,347 +198,89 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 /* ================= RESPONSIVIDADE MOBILE CORRIGIDA (DIREITA) ================= */
 /* ================= PADRÕES DA BOTTOM SHEET (DESKTOP ESCONDIDOS) ================= */
-.bottom-sheet-drag-handle {
-  display: none;
-}
-.mobile-sheet-links-grid {
-  display: none;
-}
+.bottom-sheet-drag-handle { display: none; }
+
+.mobile-sheet-links-grid { display: none; }
+
 /* Lista vertical de categorias no Painel Lateral (Desktop e Mobile) */
-.sheet-categories-section {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  overflow-y: auto;
-  margin: 14px 0 10px;
-  padding-right: 4px;
-}
+.sheet-categories-section { display: flex; flex-direction: column; flex: 1; overflow-y: auto; margin: 14px 0 10px; padding-right: 4px; }
 
-.sheet-categories-section::-webkit-scrollbar {
-  width: 4px;
-}
+.sheet-categories-section::-webkit-scrollbar { width: 4px; }
 
-.sheet-categories-section::-webkit-scrollbar-thumb {
-  background: var(--border-subtle);
-  border-radius: 4px;
-}
+.sheet-categories-section::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 4px; }
 
-.sheet-category-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  border-radius: 8px;
-  color: var(--text-main);
-  background: transparent;
-  border: none;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  text-align: left;
-  width: 100%;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
+.sheet-category-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; color: var(--text-main); background: transparent; border: none; font-size: 0.95rem; font-weight: 500; cursor: pointer; text-align: left; width: 100%; transition: background-color 0.15s ease,color 0.15s ease; }
 
-.sheet-category-item:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
+.sheet-category-item:hover { background-color: rgba(255, 255, 255, 0.05); }
 
-.sheet-category-item.active {
-  background-color: var(--bg-pill);
-  color: var(--accent-green);
-  font-weight: 700;
-}
+.sheet-category-item.active { background-color: var(--bg-pill); color: var(--accent-green); font-weight: 700; }
 
 /* Badge redondo/oval de contagem alinhado à direita */
-.sheet-category-badge {
-  background-color: #1a252f;
-  color: var(--text-dim);
-  font-size: 0.78rem;
-  font-weight: 600;
-  padding: 2px 10px;
-  border-radius: 12px;
-  border: 1px solid var(--border-subtle);
-  min-width: 28px;
-  text-align: center;
-}
+.sheet-category-badge { background-color: #1a252f; color: var(--text-dim); font-size: 0.78rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; border: 1px solid var(--border-subtle); min-width: 28px; text-align: center; }
 
-.sheet-category-item.active .sheet-category-badge {
-  background-color: var(--accent-green);
-  color: #0b141a;
-  border-color: var(--accent-green);
-}
+.sheet-category-item.active .sheet-category-badge { background-color: var(--accent-green); color: #0b141a; border-color: var(--accent-green); }
 
 /* ================= RESPONSIVIDADE MOBILE COM BOTTOM SHEET ================= */
 @media (max-width: 950px) {
-
-.mobile-only {
-    display: block;
-    background-color: #0b141a;
-    border-bottom: 1px solid #1e2c35;
-    position: static;
-    color: #e9edef; /* Trava o texto padrão do topo como claro */
-  }
-
+  .mobile-only { display: block; background-color: #0b141a; border-bottom: 1px solid #1e2c35; position: static; color: #e9edef; /* Trava o texto padrão do topo como claro */ }
   /* Trava o nome "Figurando" sempre branco/claro */
-  .mobile-only .logo-name {
-    color: #e9edef;
-  }
-
+  .mobile-only .logo-name { color: #e9edef; }
   /* Trava o texto "Tema" sempre branco/claro */
-  .mobile-only .theme-pill-text {
-    color: #e9edef;
-  }
-
+  .mobile-only .theme-pill-text { color: #e9edef; }
   /* Garante que o botão hambúrguer mantenha os traços claros visíveis */
-  .mobile-only .menu-btn .bar {
-    background-color: #e9edef;
-  }
-  .header-container {
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .split-layout {
-    flex-direction: column;
-    height: auto;
-    overflow: visible;
-  }
-
+  .mobile-only .menu-btn .bar { background-color: #e9edef; }
+  .split-layout { flex-direction: column; height: auto; overflow: visible; }
   /* O PAINEL TRANSFORMA-SE NA BOTTOM SHEET FLUTUANTE (DE BAIXO PARA CIMA) */
-  aside.split-left {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    width: 100%;
-    min-width: 100%;
-    max-height: 85vh;
-    max-height: 85dvh;
-    background-color: var(--bg-sidebar);
-    border-top: 1px solid var(--border-subtle);
-    border-right: none;
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    z-index: 2005;
-    display: flex;
-    flex-direction: column;
-    padding: 8px 16px 20px;
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
-    transform: translateY(105%);
-    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-    overflow: hidden;
-  }
-
+  aside.split-left { position: fixed; bottom: 0; left: 0; right: 0; top: auto; width: 100%; min-width: 100%; max-height: 85vh; max-height: 85dvh; background-color: var(--bg-sidebar); border-top: 1px solid var(--border-subtle); border-right: none; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 2005; display: flex; flex-direction: column; padding: 8px 16px 20px; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6); transform: translateY(105%); transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1); overflow: hidden; }
   /* Quando aberto: sobe suavemente */
-  aside.split-left.open {
-    transform: translateY(0);
-  }
-
+  aside.split-left.open { transform: translateY(0); }
   /* Tracinho indicador de arrastar no topo da folha */
-  .bottom-sheet-drag-handle {
-    display: block;
-    width: 44px;
-    height: 4px;
-    background-color: var(--border-subtle);
-    border-radius: 4px;
-    margin: 4px auto 8px;
-  }
-
-  .sidebar-top-bar {
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-subtle);
-  }
-
-  .close-sidebar-mobile-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
+  .bottom-sheet-drag-handle { display: block; width: 44px; height: 4px; background-color: var(--border-subtle); border-radius: 4px; margin: 4px auto 8px; }
+  .sidebar-top-bar { padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
+  .close-sidebar-mobile-btn { display: flex; align-items: center; justify-content: center; }
   /* Links institucionais compactos em 2 colunas como no exemplo */
-  .mobile-sheet-links-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px 12px;
-    padding: 10px 4px 6px;
-  }
-
-  .mobile-sheet-links-grid a {
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: color 0.15s ease;
-  }
-
-  .mobile-sheet-links-grid a:hover {
-    color: var(--text-main);
-  }
-
+  .mobile-sheet-links-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; padding: 10px 4px 6px; }
+  .mobile-sheet-links-grid a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; transition: color 0.15s ease; }
+  .mobile-sheet-links-grid a:hover { color: var(--text-main); }
   /* Oculta os blocos de texto grandes desktop no mobile */
-  .desktop-info-block,
-  .footer-sidebar {
-    display: none;
-  }
-
+  .desktop-info-block, .footer-sidebar { display: none; }
   /* Lista de categorias da Bottom Sheet com barra de rolagem vertical */
-/* Lista de categorias da Bottom Sheet com rolagem completa livre */
-  .sheet-categories-section {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0; /* Permite encolher e ativar scrollbar */
-    overflow-y: auto !important; /* Garante que a rolagem funcione sempre */
-    overscroll-behavior: contain; /* Impede arrastar a página de fundo junto */
-    margin-top: 8px;
-    padding: 4px 2px 40px; /* 40px de respiro no final para exibir 'Religião' e todos os itens */
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .sheet-categories-list {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-  }
-
-  .sheet-category-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 14px;
-    border-radius: 10px;
-    color: var(--text-main);
-    background: transparent;
-    border: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-    transition: background-color 0.15s ease, color 0.15s ease;
-  }
-
-  .sheet-category-item:hover,
-  .sheet-category-item:active {
-    background-color: var(--bg-pill);
-  }
-
-  .sheet-category-item.active {
-    background-color: var(--bg-pill);
-    color: var(--accent-green);
-    font-weight: 700;
-  }
-
+  /* Lista de categorias da Bottom Sheet com rolagem completa livre */
+  .sheet-categories-section { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; /* Permite encolher e ativar scrollbar */ overflow-y: auto!important; /* Garante que a rolagem funcione sempre */ overscroll-behavior: contain; /* Impede arrastar a página de fundo junto */ margin-top: 8px; padding: 4px 2px 40px; /* 40px de respiro no final para exibir 'Religião' e todos os itens */ -webkit-overflow-scrolling: touch; }
+  .sheet-categories-list { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+  .sheet-category-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 10px; color: var(--text-main); background: transparent; border: none; font-size: 0.95rem; font-weight: 500; cursor: pointer; text-align: left; width: 100%; transition: background-color 0.15s ease,color 0.15s ease; }
+  .sheet-category-item:active, .sheet-category-item:hover { background-color: var(--bg-pill); }
+  .sheet-category-item.active { background-color: var(--bg-pill); color: var(--accent-green); font-weight: 700; }
   /* Pílula com o número de figurinhas (Badge) */
-  .sheet-category-badge {
-    background-color: var(--bg-chip);
-    color: var(--text-dim);
-    font-size: 0.78rem;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 14px;
-    border: 1px solid var(--border-subtle);
-  }
-
-  .sheet-category-item.active .sheet-category-badge {
-    background-color: var(--accent-green);
-    color: #0b141a;
-    border-color: var(--accent-green);
-  }
-
+  .sheet-category-badge { background-color: var(--bg-chip); color: var(--text-dim); font-size: 0.78rem; font-weight: 600; padding: 3px 10px; border-radius: 14px; border: 1px solid var(--border-subtle); }
+  .sheet-category-item.active .sheet-category-badge { background-color: var(--accent-green); color: #0b141a; border-color: var(--accent-green); }
   /* Ajustes da grade e cabeçalho mobile */
-  .split-right {
-    height: auto;
-    overflow-y: visible;
-    padding: 12px 10px;
-  }
-
-  .stickers-sheet {
-    grid-template-columns: repeat(5, 1fr);
-    grid-auto-rows: auto;
-    gap: 6px;
-    padding: 6px 4px;
-  }
-
-  .sticker-cell {
-    height: auto;
-    aspect-ratio: 1/1;
-    padding: 4px;
-    border-radius: 6px;
-  }
-
-  .sticker-preview img {
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  .catalog-status-bar {
-    padding: 2px 6px 6px;
-  }
-
-  .status-count-text {
-    font-size: 0.76rem;
-  }
+  .split-right { height: auto; overflow-y: visible; padding: 12px 10px; }
+  .stickers-sheet { grid-template-columns: repeat(5, 1fr); grid-auto-rows: auto; gap: 6px; padding: 6px 4px; }
+  .sticker-cell { height: auto; aspect-ratio: 1/1; padding: 4px; border-radius: 6px; }
+  .sticker-preview img { max-width: 100%; max-height: 100%; }
+  .catalog-status-bar { padding: 2px 6px 6px; }
+  .status-count-text { font-size: 0.76rem; }
 }
 
 /* Agrupamento da Marca + Tema no Topo */
-.sidebar-brand-group {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
+.sidebar-brand-group { display: flex; align-items: center; gap: 12px; }
 
 /* Botão Pílula Compacto "Tema ●" */
-.compact-theme-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--bg-pill);
-  border: 1px solid var(--border-subtle);
-  padding: 5px 12px;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
+.compact-theme-pill { display: inline-flex; align-items: center; gap: 8px; background-color: var(--bg-pill); border: 1px solid var(--border-subtle); padding: 5px 12px; border-radius: 8px; cursor: pointer; user-select: none; transition: border-color 0.2s ease,background-color 0.2s ease; }
 
-.compact-theme-pill:hover {
-  border-color: var(--accent-green);
-}
+.compact-theme-pill:hover { border-color: var(--accent-green); }
 
-.theme-pill-text {
-  font-size: 0.86rem;
-  font-weight: 600;
-  color: var(--text-main);
-  letter-spacing: 0.2px;
-}
+.theme-pill-text { font-size: 0.86rem; font-weight: 600; color: var(--text-main); letter-spacing: 0.2px; }
 
-.compact-theme-pill .color-disc {
-  width: 14px;
-  height: 14px;
-  min-width: 14px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  display: inline-block;
-}
+.compact-theme-pill .color-disc { width: 14px; height: 14px; min-width: 14px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.2); display: inline-block; }
 
 /* Ajuste das ações no topo mobile para alinhar Tema + Menu Hambúrguer */
 /* Ajuste das ações no topo mobile para afastar Tema e Menu Hambúrguer */
-.mobile-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 82px; /* Aumenta o espaço entre o botão Tema e o menu */
-}
+.mobile-header-actions { display: flex; align-items: center; gap: 82px; /* Aumenta o espaço entre o botão Tema e o menu */ }
 
 /* Margem de respiro adicional à direita do botão Tema */
-#themeColorTriggerMobile {
-  margin-right: 6px;
-}
-
+#themeColorTriggerMobile { margin-right: 6px; }
 
 /* ==========================================================================
    ESTÚDIO DE FIGURINHAS TOTALMENTE VISÍVEL (DESKTOP E MOBILE)
@@ -680,107 +371,507 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 .mobile-search-overlay { display: none; }
 
-
-
 /* ================= COMPORTAMENTO NO MOBILE ================= */
 @media (max-width: 950px) {
   /* Oculta a barra de busca pesada do topo no mobile para ganhar tela */
-/* Oculta a barra de busca, os chips horizontais e o bloco institucional extra no mobile */
-/* Oculta a barra de busca, os chips horizontais, o bloco institucional extra e o botão de tema de dentro do painel mobile */
-  .search-section,
-  .categories-wrapper,
-  .desktop-info-block,
-  .footer-sidebar,
-  aside.split-left .compact-theme-pill {
-    display: none;
-  }
+  /* Oculta a barra de busca, os chips horizontais e o bloco institucional extra no mobile */
+  /* Oculta a barra de busca, os chips horizontais, o bloco institucional extra e o botão de tema de dentro do painel mobile */
+  .categories-wrapper,   .desktop-info-block,   .footer-sidebar,   .search-section, aside.split-left .compact-theme-pill { display: none; }
   /* Exibe o Botão Flutuante circular */
   .fab-search-btn.mobile-only-fab { display: flex; align-items: center; justify-content: center; position: fixed; bottom: 24px; right: 20px; width: 54px; height: 54px; background-color: var(--accent-green); color: #0b141a; border: none; border-radius: 50%; font-size: 1.35rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45); cursor: pointer; z-index: 1000; transition: transform 0.2s ease,background-color 0.2s ease; }
   .fab-search-btn:active { transform: scale(0.92); }
   /* Barra de busca deslizante no topo do mobile */
-
-
   /* Botão X com fundo cinza arredondado */
-  .mobile-search-container .clear-btn {
-    background-color: #0000000a; /* Cinza intermediário */
-    color: #ff0606;
-    border: none;
-    border-radius: 10%;
-    width: 32px;
-    height: 32px;
-    min-width: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.30rem;
-    line-height: 1;
-    cursor: pointer;
-    margin-left: 6px;
-    transition: background-color 0.15s ease;
-  }
-
-  .mobile-search-container .clear-btn:active {
-    background-color: #4b5563; /* Cinza um pouco mais claro ao tocar */
-  }
-.mobile-search-container input { 
-  width: 100%; 
-  background: transparent; 
-  border: none; 
-  outline: none; 
-  color: #e9edef; /* Trava o texto digitado sempre branco/claro */
-  padding: 8px 0; 
-  font-size: 0.95rem; 
-}
-
-.mobile-search-container input::placeholder {
-  color: #8696a0; /* Trava o texto do placeholder legível */
-}
+  .mobile-search-container .clear-btn { background-color: #0000000a; /* Cinza intermediário */ color: #ff0606; border: none; border-radius: 10%; width: 32px; height: 32px; min-width: 22px; display: flex; align-items: center; justify-content: center; font-size: 1.30rem; line-height: 1; cursor: pointer; margin-left: 6px; transition: background-color 0.15s ease; }
+  .mobile-search-container .clear-btn:active { background-color: #4b5563; /* Cinza um pouco mais claro ao tocar */ }
+  .mobile-search-container input { width: 100%; background: transparent; border: none; outline: none; color: #e9edef; /* Trava o texto digitado sempre branco/claro */ padding: 8px 0; font-size: 0.95rem; }
+  .mobile-search-container input::placeholder { color: #8696a0; /* Trava o texto do placeholder legível */ }
   /* Barra de busca deslizante no topo do mobile com fundo escuro fixo */
-  .mobile-search-overlay { 
-    display: flex; 
-    position: fixed; 
-    top: -80px; 
-    left: 0; 
-    width: 100vw; 
-    background-color: #0b141a; 
-    border-bottom: 1px solid #1e2c35; 
-    padding: 10px 14px; 
-    z-index: 2010; 
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); 
-    transition: top 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-  }
-
+  /* Barra de busca deslizante no topo do mobile com fundo escuro fixo */
+  .mobile-search-overlay { display: flex; flex-direction: column; gap: 6px; position: fixed; top: -120px; left: 0; width: 100vw; background-color: #0b141a; border-bottom: 1px solid #1e2c35; padding: 25px 14px 8px; z-index: 2010; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); transition: top 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
+  .mobile-search-hint { color: #a6d48c; font-size: 0.84rem; font-weight: 400; line-height: 1.2; padding-left: 6px; user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   /* Estado ativo da barra mobile */
   .mobile-search-overlay.active { top: 0; }
-
   .mobile-search-container { display: flex; align-items: center; gap: 10px; width: 100%; }
-
-  .mobile-search-container .search-pill {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    background-color: #1a2a34;
-    border: 1px solid #233540;
-    border-radius: 25px;
-    padding: 2px 10px 2px 14px;
-  }
-
+  .mobile-search-container .search-pill { flex: 1; display: flex; align-items: center; background-color: #1a2a34; border: 1px solid #233540; border-radius: 25px; padding: 2px 10px 2px 14px; }
   /* Botão Cancelar travado com cor legível */
-  .btn-close-mobile-search { 
-    background: transparent; 
-    border: none; 
-    color: #8696a0; 
-    font-size: 0.9rem; 
-    font-weight: 600; 
-    cursor: pointer; 
-    padding: 6px; 
-    white-space: nowrap; 
-  }
-  .btn-close-mobile-search:hover { 
-    color: #e9edef; 
-  }
-}
-.fab-search-btn i {
-  pointer-events: none; /* Garante que o clique seja capturado direto pelo botão */
+  .btn-close-mobile-search { background: transparent; border: none; color: #8696a0; font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 6px; white-space: nowrap; }
+  .btn-close-mobile-search:hover { color: #e9edef; }
 }
 
+.fab-search-btn i { pointer-events: none; /* Garante que o clique seja capturado direto pelo botão */ }
+
+/* ================= BOTÃO VOLTAR / INÍCIO ================= */
+/* ================= BOTÃO VOLTAR / INÍCIO ================= */
+.btn-return-home { display: inline-flex; align-items: center; justify-content: center; gap: 6px; background-color: transparent; border: 1px solid var(--border-subtle); color: var(--text-main); padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; white-space: nowrap; user-select: none; transition: border-color 0.2s ease,color 0.2s ease; flex-shrink: 0; }
+
+.btn-return-home i { color: var(--accent-green); font-size: 0.95rem; line-height: 1; }
+
+.btn-return-home:hover { border-color: var(--accent-green); color: var(--accent-green); }
+
+.btn-return-home:active { transform: scale(0.96); }
+
+/* ================= ALINHAMENTO DO TOPO MOBILE ================= */
+.header-container { padding: 10px 14px; display: flex; align-items: center; width: 100%; position: relative; }
+
+.mobile-brand-wrapper { display: flex; align-items: center; gap: 10px; min-width: 0; margin-right: auto; }
+
+.mobile-header-logo { font-size: 1.05rem; white-space: nowrap; }
+
+/* Centraliza o botão Tema no meio exato do header mobile */
+#themeColorTriggerMobile { position: absolute; left: 50%; transform: translateX(-50%); margin-right: 0; }
+
+.mobile-header-actions { display: flex; align-items: center; margin-left: auto; }
+
+/* Na barra lateral: impede que os elementos se partam em duas linhas */
+.sidebar-top-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 10px; }
+
+.sidebar-brand-group { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; /* Evita que o logo ou botões fiquem empilhados verticalmente */ }
+
+/* ================= TELA DE APRESENTAÇÃO PROFISSIONAL MODERNA (TEMA CLARO) ================= */
+.intro-screen { position: fixed; inset: 0; z-index: 5000; background-color: #f8fafc; display: flex; flex-direction: column; justify-content: space-between; width: 100vw; height: 100vh; height: 100dvh; overflow-y: auto; overflow-x: hidden; opacity: 1; visibility: visible; transition: opacity 0.3s ease,visibility 0.3s ease; }
+
+@media (max-width: 800px) {
+  .intro-navbar { padding: 6px 0; }
+  .intro-nav-container { padding: 8px 12px; justify-content: center; }
+  .intro-nav-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 14px; }
+  .intro-nav-links a { font-size: 0.8rem; }
+  .intro-hero-wrapper { padding: 24px 14px; margin: auto 0; }
+  .intro-hero-subtitle { font-size: 0.95rem; }
+  .btn-intro-main { width: auto; padding: 10px 20px; font-size: 0.9rem; }
+  .intro-footer-bar { padding: 12px 14px; }
+  .intro-footer-container { flex-direction: column; justify-content: center; text-align: center; gap: 8px; }
+  .intro-footer-copy { font-size: 0.75rem; }
+}
+
+.intro-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* Fundo 3D Canvas */
+.intro-canvas-bg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: auto; /* Permite arrastar com o mouse para mexer o 3D */ }
+
+/* Rodapé Preto Fixo na Base */
+.intro-footer-bar { position: relative; z-index: 20; margin-top: auto; flex-shrink: 0; background-color: #0b141a; border-top: 1px solid #1e2c35; padding: 18px 24px; }
+
+.intro-footer-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+
+.intro-footer-copy { color: #8696a0; font-size: 0.82rem; }
+
+/* Links institucionais organizados */
+.intro-footer-nav { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; }
+
+.intro-footer-nav a { color: #e9edef; text-decoration: none; font-size: 0.84rem; font-weight: 500; transition: color 0.2s ease; }
+
+.intro-footer-nav a:hover { color: #00a884; }
+
+.intro-footer-socials { display: flex; align-items: center; gap: 16px; }
+
+.intro-footer-socials a { color: #8696a0; font-size: 1.15rem; display: inline-flex; transition: color 0.2s ease,transform 0.15s ease; }
+
+.intro-footer-socials a:hover { color: #00a884; transform: translateY(-2px); }
+
+/* Organização Perfeita para Mobile */
+@media (max-width: 800px) {
+  .intro-footer-bar { padding: 16px 12px 20px; }
+  .intro-footer-container { flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 14px; }
+  .intro-footer-nav { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 14px; width: 100%; order: 1; }
+  .intro-footer-socials { justify-content: center; gap: 20px; order: 2; }
+  .intro-footer-copy { font-size: 0.74rem; color: #64748b; order: 3; line-height: 1.4; }
+}
+
+/* Hero Central */
+.intro-hero-wrapper { position: relative; z-index: 5; flex: 1; display: flex; align-items: center; justify-content: center; padding: 48px 24px; max-width: 900px; margin: 0 auto; width: 100%; pointer-events: none; /* Deixa cliques atravessarem para o 3D onde não houver botões */ }
+
+.intro-hero-content { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; pointer-events: auto; /* Reativa cliques nos botões e textos */ }
+
+/* Pílula Badge */
+.intro-badge-pill { display: inline-flex; align-items: center; gap: 8px; background-color: #fff; color: #00875a; border: 1px solid rgba(0, 168, 132, 0.25); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); padding: 6px 16px; border-radius: 24px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.3px; }
+
+.badge-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #00a884; }
+
+/* botao iniciar Hero com Alto Contraste */
+.intro-hero-brand { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 3.1rem; font-weight: 900; letter-spacing: -0.5px; margin-top: -30px;  user-select: none; position: relative; z-index: 20; }
+.intro-hero-brand .logo-bolt { font-size: 1.9rem; filter: drop-shadow(0 2px 4px rgba(246, 195, 67, 0.4)); }
+
+/* Bloco de Apresentação Hero (Desktop) */
+.intro-hero-title {
+  color: #0b141a;
+  font-size: 1.85rem;
+  font-weight: 800;
+  text-align: center;
+  margin: 20px auto 10px;
+  letter-spacing: -0.5px;
+}
+
+.intro-hero-desc {
+  color: #64748b;
+  font-size: 1.35rem;
+  line-height: 1.7;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Ajuste Compacto para Mobile */
+@media (max-width: 800px) {
+  .intro-hero-title {
+    font-size: 1.25rem;
+    margin-top: 14px;
+    margin-bottom: 6px;
+  }
+  .intro-hero-desc {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    max-width: 92%;
+  }
+}
+
+.intro-hero-brand .logo-name { color: #0b141a; /* Preto escuro: garante contraste total contra o fundo claro */ font-weight: 900; }
+
+.intro-hero-brand .logo-green { color: #007aff; /* Azul vivo original do Figuras */ font-weight: 900; }
+
+/* Botão Compacto, Ergonômico e com Excelente UX Mobile */
+.btn-intro-main { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: #00a884; color: #fff; border: 2px solid #0b141a; padding: 10px 22px; border-radius: 50px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: auto; min-height: 44px; box-shadow: 0 4px 14px rgba(0, 168, 132, 0.35); transition: background-color 0.15s ease,transform 0.1s ease; }
+
+.btn-intro-main:hover { background-color: #00c853; transform: translateY(-1px); }
+
+.btn-intro-main:active { transform: scale(0.97); }
+
+.btn-intro-main i.bi-whatsapp { font-size: 1.15rem; }
+
+.btn-intro-main i.bi-arrow-up-right { font-size: 0.95rem; }
+
+.btn-intro-main:hover { background-color: #00c853; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0, 200, 83, 0.38); }
+
+.btn-intro-main:active { transform: translateY(0); }
+
+.btn-intro-secondary { display: inline-flex; align-items: center; gap: 8px; background-color: #fff; color: #334155; border: 1px solid #cbd5e1; padding: 14px 24px; border-radius: 30px; font-size: 0.96rem; font-weight: 600; text-decoration: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); cursor: pointer; transition: all 0.2s ease; }
+
+.btn-intro-secondary:hover { border-color: #94a3b8; background-color: #f8fafc; color: #0f172a; }
+
+.intro-footer-socials a { color: #64748b; font-size: 1.15rem; transition: color 0.2s ease,transform 0.15s ease; }
+
+.intro-footer-socials a:hover { color: #00a884; transform: translateY(-2px); }
+
+/* Palco da Caixa Hero posicionado acima do nome BOXFiguras */
+.intro-box-stage { position: relative; width: 240px; height: 170px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; perspective: 1500px; -webkit-perspective: 1500px; user-select: none; pointer-events: none; }
+
+.cardbox-viewport { width: 140px; height: 140px; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transform: rotateX(-24deg) rotateY(45deg); }
+
+.cardbox-wrap { position: relative; width: 140px; height: 140px; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; }
+
+.cardbox-face { position: absolute; box-sizing: border-box; }
+
+/* Fundo e paredes internas (sombra interna como na imagem) */
+.cardbox-inner-bottom { width: 140px; height: 140px; background: #020201; transform: rotateX(90deg) translateZ(-69px); }
+
+.cardbox-inner-back { width: 140px; height: 140px; background: linear-gradient(180deg, #7c5620 0, #020201 100%); transform: translateZ(-70px); }
+
+.cardbox-inner-left { width: 140px; height: 140px; background: linear-gradient(180deg, #8e6425 0, #020201 100%); transform: rotateY(90deg) translateZ(-70px); }
+
+/* Lados externos da caixa amarela */
+.cardbox-side-front { width: 140px; height: 140px; background: linear-gradient(to right, #f6dc45, #feb645); transform: translateZ(70px); }
+
+.cardbox-side-right { width: 140px; height: 140px; background: linear-gradient(to right, #f8e154, #fec358); transform: rotateY(90deg) translateZ(70px); display: flex; align-items: flex-end; justify-content: flex-start; padding: 12px; }
+
+/* Selo com os ícones de cuidado na lateral da caixa */
+.box-warning-labels { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2px; background: #fff; border: 1.5px solid #111827; padding: 2px 3px; border-radius: 2px; font-size: 0.65rem; line-height: 1; color: #111827; opacity: 0.95; }
+
+/* Abas superiores abertas para fora */
+.cardbox-flap { position: absolute; transform-style: preserve-3d; -webkit-transform-style: preserve-3d; box-sizing: border-box; }
+
+/* Aba de trás */
+.cardbox-flap-back { width: 140px; height: 80px; top: -80px; left: 0; background: linear-gradient(to top, #7c5620, #e2ad3b); transform-origin: bottom center; transform: translateZ(-70px) rotateX(125deg); }
+
+/* Aba da esquerda */
+.cardbox-flap-left { width: 140px; height: 80px; top: -80px; left: 0; background: linear-gradient(to top, #8e6425, #f3bb45); transform-origin: bottom center; transform: rotateY(90deg) translateZ(-70px) rotateX(125deg); }
+
+/* Aba da frente */
+.cardbox-flap-front { width: 140px; height: 80px; top: -80px; left: 0; background: linear-gradient(to top, #f6cf3f, #ffe86b); transform-origin: bottom center; transform: translateZ(70px) rotateX(-125deg); }
+
+/* Aba da direita */
+.cardbox-flap-right { width: 140px; height: 80px; top: -80px; left: 0; background: linear-gradient(to top, #f9d84c, #ffe86b); transform-origin: bottom center; transform: rotateY(90deg) translateZ(70px) rotateX(-125deg); }
+
+@media (max-width: 800px) {
+  .intro-box-stage { width: 200px; height: 150px; margin: 0 auto 6px; }
+  .cardbox-viewport { transform: scale(0.8) rotateX(-24deg) rotateY(45deg); }
+}
+
+
+
+
+
+
+
+/* ========================================================================== */
+/*                                CAIXA 3D                                    */
+/* ========================================================================== */
+
+.box-wrapper {
+  animation: box-drop 0.3s ease-in;
+  transform: scale3d(0.6, 0.5, 0.6);
+}
+
+.box-wrapper div {
+  box-sizing: border-box;
+}
+.box-stage {
+  width: 300px;
+  height: 300px;
+  margin: 40px auto 0;
+  perspective: 1500px;
+  animation: box-squash 0.7s ease 0.3s;
+}
+.box-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transform: rotate3d(1, 0, 0, -23deg) rotate3d(0, 1, 0, 50deg) translate3d(150px, 100px, -150px);
+}
+
+/* Base de todas as faces */
+.box-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+/* Face Frontal (com etiqueta) */
+.box-face-front {
+  background: url("https://i.imgur.com/fkgSnbL.png") no-repeat 10% 80% / 100px auto,
+              linear-gradient(to left, #f1e767 0%, #feb645 100%);
+  transform: translate3d(0, 0, 150px);
+}
+
+/* Face Traseira */
+.box-face-back {
+  background: linear-gradient(45deg, #020201 0%, #7c5620 50%, #8e6425 51%, #f6d55a 100%);
+  transform: rotate3d(0, 1, 0, 180deg) translate3d(0, 0, 150px);
+}
+
+/* Face Esquerda */
+.box-face-left {
+  background: linear-gradient(to left, #f1e767 0%, #feb645 100%);
+  transform: rotate3d(0, 1, 0, -90deg) translate3d(0, 0, 150px);
+}
+
+/* Face Direita */
+.box-face-right {
+  background: linear-gradient(to left, #0a0a0a 0%, #7a551f 1%, #feb645 100%);
+  transform: rotate3d(0, 1, 0, 90deg) translate3d(0, 0, 150px);
+}
+
+/* Face Inferior (Fundo) */
+.box-face-bottom {
+  background: linear-gradient(to left, #f1e767 0%, #feb645 100%);
+  transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 0, 150px);
+}
+
+/* Face Superior (Container das abas) */
+.box-face-top {
+  transform-style: preserve-3d;
+  transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, 150px);
+}
+
+/* Abas dobráveis da tampa */
+.box-flap {
+  position: absolute;
+  border: 1px solid #888;
+  background: linear-gradient(to bottom, #f1e767 0%, #feb645 100%);
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+.box-flap-left {
+  width: 50%;
+  height: 100%;
+  transform-origin: left center;
+  animation-name: flap-left;
+}
+
+.box-flap-right {
+  right: 0;
+  width: 50%;
+  height: 100%;
+  transform-origin: right center;
+  animation-name: flap-right;
+}
+
+.box-flap-top {
+  width: 100%;
+  height: 50%;
+  transform-origin: center top;
+  animation-name: flap-top;
+}
+
+.box-flap-bottom {
+  bottom: 0;
+  width: 100%;
+  height: 50%;
+  transform-origin: center bottom;
+  animation-name: flap-bottom;
+}
+
+/* ========================================================================== */
+/*                                ANIMAÇÕES                                   */
+/* ========================================================================== */
+
+@keyframes box-drop {
+  0% { transform: translate3d(0, -195px, 0) scale3d(0.5, 0.5, 0.5); }
+  100% { transform: translate3d(0, 0, 0) scale3d(0.6, 0.5, 0.6); }
+}
+
+@keyframes box-squash {
+  0%, 100% { transform: scale3d(1, 1, 1); }
+  30% { transform: scale3d(1.25, 0.75, 1); }
+  40% { transform: scale3d(0.75, 1.25, 1); }
+  75% { transform: scale3d(1.05, 0.95, 1); }
+}
+
+@keyframes flap-left {
+  0% { transform: rotate3d(0, 1, 0, 0deg); }
+  50%, 100% { transform: rotate3d(0, 1, 0, -190deg); }
+  70% { transform: rotate3d(0, 1, 0, -150deg); }
+}
+
+@keyframes flap-right {
+  0% { transform: rotate3d(0, 1, 0, 0deg); }
+  50% { transform: rotate3d(0, 1, 0, 170deg); }
+  70% { transform: rotate3d(0, 1, 0, 100deg); }
+  100% { transform: rotate3d(0, 1, 0, 140deg); }
+}
+
+@keyframes flap-top {
+  0% { transform: rotate3d(1, 0, 0, 0deg); }
+  50% { transform: rotate3d(1, 0, 0, 190deg); }
+  70% { transform: rotate3d(1, 0, 0, 130deg); }
+  100% { transform: rotate3d(1, 0, 0, 140deg); }
+}
+
+@keyframes flap-bottom {
+  0% { transform: rotate3d(1, 0, 0, 0deg); }
+  50%, 100% { transform: rotate3d(1, 0, 0, -190deg); }
+  70% { transform: rotate3d(1, 0, 0, -150deg); }
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ================= ANIMAÇÃO DAS 3 FILEIRAS DE FIGURINHAS ================= */
+/* ================= ANIMAÇÃO DAS 3 FILEIRAS DE FIGURINHAS ================= */
+.box-stickers-stream {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.box-sticker-item {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  top: 0;
+  left: 0;
+  object-fit: contain;
+  pointer-events: none;
+  opacity: 0;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+
+/* Fileira 1: Lado Esquerdo */
+.box-sticker-item.side-left {
+  animation: entrarCaixaEsquerda 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Fileira 2: Centro */
+.box-sticker-item.side-center {
+  animation: entrarCaixaCentro 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Fileira 3: Lado Direito */
+.box-sticker-item.side-right {
+  animation: entrarCaixaDireita 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* 1. Trajetória ESQUERDA: Bem aberta na lateral esquerda */
+@keyframes entrarCaixaEsquerda {
+  0% {
+    opacity: 0;
+    transform: translate3d(-550px, -850px, 400px) scale(2.2) rotate(-22deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translate3d(-400px, -550px, 280px) scale(1.6) rotate(-15deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(-150px, -180px, 120px) scale(1.0) rotate(-7deg);
+  }
+  85% {
+    opacity: 1;
+    transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(85px, 140px, 0px) scale(0.18) rotate(0deg);
+  }
+}
+
+/* 2. Trajetória CENTRO: Eixo central reto */
+@keyframes entrarCaixaCentro {
+  0% {
+    opacity: 0;
+    transform: translate3d(85px, -850px, 400px) scale(2.2) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translate3d(85px, -550px, 280px) scale(1.6) rotate(0deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(85px, -180px, 120px) scale(1.0) rotate(0deg);
+  }
+  85% {
+    opacity: 1;
+    transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(85px, 140px, 0px) scale(0.18) rotate(0deg);
+  }
+}
+
+/* 3. Trajetória DIREITA: Bem aberta na lateral direita */
+@keyframes entrarCaixaDireita {
+  0% {
+    opacity: 0;
+    transform: translate3d(680px, -850px, 400px) scale(2.2) rotate(22deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translate3d(500px, -550px, 280px) scale(1.6) rotate(15deg);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(280px, -180px, 120px) scale(1.0) rotate(7deg);
+  }
+  85% {
+    opacity: 1;
+    transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(85px, 140px, 0px) scale(0.18) rotate(0deg);
+  }
+}

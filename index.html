@@ -5,24 +5,113 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ZapStickers</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Fredoka:wght@600&family=Montserrat:wght@700;900&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+
 </head>
 <body>
+<!-- TELA DE APRESENTAÇÃO MODERNA CLARA COM THREE.JS -->
+  <section class="intro-screen" id="introScreen" aria-label="Apresentação FigurandoSim">
+    <!-- Canvas 3D de Fundo Interativo -->
+    <canvas id="threeCanvas" class="intro-canvas-bg"></canvas>
+
+    <!-- Conteúdo Hero Centralizado -->
+    <div class="intro-hero-wrapper">
+      <div class="intro-hero-content">
+
+
+
+
+        
+<div id="root">
+  <div>
+    <div class="box-wrapper">
+      <div class="box-stage">
+        
+        <!-- FLUXO DAS FIGURINHAS CAINDO NA CAIXA -->
+        <div class="box-container">
+          <!-- Tampa Superior (com 4 abas dobráveis) -->
+          <div class="box-face box-face-top">
+            <div class="box-flap box-flap-left"></div>
+            <div class="box-flap box-flap-right"></div>
+            <div class="box-flap box-flap-top"></div>
+            <div class="box-flap box-flap-bottom"></div>
+          </div>
+          <!-- Laterais de Fundo -->
+          <div class="box-face box-face-back"></div>
+          <div class="box-face box-face-bottom"></div>
+
+          <!-- FLUXO DAS FIGURINHAS DENTRO DO ESPAÇO 3D DA CAIXA -->
+          <div class="box-stickers-stream" id="boxStickersStream"></div>
+
+          <!-- Faces Frontais (ficam à frente das figurinhas) -->
+          <div class="box-face box-face-front"></div>
+          <div class="box-face box-face-left"></div>
+          <div class="box-face box-face-right"></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="intro-hero-brand">
+<span class="logo-name">BOX<span class="logo-green">Figuras</span></span>
+</div>   
+<div class="intro-cta-group">
+<button type="button" class="btn-intro-main" id="btnIntroStart">
+
+<span>Ver Figurinhas Agora</span>
+<i class="bi bi-arrow-up-right"></i>
+</button>
+<h1 class="intro-hero-title">As melhores figurinhas do Brasil</h1>
+<p class="intro-hero-desc">
+  Dê mais vida, humor e emoção aos seus grupos e conversas com figurinhas atualizadas diariamente. Navegue pelas tendências mais populares das redes sociais, descubra stickers clássicos de comédia, expressões do dia a dia e memes feitos à medida do humor brasileiro. Escolha os seus pacotes favoritos, adicione-os diretamente à sua aplicação e surpreenda todos os seus amigos sem complicações nem configurações demoradas.
+</p>
+</div>
+</div>
+</div>
+
+    <!-- Rodapé Limpo -->
+<!-- Rodapé Limpo e Organizado -->
+    <footer class="intro-footer-bar">
+      <div class="intro-footer-container">
+        <p class="intro-footer-copy">© 2026 FigurandoSim • Feito para animar suas conversas.</p>
+        
+        <nav class="intro-footer-nav" aria-label="Links institucionais">
+          <a href="#quem-somos" class="modal-trigger" data-modal="modalQuemSomos">Sobre Nós</a>
+          <a href="#como-baixar" class="modal-trigger" data-modal="modalComoBaixar">Como Baixar</a>
+          <a href="#termos" class="modal-trigger" data-modal="modalTermos">Termos</a>
+          <a href="#privacidade" class="modal-trigger" data-modal="modalPrivacidade">Privacidade</a>
+          <a href="mailto:contato@zapfigurinhas.com">Contato</a>
+        </nav>
+
+        <div class="intro-footer-socials">
+          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+            <i class="bi bi-facebook"></i>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="mailto:contato@zapfigurinhas.com" aria-label="Email de Contato">
+            <i class="bi bi-envelope-fill"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </section>
 
   <!-- Topo Mobile -->
-<!-- Topo Mobile com Tema Visível Fora da Sheet -->
   <header class="header mobile-only">
     <div class="header-container">
-      <div class="logo">
-        <span class="logo-bolt">⚡</span>
-        <span class="logo-name">Figurando<span class="logo-green">Sim</span></span>
+      <div class="mobile-brand-wrapper">
+        <button type="button" class="btn-return-home" id="btnReturnHomeMobile" title="Voltar para a apresentação" aria-label="Início">
+          <i class="bi bi-house-door-fill"></i>
+          <span>Início</span>
+        </button>
       </div>
 
       <div class="mobile-header-actions">
-        <!-- Botão Tema no topo Mobile -->
         <div class="clean-color-trigger compact-theme-pill" id="themeColorTriggerMobile" title="Alterar cor do tema">
           <span class="theme-pill-text">Tema</span>
           <span class="color-disc" id="themeColorPreviewMobile"></span>
@@ -39,94 +128,49 @@
 
   <!-- Fundo escuro ao abrir menu no mobile -->
   <div class="nav-overlay" id="navOverlay"></div>
-<!----- ==================================================================================================================================-->
-<!----- ================================================BOTOM SHEET ==================================================================================-->
 
-<!-- Container Principal Dividido -->
+  <!-- Layout Principal -->
   <div class="split-layout">
-
-    <!-- PAINEL LATERAL ÚNICO (Desktop: Barra Fixa / Mobile: Bottom Sheet Flutuante) -->
+    <!-- Painel Lateral / Bottom Sheet Mobile -->
     <aside class="split-left" id="splitLeftPanel">
       <div class="bottom-sheet-drag-handle"></div>
 
-      <!-- Topo: Marca e Botão Fechar -->
-<!-- Topo: Marca + Botão Pílula de Tema lado a lado + Botão Fechar -->
       <div class="sidebar-top-bar">
         <div class="sidebar-brand-group">
           <div class="logo brand-logo">
             <span class="logo-bolt">⚡</span>
-            <span class="logo-name">Figurando<span class="logo-green">Sim</span></span>
+            <span class="logo-name">BOX<span class="logo-green">Figuras</span></span>
           </div>
-          <!-- Botão Pílula "Tema ●" compacto -->
+
           <div class="clean-color-trigger compact-theme-pill" id="themeColorTrigger" title="Alterar cor do tema">
             <span class="theme-pill-text">Tema</span>
             <span class="color-disc" id="themeColorPreview"></span>
-            <!-- Label invisível apenas para manter compatibilidade com a classe JS -->
             <span class="color-name" id="themeColorLabel" style="display: none;">#0B141A</span>
           </div>
         </div>
+
         <button type="button" class="close-sidebar-mobile-btn" id="sidebarCloseBtn" aria-label="Fechar Painel">&times;</button>
       </div>
 
       <div class="left-content">
-        <!-- Links Institucionais Compactos no topo da folha -->
-        <div class="mobile-sheet-links-grid">
-          <a href="#quem-somos" class="modal-trigger" data-modal="modalQuemSomos">Sobre Nós</a>
-          <a href="#termos" class="modal-trigger" data-modal="modalTermos">Termos de Uso</a>
-          <a href="#como-baixar" class="modal-trigger" data-modal="modalComoBaixar">Como baixar figurinhas?</a>
-          <a href="#privacidade" class="modal-trigger" data-modal="modalPrivacidade">Política de Privacidade</a>
-        </div>
-
-        <!-- Lista de Categorias com Contadores para a Bottom Sheet -->
         <div class="sheet-categories-section">
           <div class="sheet-categories-list" id="sheetCategoriesList">
-            <!-- Renderizado dinamicamente pelo JavaScript com contagem de cada uma -->
-          </div>
-        </div>
-
-        <!-- Secção Institucional Completa (Exibida no desktop) -->
-        <div class="sidebar-info-block desktop-info-block">
-          <h4 class="sidebar-block-title">FigurandoSim</h4>
-          <ul class="sidebar-links-list">
-            <li><a href="#quem-somos" class="modal-trigger" data-modal="modalQuemSomos">Sobre Nós</a></li>
-            <li><a href="#como-baixar" class="modal-trigger" data-modal="modalComoBaixar">Como baixar figurinhas?</a></li>
-            <li><a href="#termos" class="modal-trigger" data-modal="modalTermos">Termos de Uso</a></li>
-            <li><a href="#privacidade" class="modal-trigger" data-modal="modalPrivacidade">Política de Privacidade</a></li>
-          </ul>
-
-          <div class="sidebar-contact">
-            <a href="mailto:contato@zapfigurinhas.com" class="sidebar-email-link">contato@zapfigurinhas.com</a>
-          </div>
-
-          <div class="sidebar-social-actions">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="social-circle-btn facebook" aria-label="Facebook">
-              <i class="bi bi-facebook"></i>
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-circle-btn instagram" aria-label="Instagram">
-              <i class="bi bi-instagram"></i>
-            </a>
+            <!-- Renderizado dinamicamente via JS -->
           </div>
         </div>
       </div>
 
-      <!-- Rodapé Compacto -->
       <footer class="footer-sidebar">
         <p class="footer-copy-text">FigurandoSim - As melhores figurinhas para o seu whatsapp!</p>
       </footer>
     </aside>
 
-
-
-    <!-- LADO DIREITO: Catálogo Central -->
+    <!-- Catálogo Central -->
     <main class="split-right">
-      
-      <!-- 1. Campo de Busca -->
-     <!-- 1. Campo de Busca com Botões Buscar e Limpar -->
-    <!-- 1. Campo de Busca com Botões Buscar e Limpar -->
+      <!-- Campo de Busca -->
       <section class="search-section">
         <label class="search-helper-label" for="searchInput">palavras-chave: meme, bebe, feliz, bom dia, cachorro, gato etc.</label>
         <div class="search-container-bar">
-          
           <div class="search-pill">
             <input type="text" id="searchInput" placeholder="Pesquisar figurinha na grade..." autocomplete="off">
           </div>
@@ -135,9 +179,7 @@
         </div>
       </section>
 
- 
-
-   <!-- 3. Grade de Figurinhas com Contador em Tempo Real -->
+      <!-- Grade de Figurinhas -->
       <section class="gallery-wrapper">
         <div class="catalog-status-bar">
           <span class="status-count-text" id="catalogStatusCount">
@@ -146,7 +188,7 @@
         </div>
 
         <div class="stickers-sheet" id="stickersGrid">
-          <!-- Renderizado pelo JS -->
+          <!-- Renderizado via JS -->
         </div>
 
         <div class="empty-state hidden" id="emptyState">
@@ -157,7 +199,7 @@
     </main>
   </div>
 
-  <!-- Modal de Prévia e Envio Original -->
+  <!-- Modal de Prévia e Envio -->
   <div class="modal" id="modalPreview">
     <div class="modal-box preview-modal-box">
       <div class="modal-header">
@@ -176,22 +218,22 @@
     </div>
   </div>
 
-
-
-  <!-- Botão Flutuante (FAB) de Busca - Visível apenas no Mobile -->
+  <!-- Botão Flutuante (FAB) de Busca Mobile -->
   <button type="button" class="fab-search-btn mobile-only-fab" id="fabSearchBtn" aria-label="Abrir Pesquisa">
     <i class="bi bi-search"></i>
   </button>
 
-  <!-- Barra de Busca Rápida Suspensa no Mobile -->
+  <!-- Barra de Busca Rápida Mobile -->
+<!-- Barra de Busca Rápida Mobile -->
   <div class="mobile-search-overlay" id="mobileSearchOverlay">
     <div class="mobile-search-container">
       <div class="search-pill">
-        <input type="text" id="mobileSearchInput" placeholder="Pesquisar figurinha..." autocomplete="off">
+        <input type="text" id="mobileSearchInput" placeholder="Pesquisar por palavras-chaves" autocomplete="off">
         <button type="button" class="clear-btn" id="mobileClearBtn" aria-label="Limpar"><i class="bi bi-trash"></i></button>
       </div>
       <button type="button" class="btn-close-mobile-search" id="btnCloseMobileSearch">Cancelar</button>
     </div>
+    <span class="mobile-search-hint">memes, bebe, feliz, bom dia, cachorro, gato,zoeira, criança,etc.</span>
   </div>
 
   <!-- Mensagens Toast -->
