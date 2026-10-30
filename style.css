@@ -20,11 +20,21 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .brand-logo { font-size: 1.45rem; }
 
 /* Alinha o logo e o botão X perfeitamente na mesma linha */
-/* Topo com Logo e Seletor Tema alinhados à esquerda e botão X à direita */
-.sidebar-top-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 12px; }
+/* Topo com Logo, Botão Início e Seletor Tema alinhados horizontalmente */
+.sidebar-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 8px;
+}
 
-.sidebar-brand-group { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
-
+.sidebar-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
 .close-sidebar-mobile-btn { display: none; background: transparent; border: none; color: var(--text-main); font-size: 2rem; line-height: 1; cursor: pointer; padding: 4px; }
 
 /* Botão Pílula "Tema ●" */
@@ -373,10 +383,9 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 /* ================= COMPORTAMENTO NO MOBILE ================= */
 @media (max-width: 950px) {
-  /* Oculta a barra de busca pesada do topo no mobile para ganhar tela */
-  /* Oculta a barra de busca, os chips horizontais e o bloco institucional extra no mobile */
-  /* Oculta a barra de busca, os chips horizontais, o bloco institucional extra e o botão de tema de dentro do painel mobile */
-  .categories-wrapper,   .desktop-info-block,   .footer-sidebar,   .search-section, aside.split-left .compact-theme-pill { display: none; }
+  /* Oculta elementos de desktop de dentro do bottom sheet no mobile */
+  .categories-wrapper,   .desktop-info-block,   .footer-sidebar,   .search-section,   aside.split-left .compact-theme-pill,
+  #btnReturnHomeDesktop { display: none; }
   /* Exibe o Botão Flutuante circular */
   .fab-search-btn.mobile-only-fab { display: flex; align-items: center; justify-content: center; position: fixed; bottom: 24px; right: 20px; width: 54px; height: 54px; background-color: var(--accent-green); color: #0b141a; border: none; border-radius: 50%; font-size: 1.35rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45); cursor: pointer; z-index: 1000; transition: transform 0.2s ease,background-color 0.2s ease; }
   .fab-search-btn:active { transform: scale(0.92); }
@@ -602,6 +611,29 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* ========================================================================== */
 /*                                CAIXA 3D                                    */
 /* ========================================================================== */
@@ -636,36 +668,51 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   height: 100%;
 }
 
+
 /* Face Frontal (com etiqueta) */
 .box-face-front {
-  background: url("https://i.imgur.com/fkgSnbL.png") no-repeat 10% 80% / 100px auto,
-              linear-gradient(to left, #f1e767 0%, #feb645 100%);
+  background: url("figurinhas/made.png") no-repeat 20% 80% / 200px auto,
+              linear-gradient(to left, #4facfe 0%, #007aff 100%);
   transform: translate3d(0, 0, 150px);
 }
 
-/* Face Traseira */
+/* Face Traseira (Sombra interna azulada escura) */
 .box-face-back {
-  background: linear-gradient(45deg, #020201 0%, #7c5620 50%, #8e6425 51%, #f6d55a 100%);
+  background: linear-gradient(45deg, #020b14 0%, #0d3b66 50%, #134e8a 51%, #3a8bfd 100%);
   transform: rotate3d(0, 1, 0, 180deg) translate3d(0, 0, 150px);
 }
 
 /* Face Esquerda */
 .box-face-left {
-  background: linear-gradient(to left, #f1e767 0%, #feb645 100%);
+  background: linear-gradient(to left, #4facfe 0%, #007aff 100%);
   transform: rotate3d(0, 1, 0, -90deg) translate3d(0, 0, 150px);
 }
 
-/* Face Direita */
+/* Face Direita (Sombreada na lateral) */
 .box-face-right {
-  background: linear-gradient(to left, #0a0a0a 0%, #7a551f 1%, #feb645 100%);
+  background: linear-gradient(to left, #051322 0%, #0d3b66 1%, #007aff 100%);
   transform: rotate3d(0, 1, 0, 90deg) translate3d(0, 0, 150px);
 }
 
-/* Face Inferior (Fundo) */
+/* Face Inferior (Fundo interno escurecido) */
 .box-face-bottom {
-  background: linear-gradient(to left, #f1e767 0%, #feb645 100%);
+  background: linear-gradient(to left, #0b2545 0%, #06182e 100%);
   transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 0, 150px);
 }
+
+
+/* Abas dobráveis da tampa */
+.box-flap {
+  position: absolute;
+  border: 1px solid #3273a0;
+  background: linear-gradient(to bottom, #60b3ff 0%, #007aff 100%);
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0.5s;
+  animation-fill-mode: forwards;
+}
+
+
 
 /* Face Superior (Container das abas) */
 .box-face-top {
@@ -674,15 +721,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 }
 
 /* Abas dobráveis da tampa */
-.box-flap {
-  position: absolute;
-  border: 1px solid #888;
-  background: linear-gradient(to bottom, #f1e767 0%, #feb645 100%);
-  animation-duration: 1s;
-  animation-timing-function: ease-in-out;
-  animation-delay: 0.5s;
-  animation-fill-mode: forwards;
-}
 
 .box-flap-left {
   width: 50%;
@@ -875,3 +913,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
     transform: translate3d(85px, 140px, 0px) scale(0.18) rotate(0deg);
   }
 }
+
+
+

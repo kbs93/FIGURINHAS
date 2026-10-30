@@ -78,8 +78,10 @@ const state = {
   busca: '',
   stickerSelecionado: null
 };
+
 document.addEventListener('DOMContentLoaded', () => {
   inicializarApresentacao();
+  iniciarBotaoInicioDesktop();
   renderizarGrade();
   iniciarFiltros();
   renderizarCategoriasBottomSheet();
@@ -91,6 +93,19 @@ document.addEventListener('DOMContentLoaded', () => {
   inicializarStudio();
   iniciarBuscaMobileFlutuante();
 });
+
+function iniciarBotaoInicioDesktop() {
+  const btnReturnDesktop = document.getElementById('btnReturnHomeDesktop');
+  const intro = document.getElementById('introScreen');
+  if (!btnReturnDesktop || !intro) return;
+
+  btnReturnDesktop.addEventListener('click', () => {
+    intro.classList.remove('hidden');
+    if (location.hash === '#catalogo') {
+      history.pushState({ tela: 'apresentacao' }, '', window.location.pathname);
+    }
+  });
+}
 /**
  * 1. Renderiza a grade de figurinhas
  */
@@ -226,19 +241,29 @@ function iniciarModalPreview() {
     if (e.target === modal) fechar();
   });
 
-  if (btnSend) {
+if (btnSend) {
     btnSend.addEventListener('click', async () => {
       if (!state.stickerSelecionado) return;
 
       const { url, fallback, filename } = state.stickerSelecionado;
-      mostrarToast('Abrindo envio no WhatsApp...');
-      
-      const res = await compartilharSticker(url, fallback, filename);
-      if (res && res.modo === 'download') {
-        mostrarToast(`Arquivo ${filename} baixado!`);
-      }
 
-      fechar();
+      // Desabilita o botão para evitar múltiplos cliques
+      btnSend.disabled = true;
+      mostrarToast('Processando figurinha...');
+
+      const res = await compartilharSticker(url, fallback, filename);
+
+      // Reabilita o botão
+      btnSend.disabled = false;
+
+      if (res && res.modo === 'download') {
+        mostrarToast(`Figurinha ${filename} baixada!`);
+        fechar();
+      } else if (res && res.status === 'sucesso') {
+        fechar();
+      } else if (res && res.status === 'erro') {
+        mostrarToast('Erro ao enviar figurinha.');
+      }
     });
   }
 }
@@ -529,19 +554,4 @@ renderizarGrade();
       document.body.classList.remove('menu-open');
     }
   });
-}
-
-
-
-
-
-//just for reloading animation ;)
-
-var elem = document.getElementById("root")
-
-window.onclick = function(){
-  document.body.removeChild(elem)
-  setTimeout(function(){
-      document.body.prepend(elem)
-  }, 100)
 }
