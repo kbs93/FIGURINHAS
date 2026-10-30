@@ -256,10 +256,11 @@ if (btnSend) {
       // Reabilita o botão
       btnSend.disabled = false;
 
-      if (res && res.modo === 'download') {
-        mostrarToast(`Figurinha ${filename} baixada!`);
+if (res && res.status === 'sucesso') {
+        mostrarToast('Enviado! No WhatsApp, toque na foto e escolha "Criar Figurinha" ou "Favoritar".');
         fechar();
-      } else if (res && res.status === 'sucesso') {
+      } else if (res && res.modo === 'download') {
+        mostrarToast(`Figurinha ${filename} baixada! Arraste para o WhatsApp.`);
         fechar();
       } else if (res && res.status === 'erro') {
         mostrarToast('Erro ao enviar figurinha.');
