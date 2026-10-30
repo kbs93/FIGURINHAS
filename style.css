@@ -20,12 +20,74 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .brand-logo { font-size: 1.45rem; }
 
 /* Alinha o logo e o botão X perfeitamente na mesma linha */
-.sidebar-top-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+/* Topo com Logo e Seletor Tema alinhados à esquerda e botão X à direita */
+.sidebar-top-bar { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  width: 100%; 
+  gap: 12px;
+}
 
-.close-sidebar-mobile-btn { display: none; background: transparent; border: none; color: var(--text-main); font-size: 2rem; line-height: 1; cursor: pointer; padding: 4px; }
+.sidebar-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 
-.left-content { display: flex; flex-direction: column; gap: 12px; flex: 1; /* Faz o container esticar por toda a altura disponível */ }
+.close-sidebar-mobile-btn { 
+  display: none; 
+  background: transparent; 
+  border: none; 
+  color: var(--text-main); 
+  font-size: 2rem; 
+  line-height: 1; 
+  cursor: pointer; 
+  padding: 4px; 
+}
 
+/* Botão Pílula "Tema ●" */
+.compact-theme-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-pill);
+  border: 1px solid var(--border-subtle);
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.compact-theme-pill:hover {
+  border-color: var(--accent-green);
+}
+
+.theme-pill-text {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: 0.2px;
+}
+
+.compact-theme-pill .color-disc {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: inline-block;
+}
+.left-content { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  flex: 1; 
+  min-height: 0; /* Essencial no flexbox para permitir rolagem dos elementos internos */
+  overflow: hidden;
+}
 /* ================= BOTÃO CRIAR FIGURINHA ================= */
 .actions-panel { display: flex; flex-direction: column; margin-top: 24px; }
 
@@ -186,32 +248,348 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .toast.show { transform: translateX(-50%) translateY(0); }
 
 /* ================= RESPONSIVIDADE MOBILE CORRIGIDA (DIREITA) ================= */
-@media (max-width: 950px) {
-  .mobile-only { display: block; background-color: var(--bg-header); border-bottom: 1px solid var(--border-subtle); position: static; /* Remove a posição fixa/adesiva no topo */ }
-  .header-container { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; }
-  /* Evita corte da gaveta no mobile */
-  .split-layout { flex-direction: column; height: auto; overflow: visible; }
-  /* Abre pelo lado DIREITO alinhado com o botão hambúrguer */
-  aside.split-left { position: fixed; top: 0; right: -320px; left: auto; width: 290px; min-width: 0; height: 100vh; height: 100dvh; background-color: var(--bg-sidebar); z-index: 2005; display: flex; flex-direction: column; justify-content: space-between; box-shadow: none; transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow-y: auto; }
-  /* Quando abre, desliza da DIREITA para dentro */
-  aside.split-left.open { right: 0; left: auto; box-shadow: -6px 0 25px rgba(0, 0, 0, 0.7); }
-  /* Botão X fica visível e alinhado ao lado da marca no topo */
-  .close-sidebar-mobile-btn { display: flex; align-items: center; justify-content: center; }
-  .split-right { height: auto; overflow-y: visible; padding: 12px 10px; }
-  /* Ajuste compacto dos botões Buscar e Limpar no ecrã tátil */
-  .search-container-bar { gap: 6px; }
-  .search-pill { padding: 2px 14px; }
-  .search-pill input { font-size: 0.88rem; padding: 8px 0; }
-  .btn-clear-action, .btn-search-action { padding: 8px 12px; font-size: 0.82rem; border-radius: 20px; }
-  /* Texto de ajuda acima da barra de busca */
-  .search-helper-label { display: block; font-size: 0.8rem; color: var(--text-dim); /* Usa a cor suave do tema ativo */ margin-bottom: 8px; /* Afastamento perfeito do campo de busca */ padding-left: 14px; /* Alinha o início do texto com a curva da pílula */ opacity: 0.85; user-select: none; }
-  .stickers-sheet { grid-template-columns: repeat(5, 1fr); /* Trava exatamente em 5 colunas */ grid-auto-rows: auto; gap: 6px; /* Espaço menor entre as figurinhas para caber na tela */ padding: 6px 4px; }
-  /* Ajusta a altura e proporção dos cards para 5 colunas */
-  .sticker-cell { height: auto; aspect-ratio: 1/1; /* Deixa o card sempre quadradinho */ padding: 4px; border-radius: 6px; }
-  .sticker-preview img { max-width: 100%; max-height: 100%; }
-  .catalog-status-bar { padding: 2px 6px 6px; }
-  .status-count-text { font-size: 0.76rem; }
+/* ================= PADRÕES DA BOTTOM SHEET (DESKTOP ESCONDIDOS) ================= */
+.bottom-sheet-drag-handle {
+  display: none;
 }
+.mobile-sheet-links-grid {
+  display: none;
+}
+/* Lista vertical de categorias no Painel Lateral (Desktop e Mobile) */
+.sheet-categories-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+  margin: 14px 0 10px;
+  padding-right: 4px;
+}
+
+.sheet-categories-section::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sheet-categories-section::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+.sheet-category-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text-main);
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sheet-category-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.sheet-category-item.active {
+  background-color: var(--bg-pill);
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+/* Badge redondo/oval de contagem alinhado à direita */
+.sheet-category-badge {
+  background-color: #1a252f;
+  color: var(--text-dim);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  min-width: 28px;
+  text-align: center;
+}
+
+.sheet-category-item.active .sheet-category-badge {
+  background-color: var(--accent-green);
+  color: #0b141a;
+  border-color: var(--accent-green);
+}
+
+/* ================= RESPONSIVIDADE MOBILE COM BOTTOM SHEET ================= */
+@media (max-width: 950px) {
+
+.mobile-only {
+    display: block;
+    background-color: #0b141a;
+    border-bottom: 1px solid #1e2c35;
+    position: static;
+    color: #e9edef; /* Trava o texto padrão do topo como claro */
+  }
+
+  /* Trava o nome "Figurando" sempre branco/claro */
+  .mobile-only .logo-name {
+    color: #e9edef;
+  }
+
+  /* Trava o texto "Tema" sempre branco/claro */
+  .mobile-only .theme-pill-text {
+    color: #e9edef;
+  }
+
+  /* Garante que o botão hambúrguer mantenha os traços claros visíveis */
+  .mobile-only .menu-btn .bar {
+    background-color: #e9edef;
+  }
+  .header-container {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .split-layout {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  /* O PAINEL TRANSFORMA-SE NA BOTTOM SHEET FLUTUANTE (DE BAIXO PARA CIMA) */
+  aside.split-left {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    min-width: 100%;
+    max-height: 85vh;
+    max-height: 85dvh;
+    background-color: var(--bg-sidebar);
+    border-top: 1px solid var(--border-subtle);
+    border-right: none;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    z-index: 2005;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 16px 20px;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6);
+    transform: translateY(105%);
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    overflow: hidden;
+  }
+
+  /* Quando aberto: sobe suavemente */
+  aside.split-left.open {
+    transform: translateY(0);
+  }
+
+  /* Tracinho indicador de arrastar no topo da folha */
+  .bottom-sheet-drag-handle {
+    display: block;
+    width: 44px;
+    height: 4px;
+    background-color: var(--border-subtle);
+    border-radius: 4px;
+    margin: 4px auto 8px;
+  }
+
+  .sidebar-top-bar {
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .close-sidebar-mobile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Links institucionais compactos em 2 colunas como no exemplo */
+  .mobile-sheet-links-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 12px;
+    padding: 10px 4px 6px;
+  }
+
+  .mobile-sheet-links-grid a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: color 0.15s ease;
+  }
+
+  .mobile-sheet-links-grid a:hover {
+    color: var(--text-main);
+  }
+
+  /* Oculta os blocos de texto grandes desktop no mobile */
+  .desktop-info-block,
+  .footer-sidebar {
+    display: none;
+  }
+
+  /* Lista de categorias da Bottom Sheet com barra de rolagem vertical */
+/* Lista de categorias da Bottom Sheet com rolagem completa livre */
+  .sheet-categories-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0; /* Permite encolher e ativar scrollbar */
+    overflow-y: auto !important; /* Garante que a rolagem funcione sempre */
+    overscroll-behavior: contain; /* Impede arrastar a página de fundo junto */
+    margin-top: 8px;
+    padding: 4px 2px 40px; /* 40px de respiro no final para exibir 'Religião' e todos os itens */
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sheet-categories-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .sheet-category-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 10px;
+    color: var(--text-main);
+    background: transparent;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .sheet-category-item:hover,
+  .sheet-category-item:active {
+    background-color: var(--bg-pill);
+  }
+
+  .sheet-category-item.active {
+    background-color: var(--bg-pill);
+    color: var(--accent-green);
+    font-weight: 700;
+  }
+
+  /* Pílula com o número de figurinhas (Badge) */
+  .sheet-category-badge {
+    background-color: var(--bg-chip);
+    color: var(--text-dim);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .sheet-category-item.active .sheet-category-badge {
+    background-color: var(--accent-green);
+    color: #0b141a;
+    border-color: var(--accent-green);
+  }
+
+  /* Ajustes da grade e cabeçalho mobile */
+  .split-right {
+    height: auto;
+    overflow-y: visible;
+    padding: 12px 10px;
+  }
+
+  .stickers-sheet {
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: auto;
+    gap: 6px;
+    padding: 6px 4px;
+  }
+
+  .sticker-cell {
+    height: auto;
+    aspect-ratio: 1/1;
+    padding: 4px;
+    border-radius: 6px;
+  }
+
+  .sticker-preview img {
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .catalog-status-bar {
+    padding: 2px 6px 6px;
+  }
+
+  .status-count-text {
+    font-size: 0.76rem;
+  }
+}
+
+/* Agrupamento da Marca + Tema no Topo */
+.sidebar-brand-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Botão Pílula Compacto "Tema ●" */
+.compact-theme-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-pill);
+  border: 1px solid var(--border-subtle);
+  padding: 5px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.compact-theme-pill:hover {
+  border-color: var(--accent-green);
+}
+
+.theme-pill-text {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: 0.2px;
+}
+
+.compact-theme-pill .color-disc {
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  display: inline-block;
+}
+
+/* Ajuste das ações no topo mobile para alinhar Tema + Menu Hambúrguer */
+/* Ajuste das ações no topo mobile para afastar Tema e Menu Hambúrguer */
+.mobile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 82px; /* Aumenta o espaço entre o botão Tema e o menu */
+}
+
+/* Margem de respiro adicional à direita do botão Tema */
+#themeColorTriggerMobile {
+  margin-right: 6px;
+}
+
 
 /* ==========================================================================
    ESTÚDIO DE FIGURINHAS TOTALMENTE VISÍVEL (DESKTOP E MOBILE)
@@ -269,9 +647,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .footer-sidebar .footer-copy-text { font-size: 0.78rem; color: #cbd5e1; text-align: center; margin: 0; }
 
 /* Container do seletor de tema na barra lateral */
-.theme-picker-container { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; padding: 0 4px; }
-
-.theme-label-header { font-size: 0.78rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
 
 /* Gatilho (Trigger) reaproveitado do projeto */
 .clean-color-trigger { display: inline-flex; align-items: center; gap: 10px; background-color: var(--bg-pill); border: 1px solid var(--border-subtle); padding: 8px 12px; border-radius: 8px; cursor: pointer; width: fit-content; user-select: none; transition: border-color 0.2s ease; }
@@ -305,26 +680,25 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 .mobile-search-overlay { display: none; }
 
+
+
 /* ================= COMPORTAMENTO NO MOBILE ================= */
 @media (max-width: 950px) {
   /* Oculta a barra de busca pesada do topo no mobile para ganhar tela */
-  .search-section { display: none; }
+/* Oculta a barra de busca, os chips horizontais e o bloco institucional extra no mobile */
+/* Oculta a barra de busca, os chips horizontais, o bloco institucional extra e o botão de tema de dentro do painel mobile */
+  .search-section,
+  .categories-wrapper,
+  .desktop-info-block,
+  .footer-sidebar,
+  aside.split-left .compact-theme-pill {
+    display: none;
+  }
   /* Exibe o Botão Flutuante circular */
   .fab-search-btn.mobile-only-fab { display: flex; align-items: center; justify-content: center; position: fixed; bottom: 24px; right: 20px; width: 54px; height: 54px; background-color: var(--accent-green); color: #0b141a; border: none; border-radius: 50%; font-size: 1.35rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45); cursor: pointer; z-index: 1000; transition: transform 0.2s ease,background-color 0.2s ease; }
   .fab-search-btn:active { transform: scale(0.92); }
   /* Barra de busca deslizante no topo do mobile */
-  .mobile-search-overlay { display: flex; position: fixed; top: -80px; left: 0; width: 100vw; background-color: var(--bg-header); border-bottom: 1px solid var(--border-subtle); padding: 10px 14px; z-index: 2010; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); transition: top 0.25s cubic-bezier(0.4, 0, 0.2, 1); }
-  /* Estado ativo da barra mobile */
-  .mobile-search-overlay.active { top: 0; }
-  .mobile-search-container { display: flex; align-items: center; gap: 10px; width: 100%; }
-.mobile-search-container .search-pill {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    background-color: var(--bg-pill);
-    border-radius: 25px;
-    padding: 2px 10px 2px 14px;
-  }
+
 
   /* Botão X com fundo cinza arredondado */
   .mobile-search-container .clear-btn {
@@ -348,10 +722,65 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .mobile-search-container .clear-btn:active {
     background-color: #4b5563; /* Cinza um pouco mais claro ao tocar */
   }
-  .mobile-search-container input { width: 100%; background: transparent; border: none; outline: none; color: var(--text-main); padding: 8px 0; font-size: 0.95rem; }
-  .btn-close-mobile-search { background: transparent; border: none; color: var(--text-dim); font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 6px; white-space: nowrap; }
-  .btn-close-mobile-search:hover { color: var(--text-main); }
+.mobile-search-container input { 
+  width: 100%; 
+  background: transparent; 
+  border: none; 
+  outline: none; 
+  color: #e9edef; /* Trava o texto digitado sempre branco/claro */
+  padding: 8px 0; 
+  font-size: 0.95rem; 
+}
+
+.mobile-search-container input::placeholder {
+  color: #8696a0; /* Trava o texto do placeholder legível */
+}
+  /* Barra de busca deslizante no topo do mobile com fundo escuro fixo */
+  .mobile-search-overlay { 
+    display: flex; 
+    position: fixed; 
+    top: -80px; 
+    left: 0; 
+    width: 100vw; 
+    background-color: #0b141a; 
+    border-bottom: 1px solid #1e2c35; 
+    padding: 10px 14px; 
+    z-index: 2010; 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6); 
+    transition: top 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
+  }
+
+  /* Estado ativo da barra mobile */
+  .mobile-search-overlay.active { top: 0; }
+
+  .mobile-search-container { display: flex; align-items: center; gap: 10px; width: 100%; }
+
+  .mobile-search-container .search-pill {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: #1a2a34;
+    border: 1px solid #233540;
+    border-radius: 25px;
+    padding: 2px 10px 2px 14px;
+  }
+
+  /* Botão Cancelar travado com cor legível */
+  .btn-close-mobile-search { 
+    background: transparent; 
+    border: none; 
+    color: #8696a0; 
+    font-size: 0.9rem; 
+    font-weight: 600; 
+    cursor: pointer; 
+    padding: 6px; 
+    white-space: nowrap; 
+  }
+  .btn-close-mobile-search:hover { 
+    color: #e9edef; 
+  }
 }
 .fab-search-btn i {
   pointer-events: none; /* Garante que o clique seja capturado direto pelo botão */
 }
+

@@ -10,11 +10,40 @@ export class CustomColorPicker {
     this.onChange = onChange;
 
  // Todas as cores presentes no seu projeto/estúdio
-    this.palette = [
-      '#000000', , '#222222','#f1dcbb', '#f0f0f0', '#b2aafc', '#707070', '#aafccc',
-      '#bb06f125', '#fcca60', '#ff3366', '#00d592', '#2196f3', '#00eeff',
-      '#f1f0a8', '#2f00ff', '#00501b', '#f8a100', '#ac8f0e', '#b38bad',
-      '#6b1919', '#ee04a83b'
+this.palette = [
+      // Neutros marcantes (Base dia e noite)
+      '#0b141a', // WhatsApp Noturno clássico
+      '#2d3748', // Grafite azulado
+      '#ffffff', // Branco puro
+      '#f4ede4', // Creme / Papiro suave
+      '#d1d5db', // Cinza prateado claro
+
+      // Verdes
+      '#00d592', // Verde neon / WhatsApp moderno
+      '#1b5e20', // Verde floresta escuro
+
+      // Azuis
+      '#0284c7', // Azul piscina / céu
+      '#1e3a8a', // Azul marinho profundo
+
+      // Roxos e Lilás
+      '#a855f7', // Roxo elétrico
+      '#d8b4fe', // Lilás pastel suave
+
+      // Rosas e Vermelhos
+      '#e11d48', // Vermelho cereja vivo
+      '#ff69b4', // Rosa chiclete
+      '#7f1d1d', // Vinho bordô fechado
+
+      // Laranjas e Amarelos
+      '#ea580c', // Laranja cenoura intenso
+      '#f59e0b', // Âmbar dourado
+      '#fef08a', // Amarelo manteiga suave
+
+      // Tons Terrosos e Especiais
+      '#78350f', // Marrom café
+      '#0d9488', // Turquesa petróleo
+      '#475569'  // Cinza chumbo ardósia
     ];
 
     this.popup = null;

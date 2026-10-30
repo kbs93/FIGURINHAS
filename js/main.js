@@ -18,10 +18,10 @@ function applySiteTheme(hex) {
 
   document.documentElement.style.setProperty('--bg-dark', hex);
   document.documentElement.style.setProperty('--bg-sidebar', hex);
-  document.documentElement.style.setProperty('--bg-header', isLight ? '#eae6df' : '#0f1c24');
-  document.documentElement.style.setProperty('--bg-pill', isLight ? '#dfdad0' : '#1a2a34');
-  document.documentElement.style.setProperty('--bg-chip', isLight ? '#d8d2c6' : '#101d24');
-  document.documentElement.style.setProperty('--border-subtle', isLight ? '#cac3b5' : '#1e2c35');
+  document.documentElement.style.setProperty('--bg-header', isLight ? '#dfd8d8' : '#0f1c24');
+  document.documentElement.style.setProperty('--bg-pill', isLight ? '#0a0a0a' : '#1a2a34');
+  document.documentElement.style.setProperty('--bg-chip', isLight ? '#050505' : '#101d24');
+  document.documentElement.style.setProperty('--border-subtle', isLight ? '#020202' : '#1e2c35');
   document.documentElement.style.setProperty('--text-main', textColor);
   document.documentElement.style.setProperty('--text-dim', isLight ? '#4a5568' : '#8696a0');
 
@@ -31,6 +31,15 @@ function applySiteTheme(hex) {
 // Inicializa o seletor do projeto
 const savedTheme = localStorage.getItem('zapstickers_custom_theme') || '#0b141a';
 
+// Função para atualizar as bolinhas de prévia de ambos os botões
+function atualizarPreviewsTema(hex) {
+  const pDesktop = document.getElementById('themeColorPreview');
+  const pMobile = document.getElementById('themeColorPreviewMobile');
+  if (pDesktop) pDesktop.style.backgroundColor = hex;
+  if (pMobile) pMobile.style.backgroundColor = hex;
+}
+
+// Seletor Desktop
 new CustomColorPicker({
   triggerId: 'themeColorTrigger',
   previewId: 'themeColorPreview',
@@ -38,8 +47,25 @@ new CustomColorPicker({
   initialColor: savedTheme,
   onChange: (hex) => {
     applySiteTheme(hex);
+    atualizarPreviewsTema(hex);
   }
 });
+
+// Seletor Mobile (ao lado do menu hambúrguer)
+if (document.getElementById('themeColorTriggerMobile')) {
+  new CustomColorPicker({
+    triggerId: 'themeColorTriggerMobile',
+    previewId: 'themeColorPreviewMobile',
+    initialColor: savedTheme,
+    onChange: (hex) => {
+      applySiteTheme(hex);
+      atualizarPreviewsTema(hex);
+    }
+  });
+}
+
+// Inicializa a cor das bolinhas ao carregar
+atualizarPreviewsTema(savedTheme);
 
 // Aplica a cor salva logo ao carregar a página
 if (savedTheme !== '#0b141a') {
@@ -54,15 +80,15 @@ const state = {
 document.addEventListener('DOMContentLoaded', () => {
   renderizarGrade();
   iniciarFiltros();
+  renderizarCategoriasBottomSheet(); /* Renderiza a lista com badges de contagem */
   iniciarBusca();
   iniciarCliquesGrade();
   iniciarModalPreview();
   iniciarMenu();
   iniciarModais();
   inicializarStudio();
-  iniciarBuscaMobileFlutuante(); /* <-- ESSA LINHA FALTAVA CHAMAR! */
+  iniciarBuscaMobileFlutuante();
 });
-
 
 /**
  * 1. Renderiza a grade de figurinhas
@@ -298,8 +324,9 @@ function iniciarBusca() {
     state.busca = '';
     state.categoria = 'todos';
 
-    document.querySelectorAll('.chip').forEach(c => {
-      c.classList.toggle('active', c.dataset.category === 'todos');
+   const sheetItems = document.querySelectorAll('.sheet-category-item');
+    sheetItems.forEach(item => {
+      item.classList.toggle('active', item.dataset.category === 'todos');
     });
 
     const todosChip = document.querySelector('.chip[data-category="todos"]');
@@ -430,4 +457,75 @@ function iniciarBuscaMobileFlutuante() {
       inputMobile.focus();
     });
   }
+}
+
+/**
+ * Renderiza e sincroniza as categorias com contagem na Bottom Sheet móvel
+ */
+function renderizarCategoriasBottomSheet() {
+  const container = document.getElementById('sheetCategoriesList');
+  if (!container) return;
+
+  // Lista de rótulos formatados para exibição
+  const nomesFormatados = {
+    'todos': 'Todos as Figurinhas',
+    'memes': 'Memes',
+    'cachorro': 'Cachorro',
+    'gato': 'Gato',
+    'bom-dia': 'Bom Dia',
+    'boa-tarde': 'Boa Tarde',
+    'boa-noite': 'Boa Noite',
+    'reacoes': 'Reações',
+    'humor': 'Humor',
+    'animais': 'Animais',
+    'triste': 'Triste',
+    'feliz': 'Feliz',
+    'times': 'Times',
+    'politica': 'Política',
+    'religiao': 'Religião',
+    'chaves':'Chaves'
+  };
+
+
+
+// Garante que 'todos' seja obrigatoriamente a primeira chave da lista
+// Usa exatamente a ordem das chaves definidas em nomesFormatados
+  const chaves = Object.keys(nomesFormatados);
+
+  container.innerHTML = chaves.map(chave => {
+    const total = (categoriasMap[chave] || []).length;
+    const label = nomesFormatados[chave];
+    const ativo = state.categoria === chave ? 'active' : '';
+
+    return `
+      <button type="button" class="sheet-category-item ${ativo}" data-category="${chave}">
+        <span>${label}</span>
+        <span class="sheet-category-badge">${total}</span>
+      </button>
+    `;
+  }).join('');
+
+  container.addEventListener('click', (e) => {
+    const item = e.target.closest('.sheet-category-item');
+    if (!item) return;
+
+    const cat = item.getAttribute('data-category');
+    state.categoria = cat;
+
+    // Atualiza o estado visual na Bottom Sheet
+    container.querySelectorAll('.sheet-category-item').forEach(b => b.classList.toggle('active', b.dataset.category === cat));
+
+    // Sincroniza os chips horizontais da grade
+renderizarGrade();
+    if (typeof atualizarBotaoLimpar === 'function') atualizarBotaoLimpar();
+
+    // Fecha apenas se estiver em tela mobile
+    if (window.innerWidth <= 950) {
+      const panel = document.getElementById('splitLeftPanel');
+      const overlay = document.getElementById('navOverlay');
+      if (panel) panel.classList.remove('open');
+      if (overlay) overlay.classList.remove('visible');
+      document.body.classList.remove('menu-open');
+    }
+  });
 }
