@@ -3,6 +3,8 @@ import { compartilharSticker } from './share.js';
 import { inicializarStudio } from './studio.js';
 import { CustomColorPicker } from './cor.js';
 import { inicializarApresentacao } from './intro.js';
+import { copiarFigurinhaParaClipboard } from './clip.js';
+
 
 // Função para calcular luminosidade e ajustar o texto claro/escuro automaticamente
 function getContrastColor(hex) {
@@ -217,10 +219,14 @@ function abrirModalPreview(url, fallback, filename) {
   modal.classList.add('active');
 }
 
+/**
+ * 4. Modal de Prévia e Envio
+ */
 function iniciarModalPreview() {
   const modal = document.getElementById('modalPreview');
   const btnClose = document.getElementById('previewCloseBtn');
   const btnSend = document.getElementById('btnZapSend');
+  const btnCopiar = document.getElementById('btnCopiarFigurinha');
 
   if (!modal) return;
 
@@ -233,6 +239,12 @@ function iniciarModalPreview() {
       previewImg.onerror = null;
       previewImg.src = '';
     }
+
+    // Garante que o botão volte ao texto original se o modal for fechado
+    if (btnCopiar) {
+      btnCopiar.disabled = false;
+      btnCopiar.innerHTML = '<i class="bi bi-clipboard-check"></i> <span>Copiar Figurinha</span>';
+    }
   }
 
   if (btnClose) btnClose.addEventListener('click', fechar);
@@ -241,22 +253,49 @@ function iniciarModalPreview() {
     if (e.target === modal) fechar();
   });
 
-if (btnSend) {
+  // Ação de copiar direto para a área de transferência com feedback no botão
+  if (btnCopiar) {
+    btnCopiar.addEventListener('click', async () => {
+      if (!state.stickerSelecionado) return;
+
+      const textoOriginal = '<i class="bi bi-clipboard-check"></i> <span>Copiar Figurinha</span>';
+
+      btnCopiar.disabled = true;
+      btnCopiar.innerHTML = '<i class="bi bi-arrow-repeat"></i> <span>Copiando...</span>';
+      mostrarToast('Copiando figurinha...');
+
+      const res = await copiarFigurinhaParaClipboard(state.stickerSelecionado.url);
+
+      if (res && res.sucesso) {
+        // Indicador direto de sucesso no botão
+        btnCopiar.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>Copiado com Sucesso!</span>';
+        mostrarToast('Figurinha copiada! Abra o WhatsApp, segure no campo de texto e clique em COLAR.');
+
+        setTimeout(() => {
+          fechar();
+        }, 1200);
+      } else {
+        btnCopiar.disabled = false;
+        btnCopiar.innerHTML = textoOriginal;
+        mostrarToast((res && res.erro) ? res.erro : 'Não foi possível copiar a figurinha.');
+      }
+    });
+  }
+
+  if (btnSend) {
     btnSend.addEventListener('click', async () => {
       if (!state.stickerSelecionado) return;
 
       const { url, fallback, filename } = state.stickerSelecionado;
 
-      // Desabilita o botão para evitar múltiplos cliques
       btnSend.disabled = true;
       mostrarToast('Processando figurinha...');
 
       const res = await compartilharSticker(url, fallback, filename);
 
-      // Reabilita o botão
       btnSend.disabled = false;
 
-if (res && res.status === 'sucesso') {
+      if (res && res.status === 'sucesso') {
         mostrarToast('Enviado! No WhatsApp, toque na foto e escolha "Criar Figurinha" ou "Favoritar".');
         fechar();
       } else if (res && res.modo === 'download') {
@@ -268,6 +307,7 @@ if (res && res.status === 'sucesso') {
     });
   }
 }
+
 
 /**
  * 5. Busca em tempo real
