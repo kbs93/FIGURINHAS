@@ -3,7 +3,7 @@ import { compartilharSticker } from './share.js';
 import { inicializarStudio } from './studio.js';
 import { CustomColorPicker } from './cor.js';
 import { inicializarApresentacao } from './intro.js';
-import { copiarFigurinhaParaClipboard } from './clip.js';
+import { copiarFigurinha } from './clip.js';
 
 
 // Função para calcular luminosidade e ajustar o texto claro/escuro automaticamente
@@ -254,34 +254,31 @@ function iniciarModalPreview() {
   });
 
   // Ação de copiar direto para a área de transferência com feedback no botão
-  if (btnCopiar) {
+// Ação de envio/cópia nativa com suporte a Web Share e Clipboard
+if (btnCopiar) {
     btnCopiar.addEventListener('click', async () => {
       if (!state.stickerSelecionado) return;
 
       const textoOriginal = '<i class="bi bi-clipboard-check"></i> <span>Copiar Figurinha</span>';
 
-      btnCopiar.disabled = true;
-      btnCopiar.innerHTML = '<i class="bi bi-arrow-repeat"></i> <span>Copiando...</span>';
-      mostrarToast('Copiando figurinha...');
+      try {
+        btnCopiar.disabled = true;
+        btnCopiar.innerHTML = '<i class="bi bi-arrow-repeat"></i> <span>Copiando...</span>';
 
-      const res = await copiarFigurinhaParaClipboard(state.stickerSelecionado.url);
+        await copiarFigurinha(state.stickerSelecionado.url);
 
-      if (res && res.sucesso) {
-        // Indicador direto de sucesso no botão
-        btnCopiar.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>Copiado com Sucesso!</span>';
-        mostrarToast('Figurinha copiada! Abra o WhatsApp, segure no campo de texto e clique em COLAR.');
+        btnCopiar.innerHTML = '<i class="bi bi-check-circle-fill"></i> <span>Copiado!</span>';
+        mostrarToast('Figurinha copiada! Agora é só colar na conversa do WhatsApp.');
 
-        setTimeout(() => {
-          fechar();
-        }, 1200);
-      } else {
+        setTimeout(() => fechar(), 1200);
+      } catch (err) {
+        console.error('Erro ao copiar:', err);
         btnCopiar.disabled = false;
         btnCopiar.innerHTML = textoOriginal;
-        mostrarToast((res && res.erro) ? res.erro : 'Não foi possível copiar a figurinha.');
+        mostrarToast('Não foi possível copiar a figurinha.');
       }
     });
   }
-
   if (btnSend) {
     btnSend.addEventListener('click', async () => {
       if (!state.stickerSelecionado) return;
