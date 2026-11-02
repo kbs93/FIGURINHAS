@@ -1,9 +1,11 @@
 import { categoriasMap, gerarFallback } from './data.js';
-import { compartilharSticker } from './share.js';
-import { inicializarStudio } from './studio.js';
 import { CustomColorPicker } from './cor.js';
 import { inicializarApresentacao } from './intro.js';
 import { copiarFigurinha } from './clip.js';
+
+
+
+let gridController = null;
 
 
 // Função para calcular luminosidade e ajustar o texto claro/escuro automaticamente
@@ -28,9 +30,14 @@ function applySiteTheme(hex) {
   document.documentElement.style.setProperty('--text-main', textColor);
   document.documentElement.style.setProperty('--text-dim', isLight ? '#4a5568' : '#8696a0');
 
+  // Atualiza a barra de navegação/topo do navegador no celular
+  const metaTheme = document.getElementById('metaThemeColor');
+  if (metaTheme) {
+    metaTheme.setAttribute('content', hex);
+  }
+
   localStorage.setItem('zapstickers_custom_theme', hex);
 }
-
 // Inicializa o seletor do projeto
 const savedTheme = localStorage.getItem('zapstickers_custom_theme') || '#0b141a';
 
@@ -71,15 +78,21 @@ if (document.getElementById('themeColorTriggerMobile')) {
 atualizarPreviewsTema(savedTheme);
 
 // Aplica a cor salva logo ao carregar a página
+// Aplica a cor salva logo ao carregar a página
 if (savedTheme !== '#0b141a') {
   applySiteTheme(savedTheme);
+} else {
+  // Garante que a barra superior inicie com a cor padrão
+  const metaTheme = document.getElementById('metaThemeColor');
+  if (metaTheme) metaTheme.setAttribute('content', savedTheme);
 }
-
 const state = {
   categoria: 'todos',
   busca: '',
   stickerSelecionado: null
 };
+
+
 
 document.addEventListener('DOMContentLoaded', () => {
   inicializarApresentacao();
@@ -92,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
   iniciarModalPreview();
   iniciarMenu();
   iniciarModais();
-  inicializarStudio();
   iniciarBuscaMobileFlutuante();
 });
 
@@ -108,9 +120,12 @@ function iniciarBotaoInicioDesktop() {
     }
   });
 }
+
+
 /**
  * 1. Renderiza a grade de figurinhas
  */
+
 function renderizarGrade() {
   const grid = document.getElementById('stickersGrid');
   const empty = document.getElementById('emptyState');
@@ -125,77 +140,129 @@ function renderizarGrade() {
     return nome.toLowerCase().includes(state.busca);
   });
 
-if (filtrados.length === 0) {
+  if (filtrados.length === 0) {
     grid.innerHTML = '';
-    empty.classList.remove('hidden');
+    if (empty) empty.classList.remove('hidden');
     if (statusCount) {
       statusCount.innerHTML = `Nenhuma figurinha encontrada para esta pesquisa`;
     }
     return;
   }
 
-  empty.classList.add('hidden');
+  if (empty) empty.classList.add('hidden');
 
   if (statusCount) {
     statusCount.innerHTML = `Mostrando <strong>${filtrados.length}</strong> de <strong>${totalGeral}</strong> figurinhas`;
   }
 
-  grid.innerHTML = filtrados.map(nome => {
-    const filename = `${nome}.webp`;
-    const fallback = gerarFallback(nome);
-    return `
-      <div class="sticker-cell" 
-           data-url="figurinhas/${filename}" 
-           data-fallback="${fallback}" 
-           data-filename="${filename}" 
-           title="Clique para enviar ${filename}">
-        <div class="sticker-preview">
-          <img 
-            src="figurinhas/${filename}" 
-            alt="${filename}" 
-            width="88" 
-            height="88" 
-            loading="lazy" 
-            onerror="this.onerror=null; this.src='${fallback}';">
-        </div>
-        <span class="sticker-filename">${filename}</span>
-      </div>
-    `;
-  }).join('');
+  grid.innerHTML = '';
+
+  filtrados.forEach(item => {
+    // Se o item já tiver extensão (ex: d43.gif), usa o nome exato.
+    // Se não tiver (ex: d42), coloca .webp.
+  const itemStr = String(item).trim();
+// Reconhece se o item é o d43 ou se já termina com .gif
+const ehGif = itemStr.toLowerCase().endsWith('.gif') || itemStr.toLowerCase() === 'd43';
+
+const filename = ehGif 
+  ? (itemStr.toLowerCase().endsWith('.gif') ? itemStr : `${itemStr}.gif`)
+  : (itemStr.includes('.') ? itemStr : `${itemStr}.webp`);
+
+const baseName = filename.replace(/\.(webp|gif|png)$/i, '');
+    const caminho = `figurinhas/${filename}`;
+    const fallback = gerarFallback(baseName);
+
+    const cell = document.createElement('div');
+    cell.className = 'sticker-cell';
+    cell.setAttribute('data-url', caminho);
+    cell.setAttribute('data-fallback', fallback);
+    cell.setAttribute('data-filename', filename);
+    cell.title = `Clique para enviar ${filename}`;
+
+    const preview = document.createElement('div');
+    preview.className = 'sticker-preview';
+
+    const img = document.createElement('img');
+    img.width = 88;
+    img.height = 88;
+    img.loading = 'lazy';
+    img.alt = filename;
+    img.src = caminho;
+    img.onerror = function() {
+      this.onerror = null;
+      this.src = fallback;
+    };
+
+    const span = document.createElement('span');
+    span.className = 'sticker-filename';
+    span.textContent = baseName;
+
+    preview.appendChild(img);
+    cell.appendChild(preview);
+    cell.appendChild(span);
+    grid.appendChild(cell);
+  });
 }
 
-/**
- * 2. Filtro por Chips de Categoria
- */
+const preview = document.createElement('div');
+    preview.className = 'sticker-preview';
 
+    if (ehGif) {
+      const badge = document.createElement('span');
+      badge.className = 'badge-animado';
+      badge.textContent = 'Animado';
+      preview.appendChild(badge);
+    }
 
 /**
- * 3. Clique na grade: abre o modal de envio no WhatsApp
+ * 2. Clique na grade: bloqueia completamente abertura de modal para GIFs
  */
 function iniciarCliquesGrade() {
   const grid = document.getElementById('stickersGrid');
   if (!grid) return;
 
-  grid.addEventListener('click', (e) => {
+  function processarClique(e) {
     const celula = e.target.closest('.sticker-cell');
     if (!celula) return;
 
+    const url = (celula.getAttribute('data-url') || '').toLowerCase();
+    const filename = (celula.getAttribute('data-filename') || '').toLowerCase();
+    const imgSrc = (celula.querySelector('img')?.getAttribute('src') || '').toLowerCase();
+
+    // Se qualquer referência apontar para GIF, trava tudo e não abre modal de jeito nenhum
+    const ehGif = url.includes('.gif') || filename.includes('.gif') || imgSrc.includes('.gif');
+
+    if (ehGif) {
+      // Impede qualquer comportamento padrão ou propagação que abriria o modal
+      e.stopPropagation();
+mostrarToastAnimadoComConfete('Pressione e segure, Escolhe copiar imagem, depois e so colcar no WhatsApp');
+      return;
+    }
+
+    // Se for WEBP normal, segue o fluxo
     document.querySelectorAll('.sticker-cell').forEach(c => c.classList.remove('selected'));
     celula.classList.add('selected');
 
-    const url = celula.getAttribute('data-url');
     const fallback = celula.getAttribute('data-fallback');
-    const filename = celula.getAttribute('data-filename');
+    abrirModalPreview(celula.getAttribute('data-url'), fallback, celula.getAttribute('data-filename'));
+  }
 
-    abrirModalPreview(url, fallback, filename);
-  });
+  // Captura tanto o clique comum quanto o toque imediato do mobile
+  grid.addEventListener('click', processarClique);
 }
 
+
 /**
- * 4. Modal de Prévia e Envio Original (Grade)
+ * 3. Modal de Prévia e Envio (instância única com fallback para .gif)
  */
 function abrirModalPreview(url, fallback, filename) {
+  // Se for GIF, aborta imediatamente
+  if (String(url).toLowerCase().includes('.gif') || String(filename).toLowerCase().includes('.gif')) {
+    return;
+  }
+
   state.stickerSelecionado = { url, fallback, filename };
+  // ... resto da função continua exatamente igual
 
   const modal = document.getElementById('modalPreview');
   const previewImg = document.getElementById('previewImage');
@@ -210,14 +277,25 @@ function abrirModalPreview(url, fallback, filename) {
   previewTitle.textContent = 'Prévia da Figurinha';
   previewFilename.textContent = filename;
 
+  const urlGif = url.endsWith('.webp') ? url.replace('.webp', '.gif') : url;
+
   previewImg.onerror = () => {
-    previewImg.onerror = null;
-    previewImg.src = fallback;
+    if (previewImg.src !== urlGif && !url.endsWith('.gif')) {
+      previewImg.src = urlGif;
+      state.stickerSelecionado.url = urlGif;
+    } else {
+      previewImg.onerror = null;
+      previewImg.src = fallback;
+    }
   };
 
   previewImg.src = url;
   modal.classList.add('active');
 }
+
+
+
+
 
 /**
  * 4. Modal de Prévia e Envio
@@ -462,13 +540,88 @@ function iniciarModais() {
     });
   });
 }
-
-function mostrarToast(texto) {
+//=========================================  MOSTRAR TOAST  ===================================
+ function mostrarToast(texto) {
   const toast = document.getElementById('toastMessage');
   if (!toast) return;
-  toast.textContent = texto;
+ toast.innerHTML = texto;
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 2400);
+}
+
+
+/**
+ * Dispara confetes coloridos saindo do centro da tela
+ */
+
+
+
+function dispararConfetes() {
+  const container = document.createElement('div');
+  container.className = 'confetti-container';
+  document.body.appendChild(container);
+
+  const cores = ['#00d592', '#00e676', '#f6c343', '#007aff', '#ff4081', '#ffffff', '#ff1b1b', '#01fcfc', '#fbff07'];
+  const total = 92;
+  const centroX = window.innerWidth / 2;
+  const centroY = window.innerHeight / 2;
+
+  for (let i = 0; i < total; i++) {
+    const particula = document.createElement('div');
+    particula.className = 'confetti-particle';
+
+    const cor = cores[Math.floor(Math.random() * cores.length)];
+    const largura = Math.floor(Math.random() * 40 + 40) + 'px';
+    const altura = Math.floor(Math.random() * 20 + 20) + 'px';
+
+    // Ângulo e distância aleatória para explosão 360 graus
+    const angulo = Math.random() * 2 * Math.PI;
+    const distancia = Math.random() * 180 + 70;
+    const tx = Math.cos(angulo) * distancia + 'px';
+    const ty = Math.sin(angulo) * distancia + 'px';
+    const rot = (Math.random() * 720 - 360) + 'deg';
+
+    particula.style.backgroundColor = cor;
+    particula.style.width = largura;
+    particula.style.height = altura;
+    particula.style.left = centroX + 'px';
+    particula.style.top = centroY + 'px';
+    particula.style.setProperty('--tx', tx);
+    particula.style.setProperty('--ty', ty);
+    particula.style.setProperty('--rot', rot);
+
+    container.appendChild(particula);
+  }
+
+  // Remove os confetes do DOM após a animação acabar
+  setTimeout(() => {
+    container.remove();
+  }, 950);
+}
+
+// PRESSIONE Toast flutuante com animação até o meio da tela e confete
+ 
+function mostrarToastAnimadoComConfete(texto) {
+  let toast = document.getElementById('toastGifDestaque');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toastGifDestaque';
+    toast.className = 'toast-destaque-gif';
+    toast.innerHTML = `<span class="toast-icon"></span><span class="toast-msg"></span>`;
+    document.body.appendChild(toast);
+  }
+
+  toast.querySelector('.toast-msg').textContent = texto;
+
+  // Ativa a subida para o meio da tela
+  toast.classList.add('ativo');
+  dispararConfetes();
+
+  // Fecha e esconde após 2.2 segundos
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.classList.remove('ativo');
+  }, 6200);
 }
 
 
