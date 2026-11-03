@@ -15,19 +15,25 @@ type PayloadSalvar struct {
 	Categorias map[string][]string `json:"categorias"`
 }
 
-func main() {
-	porta := ":8080"
-	pastaImagens := "figurinhas"
+const (
+	portaArquivo = ":8080"
+	pastaImagens = "figurinhas"
+)
 
-	// Servir as imagens da pasta figurinhas
+func obterCaminhoJSON() string {
+	if _, err := os.Stat(filepath.Join("js", "figurinhas.json")); err == nil {
+		return filepath.Join("js", "figurinhas.json")
+	}
+	return "figurinhas.json"
+}
+
+func main() {
 	http.Handle("/figurinhas/", http.StripPrefix("/figurinhas/", http.FileServer(http.Dir(pastaImagens))))
 
-	// Servir a interface visual
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "painel.html")
 	})
 
-	// Listar arquivos soltos da pasta figurinhas
 	http.HandleFunc("/api/arquivos", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		entradas, err := os.ReadDir(pastaImagens)
@@ -48,20 +54,24 @@ func main() {
 		json.NewEncoder(w).Encode(arquivos)
 	})
 
-	// Ler dados existentes do js/data.js
 	http.HandleFunc("/api/carregar", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
-		conteudo, err := os.ReadFile(filepath.Join("js", "data.js"))
+		caminho := obterCaminhoJSON()
+		conteudo, err := os.ReadFile(caminho)
 		if err != nil {
 			json.NewEncoder(w).Encode(map[string][]string{})
 			return
 		}
 
-		mapa := lerCategoriasAtuais(string(conteudo))
+		var mapa map[string][]string
+		if err := json.Unmarshal(conteudo, &mapa); err != nil {
+			json.NewEncoder(w).Encode(map[string][]string{})
+			return
+		}
+
 		json.NewEncoder(w).Encode(mapa)
 	})
 
-	// Salvar de volta no js/data.js
 	http.HandleFunc("/api/salvar", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Metodo invalido", http.StatusMethodNotAllowed)
@@ -74,8 +84,12 @@ func main() {
 			return
 		}
 
-		if err := atualizarDataJS(dados.Categorias); err != nil {
-			http.Error(w, "Erro ao gravar data.js", http.StatusInternalServerError)
+		// Monta o arquivo com arrays em linha única
+		conteudoFormatado := formatarJSONEmLinha(dados.Categorias)
+
+		caminho := obterCaminhoJSON()
+		if err := os.WriteFile(caminho, []byte(conteudoFormatado), 0644); err != nil {
+			http.Error(w, "Erro ao gravar JSON", http.StatusInternalServerError)
 			return
 		}
 
@@ -83,101 +97,86 @@ func main() {
 		w.Write([]byte(`{"sucesso":true}`))
 	})
 
-	fmt.Printf("Painel de Organizacao: http://localhost%s\n", porta)
-	abrirNavegador(fmt.Sprintf("http://localhost%s", porta))
+	fmt.Printf("Painel de Organizacao: http://localhost%s\n", portaArquivo)
+	abrirNavegador(fmt.Sprintf("http://localhost%s", portaArquivo))
 
-	if err := http.ListenAndServe(porta, nil); err != nil {
+	if err := http.ListenAndServe(portaArquivo, nil); err != nil {
 		fmt.Printf("Erro: %v\n", err)
 	}
 }
 
-func lerCategoriasAtuais(conteudo string) map[string][]string {
-	resultado := make(map[string][]string)
-	linhas := strings.Split(conteudo, "\n")
-	for _, linha := range linhas {
-		linha = strings.TrimSpace(linha)
-		if strings.HasPrefix(linha, "export const ") && strings.Contains(linha, "=") && strings.Contains(linha, "[") {
-			partes := strings.SplitN(linha, "=", 2)
-			nomeVar := strings.TrimSpace(strings.TrimPrefix(partes[0], "export const "))
-			if nomeVar == "categoriasMap" || nomeVar == "todos" {
-				continue
-			}
+func formatarJSONEmLinha(catMap map[string][]string) string {
+	ordem := []string{
+		"memes",
+		"bom-dia",
+		"boa-tarde",
+		"boa-noite",
+		"reacoes",
+		"humor",
+		"animais",
+		"triste",
+		"feliz",
+		"times",
+		"cachorro",
+		"gato",
+		"politica",
+		"religiao",
+	}
 
-			val := strings.TrimSpace(partes[1])
-			val = strings.TrimPrefix(val, "[")
-			val = strings.TrimSuffix(val, "];")
-			val = strings.TrimSuffix(val, "]")
+	const limitePorLinha = 50
 
-			elementos := strings.Split(val, ",")
+	var sb strings.Builder
+	sb.WriteString("{\n")
+
+	for i, chave := range ordem {
+		lista := catMap[chave]
+		if lista == nil {
+			lista = []string{}
+		}
+
+		if len(lista) == 0 {
+			sb.WriteString(fmt.Sprintf("  %q: []", chave))
+		} else if len(lista) <= limitePorLinha {
+			// Até 50 itens: fica tudo numa única linha
 			var itens []string
-			for _, item := range elementos {
-				item = strings.TrimSpace(item)
-				item = strings.Trim(item, `"'`)
-				if item != "" {
-					itens = append(itens, item)
+			for _, item := range lista {
+				itens = append(itens, fmt.Sprintf("%q", item))
+			}
+			sb.WriteString(fmt.Sprintf("  %q: [%s]", chave, strings.Join(itens, ", ")))
+		} else {
+			// Mais de 50 itens: quebra em lotes de 50 por linha
+			sb.WriteString(fmt.Sprintf("  %q: [\n", chave))
+			for idx := 0; idx < len(lista); idx += limitePorLinha {
+				fim := idx + limitePorLinha
+				if fim > len(lista) {
+					fim = len(lista)
+				}
+
+				var lote []string
+				for _, item := range lista[idx:fim] {
+					lote = append(lote, fmt.Sprintf("%q", item))
+				}
+
+				sb.WriteString("    ")
+				sb.WriteString(strings.Join(lote, ", "))
+
+				if fim < len(lista) {
+					sb.WriteString(",\n")
+				} else {
+					sb.WriteString("\n")
 				}
 			}
-			resultado[nomeVar] = itens
+			sb.WriteString("  ]")
 		}
-	}
-	return resultado
-}
 
-func atualizarDataJS(catMap map[string][]string) error {
-	var sb strings.Builder
-
-	ordem := []struct {
-		ChaveHTML string
-		VarJS     string
-	}{
-		{"memes", "memes"},
-		{"bom-dia", "bomDia"},
-		{"boa-tarde", "boaTarde"},
-		{"boa-noite", "boaNoite"},
-		{"reacoes", "reacoes"},
-		{"humor", "humor"},
-		{"animais", "animais"},
-		{"triste", "triste"},
-		{"feliz", "feliz"},
-		{"times", "times"},
-		{"cachorro", "cachorro"},
-		{"gato", "gato"},
-		{"politica", "politica"},
-		{"religiao", "religiao"},
-	}
-
-	sb.WriteString("// ARRAYS INDIVIDUAIS POR CATEGORIA\n")
-	for _, item := range ordem {
-		lista := catMap[item.ChaveHTML]
-		sb.WriteString(fmt.Sprintf("export const %s = [", item.VarJS))
-		for i, n := range lista {
-			sb.WriteString(fmt.Sprintf("%q", n))
-			if i < len(lista)-1 {
-				sb.WriteString(", ")
-			}
+		if i < len(ordem)-1 {
+			sb.WriteString(",")
 		}
-		sb.WriteString("];\n")
+		sb.WriteString("\n")
 	}
 
-	sb.WriteString("\n// MAPEAMENTO DIRETO COM O data-category DO HTML\n")
-	sb.WriteString("export const categoriasMap = {\n")
-	for _, item := range ordem {
-		sb.WriteString(fmt.Sprintf("  %q: %s,\n", item.ChaveHTML, item.VarJS))
-	}
-	sb.WriteString("};\n\n")
-
-	sb.WriteString("// GERA ARRAY DE TODOS AUTOMATICAMENTE SEM DUPLICADOS\n")
-	sb.WriteString("const todosSet = new Set();\n")
-	sb.WriteString("Object.values(categoriasMap).forEach(arr => arr.forEach(nome => todosSet.add(nome)));\n")
-	sb.WriteString("export const todos = Array.from(todosSet);\n")
-	sb.WriteString("categoriasMap[\"todos\"] = todos;\n\n")
-
-	sb.WriteString("// Fallback visual SVG caso o arquivo webp real ainda nao esteja na pasta local\n")
-	sb.WriteString("export function gerarFallback(nome) {\n")
-	sb.WriteString("  return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23ffffff'/><text x='50%' y='45%' dominant-baseline='middle' text-anchor='middle' font-size='80'>🖼️</text><text x='50%' y='70%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='32' fill='%23111111'>${nome}.webp</text></svg>`;\n")
 	sb.WriteString("}\n")
-
-	return os.WriteFile(filepath.Join("js", "data.js"), []byte(sb.String()), 0644)
+	return sb.String()
 }
 
 func abrirNavegador(url string) {

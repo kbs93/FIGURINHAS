@@ -3,14 +3,24 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
 
-body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+html, body {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+}
 
 /* Trava a rolagem de fundo quando o painel lateral/menu estiver aberto */
-body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hidden; touch-action: none; /* Bloqueia arrasto de toque no mobile atrás da gaveta */ }
+body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hidden; touch-action: none; }
 
 /* ================= SPLIT LAYOUT ================= */
-.split-layout { display: flex; width: 100vw; height: 100vh; overflow: hidden; }
-
+.split-layout {
+  display: flex;
+  width: 100vw;
+  height: 100%;
+  overflow: hidden;
+}
 /* PAINEL LATERAL ESQUERDO */
 .split-left { width: 380px; min-width: 340px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; justify-content: space-between; padding: 20px 18px 14px; height: 100%; box-sizing: border-box; overflow-y: auto; }
 
@@ -73,7 +83,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .footer-copy-text { font-size: 0.7rem; color: #556771; }
 
 /* ================= COLUNA DIREITA (GRADE) ================= */
-.split-right { flex: 1; display: flex; flex-direction: column; height: 100%; overflow-y: auto; padding: 24px 32px; box-sizing: border-box; }
 
 .mobile-only { display: none; }
 
@@ -152,10 +161,116 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 .chip.active { background-color: var(--accent-green); color: #0b141a; font-weight: 700; border-color: var(--accent-green); }
 
-/* ================= GRADE ================= */
-.gallery-wrapper { flex: 1; width: 100%; display: flex; flex-direction: column; }
 
-.stickers-sheet { padding: 16px; border-radius: 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); grid-auto-rows: 125px; align-content: start; gap: 12px; width: 100%; box-sizing: border-box; }
+/* ================= GRADE ================= */
+/* ================= COLUNA DIREITA (PAINEL PRINCIPAL) ================= */
+.split-right { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  height: 100%; 
+  min-height: 0; 
+  overflow: hidden; 
+  padding: 18px 28px 0 28px; 
+  box-sizing: border-box; 
+}
+
+/* Área que envolve status, grelha e rodapé de paginação */
+.gallery-wrapper { 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 0; 
+  overflow: hidden; 
+  position: relative; 
+}
+
+/* GRELHA ROLÁVEL COM BARRA VERTICAL PARA ATÉ 200 FIGURINHAS */
+.stickers-sheet { 
+  flex: 1; 
+  min-height: 0; 
+  overflow-y: scroll; 
+  overflow-x: hidden; 
+  padding: 4px 8px 16px 0; 
+  border-radius: 8px; 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); 
+  grid-auto-rows: 125px; 
+  align-content: start; 
+  gap: 12px; 
+  width: 100%; 
+  box-sizing: border-box; 
+}
+
+.stickers-sheet::-webkit-scrollbar {
+  width: 6px;
+}
+
+.stickers-sheet::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.stickers-sheet::-webkit-scrollbar-thumb {
+  background-color: #233742;
+  border-radius: 4px;
+}
+
+.stickers-sheet::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-green);
+}
+
+/* BARRA FIXA DOS BOTÕES NA BASE DA TELA */
+.pagination-footer-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  background-color: var(--bg-dark);
+  border-top: 1px solid var(--border-subtle);
+  width: 100%;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.btn-load-more {
+  display: none;
+}
+
+.page-nav-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.btn-page-nav {
+  padding: 6px 6px;
+  background-color: #000000;
+  color: #e9edef;
+  border: 1px solid #2a3942;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.98rem;
+  font-weight: 700;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-page-nav:hover:not(:disabled) {
+  border-color: var(--accent-green);
+  background-color: #263843;
+}
+
+.btn-page-nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.page-nav-text {
+  color: #8696a0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  user-select: none;
+}
 
 .sticker-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e1e4e8; border-radius: 8px; padding: 6px; background-color: #fff; cursor: pointer; width: 100%; height: 120px; box-sizing: border-box; overflow: hidden; transition: transform 0.15s ease,border-color 0.15s ease,box-shadow 0.15s ease; }
 
@@ -241,7 +356,13 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .mobile-only .theme-pill-text { color: #e9edef; }
   /* Garante que o botão hambúrguer mantenha os traços claros visíveis */
   .mobile-only .menu-btn .bar { background-color: #e9edef; }
-  .split-layout { flex-direction: column; height: auto; overflow: visible; }
+ .split-layout { 
+    flex-direction: column; 
+    height: calc(100% - 50px); 
+    height: calc(100dvh - 50px); 
+    overflow: hidden; 
+  }
+  
   /* O PAINEL TRANSFORMA-SE NA BOTTOM SHEET FLUTUANTE (DE BAIXO PARA CIMA) */
   aside.split-left { position: fixed; bottom: 0; left: 0; right: 0; top: auto; width: 100%; min-width: 100%; max-height: 85vh; max-height: 85dvh; background-color: var(--bg-sidebar); border-top: 1px solid var(--border-subtle); border-right: none; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 2005; display: flex; flex-direction: column; padding: 8px 16px 20px; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6); transform: translateY(105%); transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1); overflow: hidden; }
   /* Quando aberto: sobe suavemente */
@@ -265,11 +386,92 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .sheet-category-item.active { background-color: var(--bg-pill); color: var(--accent-green); font-weight: 700; }
  
   
-  /* Ajustes da grade e cabeçalho mobile */
-  .split-right { height: auto; overflow-y: visible; padding: 12px 10px; }
-  .stickers-sheet { grid-template-columns: repeat(5, 1fr); grid-auto-rows: auto; gap: 6px; padding: 6px 4px; }
-  .sticker-cell { height: auto; aspect-ratio: 1/1; padding: 4px; border-radius: 6px; }
-  .sticker-preview img { max-width: 100%; max-height: 100%; }
+/*=========================== AJUSTANDO AS FIGURAS DENTRO DO SCROL =======================================================*/
+  
+/* Ajustes da coluna, grade e botões no mobile e tablet */
+  .split-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    padding: 8px 10px 0 10px;
+    box-sizing: border-box;
+  }
+
+  .gallery-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* 4 colunas uniformes com tamanho mínimo garantido */
+  .stickers-sheet {
+    flex: 1;
+    min-height: 0;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: max-content;
+    gap: 8px;
+    padding: 6px 4px 14px 4px;
+    align-content: start;
+  }
+
+  /* Célula quadrada com proporção 1:1 e sem esticar */
+  .sticker-cell {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    min-height: 70px;
+    padding: 5px;
+    border-radius: 8px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sticker-preview {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sticker-preview img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .catalog-status-bar {
+    padding: 2px 4px 6px;
+    flex-shrink: 0;
+  }
+
+  .status-count-text {
+    font-size: 0.78rem;
+  }
+
+  /* Barra de navegação visível e fixa na parte inferior */
+  .pagination-footer-bar {
+    padding: 8px 12px;
+    background-color: var(--bg-dark);
+    border-top: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+  }
+
+
+  .page-nav-text {
+    font-size: 0.84rem;
+  }
   .catalog-status-bar { padding: 2px 6px 6px; }
   .status-count-text { font-size: 0.76rem; }
 }
@@ -388,7 +590,10 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .categories-wrapper,   .desktop-info-block,   .footer-sidebar,   .search-section,   aside.split-left .compact-theme-pill,
   #btnReturnHomeDesktop { display: none; }
   /* Exibe o Botão Flutuante circular */
-  .fab-search-btn.mobile-only-fab { display: flex; align-items: center; justify-content: center; position: fixed; bottom: 24px; right: 20px; width: 54px; height: 54px; background-color: var(--accent-green); color: #0b141a; border: none; border-radius: 50%; font-size: 1.35rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45); cursor: pointer; z-index: 1000; transition: transform 0.2s ease,background-color 0.2s ease; }
+/* Exibe o Botão Flutuante circular acima da barra de paginação BOTAO*/
+  .fab-search-btn.mobile-only-fab { display: flex; align-items: center; justify-content: center; position: fixed; bottom: 95px; right: 18px; width: 52px; height: 52px; 
+    background-color: var(--accent-green); color: #0b141a; border: none; border-radius: 50%; font-size: 1.35rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45); 
+    cursor: pointer; z-index: 1000; transition: transform 0.2s ease,background-color 0.2s ease; }
   .fab-search-btn:active { transform: scale(0.92); }
   /* Barra de busca deslizante no topo do mobile */
   /* Botão X com fundo cinza arredondado */
@@ -606,35 +811,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .cardbox-viewport { transform: scale(0.8) rotateX(-24deg) rotateY(45deg); }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* ========================================================================== */
 /*                                CAIXA 3D                                    */
 /* ========================================================================== */
@@ -794,14 +970,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   50%, 100% { transform: rotate3d(1, 0, 0, -190deg); }
   70% { transform: rotate3d(1, 0, 0, -150deg); }
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -1001,3 +1169,4 @@ max-width: 85vw;
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
 }
+

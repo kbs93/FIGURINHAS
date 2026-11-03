@@ -184,7 +184,7 @@
         </div>
       </section>
 
-      <!-- Grade de Figurinhas -->
+<!-- Grade de Figurinhas -->
       <section class="gallery-wrapper">
         <div class="catalog-status-bar">
           <span class="status-count-text" id="catalogStatusCount">
@@ -192,6 +192,7 @@
           </span>
         </div>
 
+        <!-- Grade de figurinhas com rolagem vertical -->
         <div class="stickers-sheet" id="stickersGrid">
           <!-- Renderizado via JS -->
         </div>
@@ -200,7 +201,21 @@
           <p>Nenhuma figurinha encontrada.</p>
           <button id="btnResetSearch" class="btn-reset">Mostrar todas</button>
         </div>
+
+        <!-- Barra de navegação fixa na base da coluna -->
+        <div id="paginationControls" class="pagination-footer-bar">
+          <button type="button" id="btnLoadMoreStickers" class="btn-load-more">
+            <i class="bi bi-plus-circle-fill"></i> Carregar Mais Figurinhas
+          </button>
+
+          <div id="pageNavControls" class="page-nav-group">
+            <button type="button" id="btnPrevPage" class="btn-page-nav"><i class="bi bi-chevron-double-left" style="font-size: 1.25rem; color: rgb(0, 255, 157);"></i></i> Anterior </button>
+            <span id="pageNavInfo" class="page-nav-text">Página 1 de 1</span>
+            <button type="button" id="btnNextPage" class="btn-page-nav">Próxima <i class="bi bi-chevron-double-right" style="font-size: 1.25rem; color: rgb(0, 255, 157);"></i></button>
+          </div>
+        </div>
       </section>
+
     </main>
   </div>
 
@@ -244,9 +259,13 @@
     <span class="mobile-search-hint">memes, bebe, feliz, bom dia, cachorro, gato,zoeira, criança,etc.</span>
   </div>
 
+
+
+
   <!-- Mensagens Toast -->
   <div class="toast" id="toastMessage"></div>
 
 <script type="module" src="js/main.js?v=1.1"></script>
+
 </body>
 </html>

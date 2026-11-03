@@ -2,56 +2,213 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teste GIF WhatsApp</title>
+  <title>Organizador em Lote (100 por vez)</title>
   <style>
-    body {
-      background-color: #0b141a;
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      text-align: center;
-      font-family: sans-serif;
-      padding: 16px;
-    }
-    .instrucao {
-      color: #00d592;
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-    .img-box {
-      background-color: #ffffff;
-      padding: 12px;
-      border-radius: 12px;
-      display: inline-block;
-    }
-    img {
-      width: 200px;
-      height: 200px;
-      object-fit: contain;
-      user-select: auto;
-      -webkit-user-select: auto;
-      -webkit-touch-callout: default;
-      pointer-events: auto;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #0b141a; color: #e9edef; display: flex; height: 100vh; overflow: hidden; }
+
+    /* Barra Lateral Esquerda: Seleção da Categoria Alvo */
+    #lateral { width: 320px; border-right: 1px solid #202c33; display: flex; flex-direction: column; padding: 20px; background: #111b21; }
+    h2 { font-size: 15px; margin-bottom: 12px; color: #8696a0; text-transform: uppercase; letter-spacing: 0.5px; }
+    #lista-categorias { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; padding-right: 4px; }
+    .cat-btn { background: #182229; border: 1px solid #222e35; color: #d1d7db; padding: 12px 14px; border-radius: 8px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-size: 14px; transition: 0.15s; }
+    .cat-btn:hover { border-color: #00a884; }
+    .cat-btn.ativo { background: #00a884; border-color: #00a884; color: #111b21; font-weight: bold; }
+    .badge { font-size: 12px; background: rgba(0,0,0,0.3); padding: 3px 8px; border-radius: 10px; }
+
+    .btn-salvar { width: 100%; padding: 14px; border-radius: 8px; border: none; font-size: 15px; font-weight: bold; cursor: pointer; background: #00a884; color: #111b21; transition: 0.2s; }
+    .btn-salvar:hover { background: #06cf9c; }
+
+    /* Painel Principal: Grade de 100 figurinhas */
+    #conteudo { flex: 1; display: flex; flex-direction: column; padding: 20px 24px; overflow: hidden; }
+    .topo-acoes { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid #202c33; padding-bottom: 14px; }
+    .topo-info { display: flex; flex-direction: column; gap: 4px; }
+    .topo-info h1 { font-size: 18px; color: #e9edef; }
+    .topo-info span { font-size: 13px; color: #8696a0; }
+    
+    .paginacao { display: flex; align-items: center; gap: 10px; }
+    .btn-pag { background: #202c33; border: 1px solid #2a3942; color: #e9edef; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .btn-pag:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-pag:not(:disabled):hover { background: #2a3942; border-color: #00a884; }
+
+    #grade-figurinhas { flex: 1; display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); gap: 10px; overflow-y: auto; padding-right: 6px; align-content: flex-start; }
+    
+    .card-item { background: #111b21; border: 2px solid #202c33; border-radius: 8px; padding: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.15s; position: relative; user-select: none; height: 125px; }
+    .card-item:hover { border-color: #3b4a54; }
+    .card-item img { max-width: 75px; max-height: 75px; object-fit: contain; }
+    .card-item .nome-img { font-size: 10px; color: #8696a0; margin-top: 6px; width: 100%; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* Indicador visual de quando o item pertence à categoria selecionada */
+    .card-item.marcado { border-color: #00a884; background: #0c2723; }
+    .card-item.marcado::after { content: "✓"; position: absolute; top: 4px; right: 6px; background: #00a884; color: #111b21; font-weight: bold; font-size: 10px; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
   </style>
 </head>
 <body>
 
-  <div class="instrucao">
-    Toque e segure na imagem abaixo e selecione:<br>
-    👉 "Copiar imagem"[cite: 2]
+  <!-- Lateral: Escolha a categoria de trabalho -->
+  <div id="lateral">
+    <h2>1. Escolha a Categoria</h2>
+    <div id="lista-categorias"></div>
+    <button class="btn-salvar" id="btnSalvarTudo">💾 Salvar no figurinhas.json</button>
   </div>
 
-  <div class="img-box">
-    <!-- Referência direta para a pasta figurinhas -->
-    <img src="figurinhas/d43.gif" alt="Figurinha Animada">
+  <!-- Principal: 100 figurinhas por vez na grade -->
+  <div id="conteudo">
+    <div class="topo-acoes">
+      <div class="topo-info">
+        <h1 id="titulo-categoria">Categoria: Memes</h1>
+        <span id="texto-contador">Mostrando 100 figurinhas nesta página. Clique nelas para marcar ou desmarcar.</span>
+      </div>
+      <div class="paginacao">
+        <button class="btn-pag" id="btnPagAnt">◀ Anteriores (100)</button>
+        <span id="infoPag" style="font-size: 13px; color: #8696a0;">Página 1</span>
+        <button class="btn-pag" id="btnPagProx">Próximas (100) ▶</button>
+      </div>
+    </div>
+
+    <div id="grade-figurinhas"></div>
   </div>
 
+  <script>
+    const listaCategorias = [
+      { id: "memes", label: "Memes" },
+      { id: "bom-dia", label: "Bom Dia" },
+      { id: "boa-tarde", label: "Boa Tarde" },
+      { id: "boa-noite", label: "Boa Noite" },
+      { id: "reacoes", label: "Reações" },
+      { id: "humor", label: "Humor" },
+      { id: "animais", label: "Animais" },
+      { id: "triste", label: "Triste" },
+      { id: "feliz", label: "Feliz" },
+      { id: "times", label: "Times" },
+      { id: "cachorro", label: "Cachorro" },
+      { id: "gato", label: "Gato" },
+      { id: "politica", label: "Política" },
+      { id: "religiao", label: "Religião" }
+    ];
+
+    const ITENS_POR_PAGINA = 100;
+    let arquivos = [];
+    let mapa = {};
+    let categoriaAtiva = "memes";
+    let paginaAtual = 0;
+
+    listaCategorias.forEach(c => mapa[c.id] = new Set());
+
+    async function iniciar() {
+      const respArq = await fetch('/api/arquivos');
+      arquivos = await respArq.json();
+
+      const respDados = await fetch('/api/carregar');
+      const dados = await respDados.json();
+
+      // Carrega diretamente pelas chaves do JSON ("memes", "bom-dia", etc.)
+      listaCategorias.forEach(c => {
+        const itens = dados[c.id] || [];
+        itens.forEach(nome => {
+          const achado = arquivos.find(a => a === nome || a.startsWith(nome + "."));
+          if (achado) mapa[c.id].add(achado);
+        });
+      });
+
+      desenharLateral();
+      renderizarGradeLote();
+    }
+
+    function desenharLateral() {
+      const cont = document.getElementById('lista-categorias');
+      cont.innerHTML = listaCategorias.map(c => `
+        <div class="cat-btn ${c.id === categoriaAtiva ? 'ativo' : ''}" onclick="mudarCategoria('${c.id}')">
+          <span>${c.label}</span>
+          <span class="badge">${mapa[c.id].size}</span>
+        </div>
+      `).join('');
+
+      const catObj = listaCategorias.find(c => c.id === categoriaAtiva);
+      document.getElementById('titulo-categoria').textContent = 'Categoria: ' + (catObj ? catObj.label : '');
+    }
+
+    function mudarCategoria(catId) {
+      categoriaAtiva = catId;
+      desenharLateral();
+      renderizarGradeLote();
+    }
+
+    function renderizarGradeLote() {
+      const totalPaginas = Math.ceil(arquivos.length / ITENS_POR_PAGINA) || 1;
+      const inicio = paginaAtual * ITENS_POR_PAGINA;
+      const fim = Math.min(inicio + ITENS_POR_PAGINA, arquivos.length);
+      const fatia = arquivos.slice(inicio, fim);
+
+      document.getElementById('infoPag').textContent = `Página ${paginaAtual + 1} de ${totalPaginas}`;
+      document.getElementById('texto-contador').textContent = `Mostrando figurinhas ${inicio + 1} até ${fim} de ${arquivos.length}. Clique para adicionar/remover de "${listaCategorias.find(c => c.id === categoriaAtiva).label}".`;
+
+      document.getElementById('btnPagAnt').disabled = (paginaAtual === 0);
+      document.getElementById('btnPagProx').disabled = (fim >= arquivos.length);
+
+      const grid = document.getElementById('grade-figurinhas');
+      grid.innerHTML = fatia.map(nomeArq => {
+        const estaMarcado = mapa[categoriaAtiva].has(nomeArq);
+        return `
+          <div class="card-item ${estaMarcado ? 'marcado' : ''}" onclick="alternarItem('${nomeArq}')">
+            <img src="/figurinhas/${nomeArq}" loading="lazy" alt="${nomeArq}">
+            <span class="nome-img" title="${nomeArq}">${nomeArq}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function alternarItem(nomeArq) {
+      if (mapa[categoriaAtiva].has(nomeArq)) {
+        mapa[categoriaAtiva].delete(nomeArq);
+      } else {
+        mapa[categoriaAtiva].add(nomeArq);
+      }
+      desenharLateral();
+      renderizarGradeLote();
+    }
+
+    document.getElementById('btnPagAnt').onclick = () => {
+      if (paginaAtual > 0) {
+        paginaAtual--;
+        renderizarGradeLote();
+      }
+    };
+
+    document.getElementById('btnPagProx').onclick = () => {
+      const totalPaginas = Math.ceil(arquivos.length / ITENS_POR_PAGINA);
+      if (paginaAtual < totalPaginas - 1) {
+        paginaAtual++;
+        renderizarGradeLote();
+      }
+    };
+document.getElementById('btnSalvarTudo').onclick = async () => {
+      const payload = { categorias: {} };
+      listaCategorias.forEach(c => {
+        // Mantém a extensão caso seja gif (como d43.gif), ou grava o nome base
+        payload.categorias[c.id] = Array.from(mapa[c.id]).map(a => {
+          if (a.toLowerCase().endsWith('.gif')) {
+            return a;
+          }
+          return a.replace(/\.[^/.]+$/, "");
+        });
+      });
+
+      const resp = await fetch('/api/salvar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (resp.ok) {
+        alert('figurinhas.json salvo com sucesso com todas as categorias!');
+        // Atualiza a página automaticamente após salvar
+        window.location.reload();
+      } else {
+        alert('Erro ao gravar figurinhas.json');
+      }
+    };
+    iniciar();
+  </script>
 </body>
 </html>

@@ -1,21 +1,53 @@
-import { categoriasMap, gerarFallback } from './data.js';
+//import { categoriasMap, gerarFallback } from './data.js';
 import { CustomColorPicker } from './cor.js';
 import { inicializarApresentacao } from './intro.js';
 import { copiarFigurinha } from './clip.js';
+import { Paginador } from './paginacao.js';
 
-
-
-let gridController = null;
-
-
-// Função para calcular luminosidade e ajustar o texto claro/escuro automaticamente
 function getContrastColor(hex) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
   return (yiq >= 150) ? '#1a202c' : '#e9edef';
+}''
+
+
+// Objeto global de dados populado via JSON
+let categoriasMap = {};
+
+// Fallback visual SVG caso a figurinha não exista na pasta
+function gerarFallback(nome) {
+  return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='512' height='512' viewBox='0 0 512 512'>
+  <rect width='512' height='512' fill='%23ffffff'/><text x='50%' y='45%' dominant-baseline='middle' text-anchor='middle' font-size='80'></text><text x='50%' y='70%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='bold' font-size='32' fill='%23111111'>${nome}.webp</text></svg>`;
 }
+
+// Carrega o arquivo JSON e monta a lista 'todos' sem duplicados
+async function carregarDadosJSON() {
+  try {
+    const resposta = await fetch('js/figurinhas.json');
+    if (!resposta.ok) throw new Error('Falha ao carregar figurinhas.json');
+    categoriasMap = await resposta.json();
+
+    // Gera a categoria "todos" automaticamente
+    const todosSet = new Set();
+    Object.values(categoriasMap).forEach(arr => {
+      if (Array.isArray(arr)) {
+        arr.forEach(nome => todosSet.add(nome));
+      }
+    });
+    categoriasMap['todos'] = Array.from(todosSet);
+
+    // Inicializa as telas e contadores com os dados já em memória
+    renderizarCategoriasBottomSheet();
+    renderizarGrade();
+  } catch (erro) {
+    console.error('Erro na carga dos dados:', erro);
+  }
+}
+
+
+
 
 function applySiteTheme(hex) {
   const textColor = getContrastColor(hex);
@@ -92,21 +124,23 @@ const state = {
   stickerSelecionado: null
 };
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
   inicializarApresentacao();
   iniciarBotaoInicioDesktop();
-  renderizarGrade();
   iniciarFiltros();
-  renderizarCategoriasBottomSheet();
   iniciarBusca();
   iniciarCliquesGrade();
   iniciarModalPreview();
   iniciarMenu();
   iniciarModais();
   iniciarBuscaMobileFlutuante();
+// Inicializa o módulo separado de paginação passando a função de renderizar
+  Paginador.iniciar(renderizarGrade);
+  // Dispara a leitura do JSON e renderiza as figurinhas
+  carregarDadosJSON();
 });
+
+
 
 function iniciarBotaoInicioDesktop() {
   const btnReturnDesktop = document.getElementById('btnReturnHomeDesktop');
@@ -121,11 +155,9 @@ function iniciarBotaoInicioDesktop() {
   });
 }
 
-
 /**
- * 1. Renderiza a grade de figurinhas
+ * 1. Renderiza a grade de figurinhas conectada ao Paginador
  */
-
 function renderizarGrade() {
   const grid = document.getElementById('stickersGrid');
   const empty = document.getElementById('emptyState');
@@ -137,8 +169,11 @@ function renderizarGrade() {
 
   const filtrados = lista.filter(nome => {
     if (!state.busca) return true;
-    return nome.toLowerCase().includes(state.busca);
+    return String(nome).toLowerCase().includes(state.busca);
   });
+
+  // Atualiza a lista filtrada no paginador
+  Paginador.definirLista(filtrados);
 
   if (filtrados.length === 0) {
     grid.innerHTML = '';
@@ -146,30 +181,46 @@ function renderizarGrade() {
     if (statusCount) {
       statusCount.innerHTML = `Nenhuma figurinha encontrada para esta pesquisa`;
     }
+    Paginador.atualizarInterfaceControles();
     return;
   }
 
   if (empty) empty.classList.add('hidden');
 
-  if (statusCount) {
-    statusCount.innerHTML = `Mostrando <strong>${filtrados.length}</strong> de <strong>${totalGeral}</strong> figurinhas`;
+  // MOSTRA A FATIA ATUAL DE FIGURINHAS A CONTAGEM DAS MENSAGEM EM CADA PAGINA 
+  const fatia = Paginador.obterFatia();
+
+if (statusCount) {
+    const textoFaixa = fatia.inicio === fatia.fim 
+      ? `<strong>${fatia.fim}</strong>` 
+      : `<strong>${fatia.inicio} ate ${fatia.fim}</strong>`;
+
+    statusCount.innerHTML = `Mostrando ${textoFaixa} de <strong>${fatia.total}</strong> figurinhas`;
   }
 
   grid.innerHTML = '';
+  const fragmento = document.createDocumentFragment();
 
-  filtrados.forEach(item => {
-    // Se o item já tiver extensão (ex: d43.gif), usa o nome exato.
-    // Se não tiver (ex: d42), coloca .webp.
-  const itemStr = String(item).trim();
-// Reconhece se o item é o d43 ou se já termina com .gif
-const ehGif = itemStr.toLowerCase().endsWith('.gif') || itemStr.toLowerCase() === 'd43';
+  fatia.itens.forEach(item => {
+    const itemStr = String(item).trim();
+    const ehGif = itemStr.toLowerCase().endsWith('.gif') || itemStr.toLowerCase() === 'd43';
 
-const filename = ehGif 
-  ? (itemStr.toLowerCase().endsWith('.gif') ? itemStr : `${itemStr}.gif`)
-  : (itemStr.includes('.') ? itemStr : `${itemStr}.webp`);
+    const filename = ehGif 
+      ? (itemStr.toLowerCase().endsWith('.gif') ? itemStr : `${itemStr}.gif`)
+      : (itemStr.includes('.') ? itemStr : `${itemStr}.webp`);
 
-const baseName = filename.replace(/\.(webp|gif|png)$/i, '');
-    const caminho = `figurinhas/${filename}`;
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+
+
+      //FIREBASE STORAGE URL ENVIAR AS FIGURINHAS PARA O FIREBASE STORAGE E PEGAR O LINK DIRETO PARA CADA FIGURINHA 
+    const baseName = filename.replace(/\.(webp|gif|png)$/i, '');
+    const caminho = `https://firebasestorage.googleapis.com/v0/b/boxfiguras.firebasestorage.app/o/figurinhas%2F${encodeURIComponent(filename)}?alt=media`;
     const fallback = gerarFallback(baseName);
 
     const cell = document.createElement('div');
@@ -200,19 +251,13 @@ const baseName = filename.replace(/\.(webp|gif|png)$/i, '');
     preview.appendChild(img);
     cell.appendChild(preview);
     cell.appendChild(span);
-    grid.appendChild(cell);
+    fragmento.appendChild(cell);
   });
+
+  grid.appendChild(fragmento);
+  Paginador.atualizarInterfaceControles();
 }
 
-const preview = document.createElement('div');
-    preview.className = 'sticker-preview';
-
-    if (ehGif) {
-      const badge = document.createElement('span');
-      badge.className = 'badge-animado';
-      badge.textContent = 'Animado';
-      preview.appendChild(badge);
-    }
 
 /**
  * 2. Clique na grade: bloqueia completamente abertura de modal para GIFs
@@ -235,7 +280,7 @@ function iniciarCliquesGrade() {
     if (ehGif) {
       // Impede qualquer comportamento padrão ou propagação que abriria o modal
       e.stopPropagation();
-mostrarToastAnimadoComConfete('Pressione e segure, Escolhe copiar imagem, depois e so colcar no WhatsApp');
+mostrarToastAnimadoComConfete('Pressione e segure, Escolhe copiar imagem, depois e so colar no WhatsApp');
       return;
     }
 
@@ -277,7 +322,7 @@ function abrirModalPreview(url, fallback, filename) {
   previewTitle.textContent = 'Prévia da Figurinha';
   previewFilename.textContent = filename;
 
-  const urlGif = url.endsWith('.webp') ? url.replace('.webp', '.gif') : url;
+  const urlGif = url.includes('.webp') ? url.replace('.webp', '.gif') : url;
 
   previewImg.onerror = () => {
     if (previewImg.src !== urlGif && !url.endsWith('.gif')) {
@@ -424,7 +469,7 @@ function iniciarFiltros() {
       inline: 'center',
       block: 'nearest'
     });
-
+Paginador.resetar();
     state.categoria = chip.getAttribute('data-category');
     renderizarGrade();
     atualizarBotaoLimpar();
@@ -440,9 +485,12 @@ function iniciarBusca() {
   const btnClear = document.getElementById('btnClearAllFilters');
   const btnReset = document.getElementById('btnResetSearch');
 
-  if (!input) return;
+
+
+if (!input) return;
 
   function filtrar(val) {
+    Paginador.resetar();
     state.busca = val.trim().toLowerCase();
     renderizarGrade();
     atualizarBotaoLimpar();
@@ -745,4 +793,5 @@ renderizarGrade();
       document.body.classList.remove('menu-open');
     }
   });
+
 }
