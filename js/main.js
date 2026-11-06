@@ -3,6 +3,7 @@ import { CustomColorPicker } from './cor.js';
 import { inicializarApresentacao } from './intro.js';
 import { copiarFigurinha } from './clip.js';
 import { Paginador } from './paginacao.js';
+import { obterUrlFigurinha } from './storageConfig.js';
 
 function getContrastColor(hex) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -155,6 +156,37 @@ function iniciarBotaoInicioDesktop() {
   });
 }
 
+
+
+// Remove acentos, pontuação e padroniza o texto
+function normalizarTexto(str) {
+  return String(str || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[-_]/g, ' ')
+    .trim();
+}
+
+// Mapa de sinónimos e equivalências para palavras comuns
+const mapaSinonimos = {
+  'bebe': ['bebe', 'bebes', 'crianca', 'criancas', 'nenem'],
+  'crianca': ['crianca', 'criancas', 'bebe', 'bebes', 'infantil'],
+  'cachorro': ['cachorro', 'cao', 'dog', 'animais', 'pet'],
+  'gato': ['gato', 'cat', 'animais', 'felino'],
+  'meme': ['meme', 'memes', 'zoeira', 'humor', 'engracado'],
+  'engracado': ['engracado', 'humor', 'memes', 'comedia'],
+  'futebol': ['times', 'flamengo', 'corinthians', 'palmeiras', 'futebol', 'jogo'],
+  'triste': ['triste', 'choro', 'tristeza', 'bad'],
+  'feliz': ['feliz', 'alegria', 'comemoracao', 'festa']
+};
+
+
+
+
+
+
+
 /**
  * 1. Renderiza a grade de figurinhas conectada ao Paginador
  */
@@ -164,12 +196,43 @@ function renderizarGrade() {
   const statusCount = document.getElementById('catalogStatusCount');
   if (!grid) return;
 
-  const totalGeral = (categoriasMap['todos'] || []).length;
-  const lista = categoriasMap[state.categoria] || [];
+const termoBusca = normalizarTexto(state.busca);
 
-  const filtrados = lista.filter(nome => {
-    if (!state.busca) return true;
-    return String(nome).toLowerCase().includes(state.busca);
+  // Se houver texto digitado no campo de busca, pesquisa em TODAS as figurinhas
+  // Se o campo estiver vazio, respeita a categoria atualmente clicada
+  const baseLista = termoBusca ? (categoriasMap['todos'] || []) : (categoriasMap[state.categoria] || []);
+
+  const filtrados = baseLista.filter(item => {
+    if (!termoBusca) return true;
+
+    // Obtém o nome limpo do arquivo (sem extensão e sem traços)
+    const nomeLimpo = normalizarTexto(item);
+
+    // Identifica quais categorias do JSON contêm este item
+    const categoriasDoItem = Object.keys(categoriasMap)
+      .filter(cat => cat !== 'todos' && Array.isArray(categoriasMap[cat]) && categoriasMap[cat].includes(item))
+      .map(cat => normalizarTexto(cat));
+
+    // Texto completo onde a busca pode encontrar o termo
+    const textoCompleto = `${nomeLimpo} ${categoriasDoItem.join(' ')}`;
+
+    // Divide a busca caso o usuário digite mais de uma palavra (ex: "cachorro bom dia")
+    const palavrasBuscadas = termoBusca.split(/\s+/).filter(Boolean);
+
+    // Valida se cada palavra digitada é atendida pelo arquivo, pela categoria ou por sinónimos
+    return palavrasBuscadas.every(palavra => {
+      if (textoCompleto.includes(palavra)) return true;
+
+      // Verifica sinónimos mapeados
+      for (const [chave, sinonimos] of Object.entries(mapaSinonimos)) {
+        if (chave.includes(palavra) || sinonimos.some(s => s.includes(palavra))) {
+          const achouSinonimo = sinonimos.some(s => textoCompleto.includes(s));
+          if (achouSinonimo) return true;
+        }
+      }
+
+      return false;
+    });
   });
 
   // Atualiza a lista filtrada no paginador
@@ -201,26 +264,40 @@ if (statusCount) {
   grid.innerHTML = '';
   const fragmento = document.createDocumentFragment();
 
-  fatia.itens.forEach(item => {
+
+
+
+
+
+
+
+
+  //=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+//=============================================================================================================
+fatia.itens.forEach(item => {
     const itemStr = String(item).trim();
+    if (!itemStr) return;
+
     const ehGif = itemStr.toLowerCase().endsWith('.gif') || itemStr.toLowerCase() === 'd43';
 
     const filename = ehGif 
       ? (itemStr.toLowerCase().endsWith('.gif') ? itemStr : `${itemStr}.gif`)
       : (itemStr.includes('.') ? itemStr : `${itemStr}.webp`);
 
-//=============================================================================================================
-//=============================================================================================================
-//=============================================================================================================
-//=============================================================================================================
-//=============================================================================================================
-//=============================================================================================================
-//=============================================================================================================
+    // Isola apenas o nome do arquivo para o texto do card (ex: "gato/b.webp" vira apenas "b")
+    const apenasArquivo = filename.split('/').pop();
+    const baseName = apenasArquivo.replace(/\.(webp|gif|png)$/i, '');
 
+    // Envia o caminho completo (com a pasta) para montar a URL da CDN
+    const caminho = obterUrlFigurinha(filename);
 
-      //FIREBASE STORAGE URL ENVIAR AS FIGURINHAS PARA O FIREBASE STORAGE E PEGAR O LINK DIRETO PARA CADA FIGURINHA 
-    const baseName = filename.replace(/\.(webp|gif|png)$/i, '');
-    const caminho = `https://firebasestorage.googleapis.com/v0/b/boxfiguras.firebasestorage.app/o/figurinhas%2F${encodeURIComponent(filename)}?alt=media`;
+    //quando for enviar para o firebase storage, usar o link abaixo, mas antes precisa enviar as figurinhas para o firebase storage
+    //const caminho = `https://firebasestorage.googleapis.com/v0/b/boxfiguras.firebasestorage.app/o/figurinhas%2F${encodeURIComponent(filename)}?alt=media`;
     const fallback = gerarFallback(baseName);
 
     const cell = document.createElement('div');
@@ -297,7 +374,8 @@ mostrarToastAnimadoComConfete('Pressione e segure, Escolhe copiar imagem, depois
 }
 
 
-/**
+/**======================================PREVIA DAS FIGURINHAS=================================================================
+ * 
  * 3. Modal de Prévia e Envio (instância única com fallback para .gif)
  */
 function abrirModalPreview(url, fallback, filename) {
@@ -318,10 +396,6 @@ function abrirModalPreview(url, fallback, filename) {
 
   previewImg.onerror = null;
   previewImg.src = '';
-
-  previewTitle.textContent = 'Prévia da Figurinha';
-  previewFilename.textContent = filename;
-
   const urlGif = url.includes('.webp') ? url.replace('.webp', '.gif') : url;
 
   previewImg.onerror = () => {
@@ -725,6 +799,7 @@ function iniciarBuscaMobileFlutuante() {
 }
 
 /**
+ * LISTA DAS CATEGORIAS
  * Renderiza e sincroniza as categorias com contagem na Bottom Sheet móvel
  */
 function renderizarCategoriasBottomSheet() {
@@ -748,7 +823,16 @@ function renderizarCategoriasBottomSheet() {
     'times': 'Times',
     'politica': 'Política',
     'religiao': 'Religião',
-    'chaves':'Chaves'
+    'chaves':'Chaves',
+    'flork':'Flork',
+    'criancas':'Crianças',
+    'bebes':'Bebês',
+    'animacao':'Animação',
+    'filmes':'Filmes',
+    'series':'Séries',
+    'games':'Games',
+    'musica':'Música',
+    'outros':'Outros'
   };
 
 

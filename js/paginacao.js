@@ -1,5 +1,5 @@
 // js/paginacao.js - Gerenciador de paginação até 200 figuras com rolagem interna
-const LIMITE_PAGINA = 90; // Limite fixo de 200 figuras por página
+const LIMITE_PAGINA = 80; // Limite fixo de 200 figuras por página
 
 export const Paginador = {
   paginaAtual: 1,

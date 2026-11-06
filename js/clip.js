@@ -38,28 +38,43 @@ async function converterParaPNG(blob) {
 
 /**
  * Grava a imagem na Área de Transferência (Clipboard)
- * Mantém compatibilidade com ambos os nomes de importação
+ * Otimizado para o botão "Colar" do teclado Android aparecer instantaneamente
  */
 export async function copiarFigurinha(url) {
   if (!navigator.clipboard || !window.ClipboardItem) {
     throw new Error('Clipboard não suportado');
   }
 
-  const blobPromise = fetch(url)
-    .then((res) => {
-      if (!res.ok) throw new Error('Erro ao baixar imagem');
-      return res.blob();
-    })
-    .then((blob) => {
-      if (blob.type === 'image/png') return blob;
-      return converterParaPNG(blob);
-    });
+  // 1. Resolve o download e a conversão ANTES de mexer no ClipboardItem
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('Erro ao baixar imagem');
+  let blob = await res.blob();
 
+  if (blob.type !== 'image/png') {
+    blob = await converterParaPNG(blob);
+  }
+
+  // 2. Grava o dado bruto imediatamente (sem passar Promises lentas por dentro)
   await navigator.clipboard.write([
     new ClipboardItem({
-      'image/png': blobPromise
+      [blob.type]: blob
     })
   ]);
+
+  // 3. Força o sistema Android/Teclado a atualizar o status do Clipboard na hora
+  const inputFalso = document.createElement('input');
+  inputFalso.style.position = 'fixed';
+  inputFalso.style.opacity = '0';
+  inputFalso.style.pointerEvents = 'none';
+  document.body.appendChild(inputFalso);
+  inputFalso.focus();
+  
+  // Remove o elemento após o teclado registrar a mudança
+  setTimeout(() => {
+    inputFalso.blur();
+    document.body.removeChild(inputFalso);
+  }, 50);
 }
 
+// Mantém compatibilidade com ambos os nomes de importação que você usa
 export { copiarFigurinha as copiarFigurinhaParaClipboard };

@@ -57,49 +57,57 @@
   </div>
 </div>
 <div class="intro-hero-brand">
-<span class="logo-name">BOX<span class="logo-green">Figuras4</span></span>
+<span class="logo-name">BOX<span class="logo-green">Figuras </span></span>
 </div>   
 <div class="intro-cta-group">
-<button type="button" class="btn-intro-main" id="btnIntroStart">
+  <button type="button" class="btn-intro-main" id="btnIntroStart">
+    <span>Ver Figurinhas Agora</span>
+    <i class="bi bi-arrow-up-right"></i>
+  </button>
 
-<span>Ver Figurinhas Agora</span>
-<i class="bi bi-arrow-up-right"></i>
-</button>
-<h1 class="intro-hero-title">As melhores figurinhas do Brasil</h1>
-<p class="intro-hero-desc">
-  Dê mais vida, humor e emoção aos seus grupos e conversas com figurinhas atualizadas diariamente. Navegue pelas tendências mais populares das redes sociais, descubra stickers clássicos de comédia, expressões do dia a dia e memes feitos à medida do humor brasileiro. Escolha os seus pacotes favoritos, adicione-os diretamente à sua aplicação e surpreenda todos os seus amigos sem complicações nem configurações demoradas.
-</p>
+  <!-- CONTADOR ABAIXO DO BOTÃO -->
+  <div class="visitor-counter-pill" id="visitorCounterBadge">
+    <i class="bi bi-emoji-heart-eyes-fill"></i>
+    <span>Mais de <strong id="contadorVisitasValor">&nbsp; 0 &nbsp;</strong> Pessoas já usaram</span>
+  </div>
+
+  <h1 class="intro-hero-title">As melhores figurinhas do Brasil</h1>
+  <p class="intro-hero-desc">
+    Dê mais vida, humor e emoção aos seus grupos e conversas com figurinhas atualizadas diariamente. Navegue pelas tendências mais populares das redes sociais, descubra stickers clássicos de comédia, expressões do dia a dia e memes feitos à medida do humor brasileiro. Escolha os seus pacotes favoritos, adicione-os diretamente à sua aplicação e surpreenda todos os seus amigos sem complicações nem configurações demoradas.
+  </p>
 </div>
 </div>
 </div>
 
     <!-- Rodapé Limpo -->
 <!-- Rodapé Limpo e Organizado -->
-    <footer class="intro-footer-bar">
-      <div class="intro-footer-container">
-        <p class="intro-footer-copy">© kbsweb 2026 | • Feito para animar suas conversas.</p>
-        
-        <nav class="intro-footer-nav" aria-label="Links institucionais">
-          <a href="#quem-somos" class="modal-trigger" data-modal="modalQuemSomos">Sobre Nós</a>
-          <a href="#como-baixar" class="modal-trigger" data-modal="modalComoBaixar">Como Baixar</a>
-          <a href="#termos" class="modal-trigger" data-modal="modalTermos">Termos</a>
-          <a href="#privacidade" class="modal-trigger" data-modal="modalPrivacidade">Privacidade</a>
-          <a href="mailto:contato@zapfigurinhas.com">Contato</a>
-        </nav>
+<!-- 🔹 RODAPÉ -->
+<footer class="custom-footer">
+    <div class="footer-container">
+      <nav class="footer-nav">
+        <a href="somos.html">Sobre Nós</a>
+        <a href="termos.html">Termos</a>
+        <a href="privacidade.html">Privacidade</a>
+      </nav>
 
-        <div class="intro-footer-socials">
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-            <i class="bi bi-facebook"></i>
-          </a>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <i class="bi bi-instagram"></i>
-          </a>
-          <a href="mailto:contato@zapfigurinhas.com" aria-label="Email de Contato">
-            <i class="bi bi-envelope-fill"></i>
-          </a>
-        </div>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/boxfiguras/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <i class="bi bi-instagram"></i>
+        </a>
+        <a href="mailto:boxfiguras@gmail.com" aria-label="E-mail">
+          <i class="bi bi-envelope"></i>
+        </a>
       </div>
-    </footer>
+
+      <div class="footer-contact">
+        <p style="margin: 0; font-size: 0.87em; color: #adb5bd;">Contato: boxfiguras@gmail.com</p>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; kbsweb 2026 | &bull; Feito para animar suas conversas.</p>
+      </div>
+    </div>
+  </footer>
   </section>
 
   <!-- Topo Mobile -->
@@ -219,14 +227,17 @@
     </main>
   </div>
 
-  <!-- Modal de Prévia e Envio -->
+  <!--=============================================  Modal de Previa e Envio ================================-->
 <!-- Modal de Prévia e Envio -->
   <div class="modal" id="modalPreview">
     <div class="modal-box preview-modal-box">
-      <div class="modal-header">
-        <h3 id="previewTitle">Figurinha</h3>
-        <button class="modal-close" id="previewCloseBtn">&times;</button>
-      </div>
+     <div class="modal-header">
+  <h3 id="previewTitle" style="color: #03cf81; font-size: 1.33rem; display: flex; flex-direction: column; line-height: 1.3;">
+    <span>após copiar é só colar no seu </span>
+    <span style="text-align: center;">whatsApp</span>
+  </h3>
+  <button class="modal-close" id="previewCloseBtn">&times;</button>
+</div>
       <div class="modal-body preview-modal-body">
         <div class="preview-img-container">
           <img id="previewImage" src="" alt="Prévia da Figurinha" width="220" height="220">
@@ -264,7 +275,12 @@
 
   <!-- Mensagens Toast -->
   <div class="toast" id="toastMessage"></div>
+<!-- Scripts Firebase (Versão Compatível Vanilla) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+  <!-- Script isolado exclusivo do Contador -->
+  <script src="js/contador.js"></script>
 <script type="module" src="js/main.js?v=1.1"></script>
 
 </body>

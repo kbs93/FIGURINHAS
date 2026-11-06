@@ -1,0 +1,11 @@
+
+
+
+
+▶▶▶ pasta ENVAR - serve pra enviar os arquivos pra o cloudflare
+
+▶▶▶ANIMACAO - E animação das figuras no index
+
+▶▶▶ ORGANIZARDOR - responsavel por organizar as figuras no painel 
+
+▶▶▶

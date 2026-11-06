@@ -1,26 +1,15 @@
-:root { --bg-dark: #0b141a; --bg-header: #0f1c24; --bg-sidebar: #111e26; --bg-pill: #1a2a34; --bg-chip: #101d24; --accent-green: #00d592; --accent-green-hover: #06e8a0; 
-  --border-subtle: #1e2c35; --text-main: #e9edef; }
+:root { --bg-dark: #0b141a; --bg-header: #0f1c24; --bg-sidebar: #111e26; --bg-pill: #1a2a34; --bg-chip: #101d24; --accent-green: #00d592; --accent-green-hover: #06e8a0; --border-subtle: #1e2c35; --text-main: #e9edef; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
 
-html, body {
-  height: 100%;
-  height: 100dvh;
-  overflow: hidden;
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-}
+body, html { height: 100%; height: 100dvh; overflow: hidden; background-color: var(--bg-dark); color: var(--text-main); }
 
 /* Trava a rolagem de fundo quando o painel lateral/menu estiver aberto */
 body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hidden; touch-action: none; }
 
 /* ================= SPLIT LAYOUT ================= */
-.split-layout {
-  display: flex;
-  width: 100vw;
-  height: 100%;
-  overflow: hidden;
-}
+.split-layout { display: flex; width: 100vw; height: 100%; overflow: hidden; }
+
 /* PAINEL LATERAL ESQUERDO */
 .split-left { width: 380px; min-width: 340px; background-color: var(--bg-sidebar); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; justify-content: space-between; padding: 20px 18px 14px; height: 100%; box-sizing: border-box; overflow-y: auto; }
 
@@ -32,20 +21,10 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 /* Alinha o logo e o botão X perfeitamente na mesma linha */
 /* Topo com Logo, Botão Início e Seletor Tema alinhados horizontalmente */
-.sidebar-top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  gap: 8px;
-}
+.sidebar-top-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 8px; }
 
-.sidebar-brand-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: nowrap;
-}
+.sidebar-brand-group { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+
 .close-sidebar-mobile-btn { display: none; background: transparent; border: none; color: var(--text-main); font-size: 2rem; line-height: 1; cursor: pointer; padding: 4px; }
 
 /* Botão Pílula "Tema ●" */
@@ -70,17 +49,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .btn-create-sticker .btn-icon { font-size: 1.15rem; display: inline-block; }
 
 .btn-create-sticker .btn-label { letter-spacing: 0.2px; }
-
-/* Rodapé Compacto */
-.footer-sidebar { border-top: 1px solid var(--border-subtle); padding-top: 12px; display: flex; flex-direction: column; gap: 6px; align-items: center; }
-
-.footer-side-links { display: flex; gap: 8px; align-items: center; font-size: 0.78rem; color: var(--text-dim); }
-
-.footer-side-links a { color: var(--text-dim); text-decoration: none; }
-
-.footer-side-links a:hover { color: var(--text-main); }
-
-.footer-copy-text { font-size: 0.7rem; color: #556771; }
 
 /* ================= COLUNA DIREITA (GRADE) ================= */
 
@@ -161,116 +129,38 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 .chip.active { background-color: var(--accent-green); color: #0b141a; font-weight: 700; border-color: var(--accent-green); }
 
-
 /* ================= GRADE ================= */
 /* ================= COLUNA DIREITA (PAINEL PRINCIPAL) ================= */
-.split-right { 
-  flex: 1; 
-  display: flex; 
-  flex-direction: column; 
-  height: 100%; 
-  min-height: 0; 
-  overflow: hidden; 
-  padding: 18px 28px 0 28px; 
-  box-sizing: border-box; 
-}
+.split-right { flex: 1; display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; padding: 18px 28px 0 28px; box-sizing: border-box; }
 
 /* Área que envolve status, grelha e rodapé de paginação */
-.gallery-wrapper { 
-  flex: 1; 
-  display: flex; 
-  flex-direction: column; 
-  min-height: 0; 
-  overflow: hidden; 
-  position: relative; 
-}
+.gallery-wrapper { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; position: relative; }
 
 /* GRELHA ROLÁVEL COM BARRA VERTICAL PARA ATÉ 200 FIGURINHAS */
-.stickers-sheet { 
-  flex: 1; 
-  min-height: 0; 
-  overflow-y: scroll; 
-  overflow-x: hidden; 
-  padding: 4px 8px 16px 0; 
-  border-radius: 8px; 
-  display: grid; 
-  grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); 
-  grid-auto-rows: 125px; 
-  align-content: start; 
-  gap: 12px; 
-  width: 100%; 
-  box-sizing: border-box; 
-}
+.stickers-sheet { flex: 1; min-height: 0; overflow-y: scroll; overflow-x: hidden; padding: 4px 8px 16px 0; border-radius: 8px; display: grid; grid-template-columns: repeat(auto-fill, minmax(105px, 1fr)); grid-auto-rows: 125px; align-content: start; gap: 12px; width: 100%; box-sizing: border-box; }
 
-.stickers-sheet::-webkit-scrollbar {
-  width: 6px;
-}
+.stickers-sheet::-webkit-scrollbar { width: 6px; }
 
-.stickers-sheet::-webkit-scrollbar-track {
-  background: transparent;
-}
+.stickers-sheet::-webkit-scrollbar-track { background: transparent; }
 
-.stickers-sheet::-webkit-scrollbar-thumb {
-  background-color: #233742;
-  border-radius: 4px;
-}
+.stickers-sheet::-webkit-scrollbar-thumb { background-color: #233742; border-radius: 4px; }
 
-.stickers-sheet::-webkit-scrollbar-thumb:hover {
-  background-color: var(--accent-green);
-}
+.stickers-sheet::-webkit-scrollbar-thumb:hover { background-color: var(--accent-green); }
 
 /* BARRA FIXA DOS BOTÕES NA BASE DA TELA */
-.pagination-footer-bar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 16px;
-  background-color: var(--bg-dark);
-  border-top: 1px solid var(--border-subtle);
-  width: 100%;
-  flex-shrink: 0;
-  box-sizing: border-box;
-}
+.pagination-footer-bar { display: flex; align-items: center; justify-content: center; padding: 10px 16px; background-color: var(--bg-dark); border-top: 1px solid var(--border-subtle); width: 100%; flex-shrink: 0; box-sizing: border-box; }
 
-.btn-load-more {
-  display: none;
-}
+.btn-load-more { display: none; }
 
-.page-nav-group {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
+.page-nav-group { display: flex; align-items: center; justify-content: center; gap: 16px; }
 
-.btn-page-nav {
-  padding: 6px 6px;
-  background-color: #000000;
-  color: #e9edef;
-  border: 1px solid #2a3942;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.98rem;
-  font-weight: 700;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
+.btn-page-nav { padding: 6px 6px; background-color: #000; color: #e9edef; border: 1px solid #2a3942; border-radius: 8px; cursor: pointer; font-size: 0.98rem; font-weight: 700; transition: border-color 0.2s ease,background-color 0.2s ease; }
 
-.btn-page-nav:hover:not(:disabled) {
-  border-color: var(--accent-green);
-  background-color: #263843;
-}
+.btn-page-nav:hover:not(:disabled) { border-color: var(--accent-green); background-color: #263843; }
 
-.btn-page-nav:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
+.btn-page-nav:disabled { opacity: 0.35; cursor: not-allowed; }
 
-.page-nav-text {
-  color: #8696a0;
-  font-size: 0.9rem;
-  font-weight: 700;
-  user-select: none;
-}
+.page-nav-text { color: #8696a0; font-size: 0.9rem; font-weight: 700; user-select: none; }
 
 .sticker-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid #e1e4e8; border-radius: 8px; padding: 6px; background-color: #fff; cursor: pointer; width: 100%; height: 120px; box-sizing: border-box; overflow: hidden; transition: transform 0.15s ease,border-color 0.15s ease,box-shadow 0.15s ease; }
 
@@ -342,8 +232,7 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .sheet-category-item.active { background-color: var(--bg-pill); color: var(--accent-green); font-weight: 700; }
 
 /* Badge redondo/oval de contagem alinhado à direita */
-.sheet-category-badge { background-color: #030303; color:rgb(255, 255, 255); font-size: 0.88rem; font-weight: 600; padding: 2px 10px; border-radius: 12px;
-   border: 1px solid var(--border-subtle); min-width: 28px; text-align: center; }
+.sheet-category-badge { background-color: #030303; color: rgb(255, 255, 255); font-size: 0.88rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; border: 1px solid var(--border-subtle); min-width: 28px; text-align: center; }
 
 .sheet-category-item.active .sheet-category-badge { background-color: var(--accent-green); color: #0b141a; border-color: var(--accent-green); }
 
@@ -356,13 +245,7 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .mobile-only .theme-pill-text { color: #e9edef; }
   /* Garante que o botão hambúrguer mantenha os traços claros visíveis */
   .mobile-only .menu-btn .bar { background-color: #e9edef; }
- .split-layout { 
-    flex-direction: column; 
-    height: calc(100% - 50px); 
-    height: calc(100dvh - 50px); 
-    overflow: hidden; 
-  }
-  
+  .split-layout { flex-direction: column; height: calc(100% - 50px); height: calc(100dvh - 50px); overflow: hidden; }
   /* O PAINEL TRANSFORMA-SE NA BOTTOM SHEET FLUTUANTE (DE BAIXO PARA CIMA) */
   aside.split-left { position: fixed; bottom: 0; left: 0; right: 0; top: auto; width: 100%; min-width: 100%; max-height: 85vh; max-height: 85dvh; background-color: var(--bg-sidebar); border-top: 1px solid var(--border-subtle); border-right: none; border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 2005; display: flex; flex-direction: column; padding: 8px 16px 20px; box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.6); transform: translateY(105%); transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1); overflow: hidden; }
   /* Quando aberto: sobe suavemente */
@@ -376,7 +259,6 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .mobile-sheet-links-grid a { color: var(--text-dim); text-decoration: none; font-size: 0.8rem; transition: color 0.15s ease; }
   .mobile-sheet-links-grid a:hover { color: var(--text-main); }
   /* Oculta os blocos de texto grandes desktop no mobile */
-  .desktop-info-block, .footer-sidebar { display: none; }
   /* Lista de categorias da Bottom Sheet com barra de rolagem vertical */
   /* Lista de categorias da Bottom Sheet com rolagem completa livre */
   .sheet-categories-section { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; /* Permite encolher e ativar scrollbar */ overflow-y: auto!important; /* Garante que a rolagem funcione sempre */ overscroll-behavior: contain; /* Impede arrastar a página de fundo junto */ margin-top: 8px; padding: 4px 2px 40px; /* 40px de respiro no final para exibir 'Religião' e todos os itens */ -webkit-overflow-scrolling: touch; }
@@ -384,94 +266,21 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
   .sheet-category-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 10px; color: var(--text-main); background: transparent; border: none; font-size: 0.95rem; font-weight: 500; cursor: pointer; text-align: left; width: 100%; transition: background-color 0.15s ease,color 0.15s ease; }
   .sheet-category-item:active, .sheet-category-item:hover { background-color: var(--bg-pill); }
   .sheet-category-item.active { background-color: var(--bg-pill); color: var(--accent-green); font-weight: 700; }
- 
-  
-/*=========================== AJUSTANDO AS FIGURAS DENTRO DO SCROL =======================================================*/
-  
-/* Ajustes da coluna, grade e botões no mobile e tablet */
-  .split-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 0;
-    overflow: hidden;
-    padding: 8px 10px 0 10px;
-    box-sizing: border-box;
-  }
-
-  .gallery-wrapper {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-  }
-
+  /*=========================== AJUSTANDO AS FIGURAS DENTRO DO SCROL =======================================================*/
+  /* Ajustes da coluna, grade e botões no mobile e tablet */
+  .split-right { flex: 1; display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; padding: 8px 10px 0 10px; box-sizing: border-box; }
+  .gallery-wrapper { flex: 1; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
   /* 4 colunas uniformes com tamanho mínimo garantido */
-  .stickers-sheet {
-    flex: 1;
-    min-height: 0;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    grid-template-columns: repeat(5, 1fr);
-    grid-auto-rows: max-content;
-    gap: 8px;
-    padding: 6px 4px 14px 4px;
-    align-content: start;
-  }
-
+  .stickers-sheet { flex: 1; min-height: 0; overflow-y: scroll; overflow-x: hidden; grid-template-columns: repeat(5, 1fr); grid-auto-rows: max-content; gap: 8px; padding: 6px 4px 14px 4px; align-content: start; }
   /* Célula quadrada com proporção 1:1 e sem esticar */
-  .sticker-cell {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 1 / 1;
-    min-height: 70px;
-    padding: 5px;
-    border-radius: 8px;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .sticker-preview {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .sticker-preview img {
-    width: 100%;
-    height: 100%;
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-  }
-
-  .catalog-status-bar {
-    padding: 2px 4px 6px;
-    flex-shrink: 0;
-  }
-
-  .status-count-text {
-    font-size: 0.78rem;
-  }
-
+  .sticker-cell { width: 100%; height: auto; aspect-ratio: 1/1; min-height: 70px; padding: 5px; border-radius: 8px; box-sizing: border-box; display: flex; align-items: center; justify-content: center; }
+  .sticker-preview { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+  .sticker-preview img { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
+  .catalog-status-bar { padding: 2px 4px 6px; flex-shrink: 0; }
+  .status-count-text { font-size: 0.78rem; }
   /* Barra de navegação visível e fixa na parte inferior */
-  .pagination-footer-bar {
-    padding: 8px 12px;
-    background-color: var(--bg-dark);
-    border-top: 1px solid var(--border-subtle);
-    flex-shrink: 0;
-  }
-
-
-  .page-nav-text {
-    font-size: 0.84rem;
-  }
+  .pagination-footer-bar { padding: 8px 12px; background-color: var(--bg-dark); border-top: 1px solid var(--border-subtle); flex-shrink: 0; }
+  .page-nav-text { font-size: 0.84rem; }
   .catalog-status-bar { padding: 2px 6px 6px; }
   .status-count-text { font-size: 0.76rem; }
 }
@@ -587,13 +396,10 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 /* ================= COMPORTAMENTO NO MOBILE ================= */
 @media (max-width: 950px) {
   /* Oculta elementos de desktop de dentro do bottom sheet no mobile */
-  .categories-wrapper,   .desktop-info-block,   .footer-sidebar,   .search-section,   aside.split-left .compact-theme-pill,
-  #btnReturnHomeDesktop { display: none; }
+  #btnReturnHomeDesktop,   .categories-wrapper,   .desktop-info-block,   .footer-sidebar,   .search-section, aside.split-left .compact-theme-pill { display: none; }
   /* Exibe o Botão Flutuante circular */
-/* Exibe o Botão Flutuante circular acima da barra de paginação BOTAO*/
-  .fab-search-btn.mobile-only-fab { display: flex; align-items: center; justify-content: center; position: fixed; bottom: 95px; right: 18px; width: 52px; height: 52px; 
-    background-color: var(--accent-green); color: #0b141a; border: none; border-radius: 50%; font-size: 1.35rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45); 
-    cursor: pointer; z-index: 1000; transition: transform 0.2s ease,background-color 0.2s ease; }
+  /* Exibe o Botão Flutuante circular acima da barra de paginação BOTAO*/
+  .fab-search-btn.mobile-only-fab { display: flex; align-items: center; justify-content: center; position: fixed; bottom: 95px; right: 18px; width: 52px; height: 52px; background-color: var(--accent-green); color: #0b141a; border: none; border-radius: 50%; font-size: 1.35rem; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45); cursor: pointer; z-index: 1000; transition: transform 0.2s ease,background-color 0.2s ease; }
   .fab-search-btn:active { transform: scale(0.92); }
   /* Barra de busca deslizante no topo do mobile */
   /* Botão X com fundo cinza arredondado */
@@ -704,40 +510,19 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 .badge-dot { width: 8px; height: 8px; border-radius: 50%; background-color: #00a884; }
 
 /* botao iniciar Hero com Alto Contraste */
-.intro-hero-brand { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 3.1rem; font-weight: 900; letter-spacing: -0.5px; margin-top: -30px;  user-select: none; position: relative; z-index: 20; }
+.intro-hero-brand { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 3.1rem; font-weight: 900; letter-spacing: -0.5px; margin-top: -30px; user-select: none; position: relative; z-index: 20; }
+
 .intro-hero-brand .logo-bolt { font-size: 1.9rem; filter: drop-shadow(0 2px 4px rgba(246, 195, 67, 0.4)); }
 
 /* Bloco de Apresentação Hero (Desktop) */
-.intro-hero-title {
-  color: #0b141a;
-  font-size: 1.85rem;
-  font-weight: 800;
-  text-align: center;
-  margin: 20px auto 10px;
-  letter-spacing: -0.5px;
-}
+.intro-hero-title { color: #0b141a; font-size: 1.85rem; font-weight: 800; text-align: center; margin: 20px auto 10px; letter-spacing: -0.5px; }
 
-.intro-hero-desc {
-  color: #64748b;
-  font-size: 1.35rem;
-  line-height: 1.7;
-  max-width: 720px;
-  margin: 0 auto;
-  text-align: center;
-}
+.intro-hero-desc { color: #64748b; font-size: 1.35rem; line-height: 1.7; max-width: 720px; margin: 0 auto; text-align: center; }
 
 /* Ajuste Compacto para Mobile */
 @media (max-width: 800px) {
-  .intro-hero-title {
-    font-size: 1.25rem;
-    margin-top: 14px;
-    margin-bottom: 6px;
-  }
-  .intro-hero-desc {
-    font-size: 0.88rem;
-    line-height: 1.5;
-    max-width: 92%;
-  }
+  .intro-hero-title { font-size: 1.25rem; margin-top: 14px; margin-bottom: 6px; }
+  .intro-hero-desc { font-size: 0.88rem; line-height: 1.5; max-width: 92%; }
 }
 
 .intro-hero-brand .logo-name { color: #0b141a; /* Preto escuro: garante contraste total contra o fundo claro */ font-weight: 900; }
@@ -815,119 +600,47 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 /*                                CAIXA 3D                                    */
 /* ========================================================================== */
 
-.box-wrapper {
-  animation: box-drop 0.3s ease-in;
-  transform: scale3d(0.6, 0.5, 0.6);
-}
+.box-wrapper { animation: box-drop 0.3s ease-in; transform: scale3d(0.6, 0.5, 0.6); }
 
-.box-wrapper div {
-  box-sizing: border-box;
-}
-.box-stage {
-  width: 300px;
-  height: 300px;
-  margin: 40px auto 0;
-  perspective: 1500px;
-  animation: box-squash 0.7s ease 0.3s;
-}
-.box-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transform: rotate3d(1, 0, 0, -23deg) rotate3d(0, 1, 0, 50deg) translate3d(150px, 100px, -150px);
-}
+.box-wrapper div { box-sizing: border-box; }
+
+.box-stage { width: 300px; height: 300px; margin: 40px auto 0; perspective: 1500px; animation: box-squash 0.7s ease 0.3s; }
+
+.box-container { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transform: rotate3d(1, 0, 0, -23deg) rotate3d(0, 1, 0, 50deg) translate3d(150px, 100px, -150px); }
 
 /* Base de todas as faces */
-.box-face {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
+.box-face { position: absolute; width: 100%; height: 100%; }
 
 /* Face Frontal (com etiqueta) */
-.box-face-front {
-  background: url("figurinhas/made.png") no-repeat 20% 80% / 200px auto,
-              linear-gradient(to left, #4facfe 0%, #007aff 100%);
-  transform: translate3d(0, 0, 150px);
-}
+.box-face-front { background: url("img/made.png") no-repeat 20% 80%/200px auto,linear-gradient(to left, #4facfe 0, #007aff 100%); transform: translate3d(0, 0, 150px); }
 
 /* Face Traseira (Sombra interna azulada escura) */
-.box-face-back {
-  background: linear-gradient(45deg, #020b14 0%, #0d3b66 50%, #134e8a 51%, #3a8bfd 100%);
-  transform: rotate3d(0, 1, 0, 180deg) translate3d(0, 0, 150px);
-}
+.box-face-back { background: linear-gradient(45deg, #020b14 0, #0d3b66 50%, #134e8a 51%, #3a8bfd 100%); transform: rotate3d(0, 1, 0, 180deg) translate3d(0, 0, 150px); }
 
 /* Face Esquerda */
-.box-face-left {
-  background: linear-gradient(to left, #4facfe 0%, #007aff 100%);
-  transform: rotate3d(0, 1, 0, -90deg) translate3d(0, 0, 150px);
-}
+.box-face-left { background: linear-gradient(to left, #4facfe 0, #007aff 100%); transform: rotate3d(0, 1, 0, -90deg) translate3d(0, 0, 150px); }
 
 /* Face Direita (Sombreada na lateral) */
-.box-face-right {
-  background: linear-gradient(to left, #051322 0%, #0d3b66 1%, #007aff 100%);
-  transform: rotate3d(0, 1, 0, 90deg) translate3d(0, 0, 150px);
-}
+.box-face-right { background: linear-gradient(to left, #051322 0, #0d3b66 1%, #007aff 100%); transform: rotate3d(0, 1, 0, 90deg) translate3d(0, 0, 150px); }
 
 /* Face Inferior (Fundo interno escurecido) */
-.box-face-bottom {
-  background: linear-gradient(to left, #0b2545 0%, #06182e 100%);
-  transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 0, 150px);
-}
-
+.box-face-bottom { background: linear-gradient(to left, #0b2545 0, #06182e 100%); transform: rotate3d(1, 0, 0, -90deg) translate3d(0, 0, 150px); }
 
 /* Abas dobráveis da tampa */
-.box-flap {
-  position: absolute;
-  border: 1px solid #3273a0;
-  background: linear-gradient(to bottom, #60b3ff 0%, #007aff 100%);
-  animation-duration: 1s;
-  animation-timing-function: ease-in-out;
-  animation-delay: 0.5s;
-  animation-fill-mode: forwards;
-}
-
-
+.box-flap { position: absolute; border: 1px solid #3273a0; background: linear-gradient(to bottom, #60b3ff 0, #007aff 100%); animation-duration: 1s; animation-timing-function: ease-in-out; animation-delay: 0.5s; animation-fill-mode: forwards; }
 
 /* Face Superior (Container das abas) */
-.box-face-top {
-  transform-style: preserve-3d;
-  transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, 150px);
-}
+.box-face-top { transform-style: preserve-3d; transform: rotate3d(1, 0, 0, 90deg) translate3d(0, 0, 150px); }
 
 /* Abas dobráveis da tampa */
 
-.box-flap-left {
-  width: 50%;
-  height: 100%;
-  transform-origin: left center;
-  animation-name: flap-left;
-}
+.box-flap-left { width: 50%; height: 100%; transform-origin: left center; animation-name: flap-left; }
 
-.box-flap-right {
-  right: 0;
-  width: 50%;
-  height: 100%;
-  transform-origin: right center;
-  animation-name: flap-right;
-}
+.box-flap-right { right: 0; width: 50%; height: 100%; transform-origin: right center; animation-name: flap-right; }
 
-.box-flap-top {
-  width: 100%;
-  height: 50%;
-  transform-origin: center top;
-  animation-name: flap-top;
-}
+.box-flap-top { width: 100%; height: 50%; transform-origin: center top; animation-name: flap-top; }
 
-.box-flap-bottom {
-  bottom: 0;
-  width: 100%;
-  height: 50%;
-  transform-origin: center bottom;
-  animation-name: flap-bottom;
-}
+.box-flap-bottom { bottom: 0; width: 100%; height: 50%; transform-origin: center bottom; animation-name: flap-bottom; }
 
 /* ========================================================================== */
 /*                                ANIMAÇÕES                                   */
@@ -947,7 +660,7 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 @keyframes flap-left {
   0% { transform: rotate3d(0, 1, 0, 0deg); }
-  50%, 100% { transform: rotate3d(0, 1, 0, -190deg); }
+  100%, 50% { transform: rotate3d(0, 1, 0, -190deg); }
   70% { transform: rotate3d(0, 1, 0, -150deg); }
 }
 
@@ -967,206 +680,115 @@ body.menu-open, body.menu-open .split-right, body.menu-open html { overflow: hid
 
 @keyframes flap-bottom {
   0% { transform: rotate3d(1, 0, 0, 0deg); }
-  50%, 100% { transform: rotate3d(1, 0, 0, -190deg); }
+  100%, 50% { transform: rotate3d(1, 0, 0, -190deg); }
   70% { transform: rotate3d(1, 0, 0, -150deg); }
 }
 
-
-
 /* ================= ANIMAÇÃO DAS 3 FILEIRAS DE FIGURINHAS ================= */
 /* ================= ANIMAÇÃO DAS 3 FILEIRAS DE FIGURINHAS ================= */
-.box-stickers-stream {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  pointer-events: none;
-}
+.box-stickers-stream { position: absolute; width: 100%; height: 100%; transform-style: preserve-3d; pointer-events: none; }
 
-.box-sticker-item {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  top: 0;
-  left: 0;
-  object-fit: contain;
-  pointer-events: none;
-  opacity: 0;
-  transform-style: preserve-3d;
-  will-change: transform, opacity;
-}
+.box-sticker-item { position: absolute; width: 120px; height: 120px; top: 0; left: 0; object-fit: contain; pointer-events: none; opacity: 0; transform-style: preserve-3d; will-change: transform,opacity; }
 
 /* Fileira 1: Lado Esquerdo */
-.box-sticker-item.side-left {
-  animation: entrarCaixaEsquerda 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
+.box-sticker-item.side-left { animation: entrarCaixaEsquerda 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 
 /* Fileira 2: Centro */
-.box-sticker-item.side-center {
-  animation: entrarCaixaCentro 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
+.box-sticker-item.side-center { animation: entrarCaixaCentro 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 
 /* Fileira 3: Lado Direito */
-.box-sticker-item.side-right {
-  animation: entrarCaixaDireita 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-}
+.box-sticker-item.side-right { animation: entrarCaixaDireita 2.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards; }
 
 /* 1. Trajetória ESQUERDA: Bem aberta na lateral esquerda */
 @keyframes entrarCaixaEsquerda {
-  0% {
-    opacity: 0;
-    transform: translate3d(-550px, -850px, 400px) scale(2.2) rotate(-22deg);
-  }
-  15% {
-    opacity: 1;
-    transform: translate3d(-400px, -550px, 280px) scale(1.6) rotate(-15deg);
-  }
-  60% {
-    opacity: 1;
-    transform: translate3d(-150px, -180px, 120px) scale(1.0) rotate(-7deg);
-  }
-  85% {
-    opacity: 1;
-    transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(85px, 140px, 0px) scale(0.18) rotate(0deg);
-  }
+  0% { opacity: 0; transform: translate3d(-550px, -850px, 400px) scale(2.2) rotate(-22deg); }
+  15% { opacity: 1; transform: translate3d(-400px, -550px, 280px) scale(1.6) rotate(-15deg); }
+  60% { opacity: 1; transform: translate3d(-150px, -180px, 120px) scale(1.0) rotate(-7deg); }
+  85% { opacity: 1; transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0); }
+  100% { opacity: 0; transform: translate3d(85px, 140px, 0) scale(0.18) rotate(0); }
 }
 
 /* 2. Trajetória CENTRO: Eixo central reto */
 @keyframes entrarCaixaCentro {
-  0% {
-    opacity: 0;
-    transform: translate3d(85px, -850px, 400px) scale(2.2) rotate(0deg);
-  }
-  15% {
-    opacity: 1;
-    transform: translate3d(85px, -550px, 280px) scale(1.6) rotate(0deg);
-  }
-  60% {
-    opacity: 1;
-    transform: translate3d(85px, -180px, 120px) scale(1.0) rotate(0deg);
-  }
-  85% {
-    opacity: 1;
-    transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(85px, 140px, 0px) scale(0.18) rotate(0deg);
-  }
+  0% { opacity: 0; transform: translate3d(85px, -850px, 400px) scale(2.2) rotate(0); }
+  15% { opacity: 1; transform: translate3d(85px, -550px, 280px) scale(1.6) rotate(0); }
+  60% { opacity: 1; transform: translate3d(85px, -180px, 120px) scale(1.0) rotate(0); }
+  85% { opacity: 1; transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0); }
+  100% { opacity: 0; transform: translate3d(85px, 140px, 0) scale(0.18) rotate(0); }
 }
 
 /* 3. Trajetória DIREITA: Bem aberta na lateral direita */
 @keyframes entrarCaixaDireita {
-  0% {
-    opacity: 0;
-    transform: translate3d(680px, -850px, 400px) scale(2.2) rotate(22deg);
-  }
-  15% {
-    opacity: 1;
-    transform: translate3d(500px, -550px, 280px) scale(1.6) rotate(15deg);
-  }
-  60% {
-    opacity: 1;
-    transform: translate3d(280px, -180px, 120px) scale(1.0) rotate(7deg);
-  }
-  85% {
-    opacity: 1;
-    transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate3d(85px, 140px, 0px) scale(0.18) rotate(0deg);
-  }
+  0% { opacity: 0; transform: translate3d(680px, -850px, 400px) scale(2.2) rotate(22deg); }
+  15% { opacity: 1; transform: translate3d(500px, -550px, 280px) scale(1.6) rotate(15deg); }
+  60% { opacity: 1; transform: translate3d(280px, -180px, 120px) scale(1.0) rotate(7deg); }
+  85% { opacity: 1; transform: translate3d(85px, 40px, 10px) scale(0.55) rotate(0); }
+  100% { opacity: 0; transform: translate3d(85px, 140px, 0) scale(0.18) rotate(0); }
 }
-
 
 /*========================================  NOME ANIMADAO QUE APARECE NA FIGURINHA GIF==============================================================*/
 
 /* Garante que o toque longo abra o menu nativo nas imagens */
-.sticker-cell img {
-  -webkit-touch-callout: default !important; /* Habilita o menu nativo no iOS Safari */
-  user-select: auto !important;
-  -webkit-user-select: auto !important;
-  pointer-events: auto !important;
-}
+.sticker-cell img { -webkit-touch-callout: default!important; /* Habilita o menu nativo no iOS Safari */ 
+  user-select: auto!important; -webkit-user-select: auto!important; pointer-events: auto!important; }
 
 /* Badge discreto sobre o GIF avisando que é animado */
-.sticker-cell[data-filename$=".gif"] {
-  position: relative;
-}
+.sticker-cell[data-filename$=".gif"] { position: relative; }
 
-.sticker-cell[data-filename$=".gif"]::after {
-  content: "Animado";
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  background-color: rgba(116, 113, 113, 0.836);
-  color: #00d592;
-  font-size: 0.65rem;
-  font-weight: 800;
-  padding: 2px 5px;
-  border-radius: 4px;
-  pointer-events: none;
-}
-
+.sticker-cell[data-filename$=".gif"]::after { content: "Animado"; position: absolute; top:-1px; right: 4px; background-color: rgba(31, 30, 30, 0.836); color: #00d592; font-size: 0.65rem; font-weight: 800; padding: 2px 5px; border-radius: 4px; pointer-events: none; }
 
 /* Container dos confetes */
-.confetti-container {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 9998;
-  overflow: hidden;
-}
+.confetti-container { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9998; overflow: hidden; }
 
-.confetti-particle {
-  position: absolute;
-  border-radius: 2px;
-  animation: explodeConfete 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
+.confetti-particle { position: absolute; border-radius: 2px; animation: explodeConfete 0.9s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
 
 @keyframes explodeConfete {
-  0% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1) rotate(0deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.3) rotate(var(--rot));
-  }
+  0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0); }
+  100% { opacity: 0; transform: translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.3) rotate(var(--rot)); }
 }
 
 /* Toast centralizado sem emoji */
-.toast-destaque-gif {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, 60px) scale(0.8);
-  background: #0b141a;
-  color: #e9edef;
-  border: 2px solid #00d592;
-  padding: 10px 4px;
-  border-radius: 30px;
-  font-size: 0.95rem;
+.toast-destaque-gif { position: fixed; top: 50%; left: 50%; transform: translate(-50%, 60px) scale(0.8); background: #0b141a; color: #e9edef; border: 2px solid #00d592; padding: 10px 4px; border-radius: 30px; font-size: 0.95rem; text-align: center; white-space: normal; line-height: 1.4; max-width: 85vw; z-index: 9999; opacity: 0; pointer-events: none; transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275),opacity 0.25s ease; }
 
-  text-align: center;
-white-space: normal;
-line-height: 1.4;
-max-width: 85vw;
-  z-index: 9999;
-  opacity: 0;
-  pointer-events: none;
-  transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.25s ease;
+.toast-destaque-gif.ativo { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+/* Força o botão, o contador e o título a ficarem empilhados um embaixo do outro no centro */
+.intro-cta-group { display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+/* ================= CONTADOR DE VISITAS HERO ================= */
+.visitor-counter-pill { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: #fff; color: #556771; border: 1px solid #d1d7db; padding: 6px 16px; border-radius: 20px; font-size: 0.88rem; font-weight: 500; margin-top: 14px; margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); }
+
+.visitor-counter-pill i { color: #00a884; font-size: 1rem; }
+
+.visitor-counter-pill strong { color: #007aff; font-weight: 800; margin-left: 2px; }
+
+/*==============================CAIXA EMPURRA A CAIXA PRA BAIXO ==========================================*/
+@media (max-width: 800px) {
+  /* Empurra a caixa mais para baixo no mobile */
+  .box-stage { margin-top: 170px; }
+  /* Ajusta o espaçamento do título da marca em relação à caixa descida */
+  .intro-hero-brand { margin-top: -45px; }
 }
 
-.toast-destaque-gif.ativo {
-  opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-}
+.custom-footer { position: relative; z-index: 100; background-color: #0b131b; padding: 35px 20px 25px 20px; width: 100%; }
 
+.custom-footer .footer-container { max-width: 1100px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; }
+
+/* Links das informações */
+.footer-nav { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 24px; }
+
+.footer-nav a { color: #f8f9fa; font-size: 15px; font-weight: 600; text-decoration: none; transition: color 0.2s ease; }
+
+.footer-nav a:hover { color: #0d6efd; }
+
+/* Ícones das redes sociais */
+.footer-social { display: flex; justify-content: center; align-items: center; gap: 18px; }
+
+.footer-social a { color: #adb5bd; font-size: 20px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: color 0.2s ease; }
+
+.footer-social a:hover { color: #fff; }
+
+/* Texto de direitos autorais / KBS */
+.footer-bottom { margin-top: 4px; }
+
+.footer-bottom p { margin: 0; font-size: 13px; color: #6c757d; letter-spacing: 0.3px; }
