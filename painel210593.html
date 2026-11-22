@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Painel de Controle - BOX Figuras</title>
+    <link rel="icon" type="image/png" sizes="48x48" href="/img/box2.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <style>
+      :root {
+        --bg-page: #f4f6f9;
+        --bg-white: #ffffff;
+        --bg-soft: #f8fafc;
+        --accent-green: #00a884;
+        --accent-green-hover: #008f6f;
+        --accent-blue: #007aff;
+        --accent-danger: #dc2626;
+        --accent-danger-hover: #b91c1c;
+        --border-light: #e2e8f0;
+        --text-dark: #0f172a;
+        --text-muted: #64748b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      }
+
+      body {background-color: var(--bg-page);color: var(--text-dark);min-height: 100vh;min-height: 100dvh;display: flex;flex-direction: column;}
+
+      /* ================= 1. TELA DE LOGIN (ÚNICA VISÍVEL AO ABRIR) ================= */
+      .login-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background-color: var(--bg-page);
+      }
+
+      .login-card {
+        width: 100%;
+        max-width: 390px;
+        background-color: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: 14px;
+        padding: 30px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .brand-header {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .brand-title {
+        font-size: 1.8rem;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+        color: var(--text-dark);
+      }
+
+      .brand-blue {
+        color: var(--accent-blue);
+      }
+
+      .brand-subtitle {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        font-weight: 600;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .form-label {
+        font-size: 0.84rem;
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .form-input {
+        width: 100%;
+        padding: 11px 14px;
+        border-radius: 8px;
+        border: 1px solid #cbd5e1;
+        background-color: var(--bg-white);
+        color: var(--text-dark);
+        font-size: 0.95rem;
+        outline: none;
+        transition: border-color 0.2s ease;
+      }
+
+      .form-input:focus {
+        border-color: var(--accent-blue);
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: var(--accent-green);
+        color: #ffffff;
+        font-size: 0.98rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition:
+          background-color 0.2s ease,
+          transform 0.1s ease;
+      }
+
+      .btn-primary:hover {
+        background-color: var(--accent-green-hover);
+      }
+
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+
+      .login-hint {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        text-align: center;
+        line-height: 1.4;
+      }
+
+      /* ================= 2. PAINEL ADMINISTRATIVO (APENAS APÓS LOGIN) ================= */
+      .admin-dashboard {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        min-height: 100dvh;
+        background-color: var(--bg-page);
+      }
+
+      .admin-topbar {
+        background-color: var(--bg-white);
+        border-bottom: 1px solid var(--border-light);
+        padding: 14px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .topbar-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .topbar-logo {
+        font-size: 1.35rem;
+        font-weight: 900;
+        color: var(--text-dark);
+      }
+
+      .admin-badge {
+        background-color: #ecfdf5;
+        color: var(--accent-green);
+        border: 1px solid #a7f3d0;
+        font-size: 0.72rem;
+        font-weight: 800;
+        padding: 3px 10px;
+        border-radius: 20px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn-outline {
+        background-color: var(--bg-white);
+        color: var(--text-dark);
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-decoration: none;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .btn-outline:hover {
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
+        background-color: var(--bg-soft);
+      }
+
+      .btn-danger-outline {
+        background-color: #fef2f2;
+        color: var(--accent-danger);
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition:
+          background-color 0.2s ease,
+          color 0.2s ease;
+      }
+
+      .btn-danger-outline:hover {
+        background-color: var(--accent-danger);
+        color: #ffffff;
+      }
+
+      .admin-container {
+        width: 100%;
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 22px 20px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      /* Cards de Resumo */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        gap: 14px;
+      }
+
+      .stat-card {
+        background-color: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 16px 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .stat-label {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+
+      .stat-value {
+        font-size: 1.55rem;
+        font-weight: 900;
+        color: var(--accent-green);
+      }
+
+      .stat-sub {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      /* Barra de Ferramentas da Grade */
+      .section-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        background-color: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 14px 18px;
+      }
+
+      .section-title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .section-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text-dark);
+      }
+
+      .section-desc {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      .toolbar-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      /* Grade de Moderação */
+      .moderation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+        gap: 14px;
+      }
+
+      .mod-card {
+        background-color: var(--bg-white);
+        border: 1px solid var(--border-light);
+        border-radius: 12px;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        transition:
+          border-color 0.2s ease,
+          transform 0.15s ease;
+      }
+
+      .mod-card:hover {
+        border-color: var(--accent-blue);
+        transform: translateY(-2px);
+      }
+
+      .mod-thumb-box {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        background-color: var(--bg-soft);
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      .mod-thumb-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .mod-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: var(--text-muted);
+      }
+
+      .mod-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+
+      .btn-mod-view {
+        background-color: var(--bg-soft);
+        color: var(--text-dark);
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 7px 6px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .btn-mod-view:hover {
+        border-color: var(--accent-blue);
+        color: var(--accent-blue);
+      }
+
+      .btn-mod-delete {
+        background-color: var(--accent-danger);
+        color: #ffffff;
+        border: none;
+        border-radius: 6px;
+        padding: 7px 6px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+      }
+
+      .btn-mod-delete:hover {
+        background-color: var(--accent-danger-hover);
+      }
+
+      .empty-mod-state {
+        grid-column: 1 / -1;
+        background-color: var(--bg-white);
+        border: 1px dashed #cbd5e1;
+        border-radius: 12px;
+        padding: 46px 20px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+
+      /* Modal de Visualização Ampliada */
+      /* Modal de Visualização Ampliada (Sem cor de fundo) */
+      .modal-backdrop {
+        position: fixed;
+        inset: 0;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 2000;
+      }
+
+      .modal-card {
+        background-color: var(--bg-white);
+        border: 1px solid #cbd5e1;
+        border-radius: 14px;
+        width: 100%;
+        max-width: 340px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        box-shadow: 0 12px 32px #cbd5e1;
+      }
+
+      .modal-card-top {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--text-dark);
+      }
+
+      .modal-close-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        font-size: 1.6rem;
+        cursor: pointer;
+        line-height: 1;
+      }
+
+      .modal-big-img {
+        width: 260px;
+        height: 260px;
+        background-color: var(--bg-soft);
+        border: 1px solid var(--border-light);
+        border-radius: 10px;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-big-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+
+      .btn-full-center {
+        width: 100%;
+        justify-content: center;
+      }
+
+      /* Toast */
+      .admin-toast {
+        position: fixed;
+        bottom: 22px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: var(--text-dark);
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 24px;
+        font-size: 0.88rem;
+        font-weight: 600;
+        z-index: 3000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s ease;
+      }
+
+      .admin-toast.show {
+        opacity: 1;
+      }
+
+      /* Classe de ocultação posicionada ao final para sempre prevalecer sem !important */
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 600px) {
+        .admin-topbar {
+          padding: 12px 14px;
+        }
+        .moderation-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 1. TELA DE ACESSO RESTRITO (APARECE PRIMEIRO SOZINHA) -->
+    <section class="login-wrapper" id="loginSection">
+      <form class="login-card" id="adminLoginForm" autocomplete="off">
+        <div class="brand-header">
+          <div class="brand-title">
+            BOX<span class="brand-blue">Figuras</span>
+          </div>
+          <div class="brand-subtitle">Acesso Restrito &bull; Moderação</div>
+        </div>
+
+        <div class="form-group">
+          <label for="adminEmail" class="form-label">E-mail</label>
+          <input
+            type="email"
+            id="adminEmail"
+            name="admin_email_nocache"
+            class="form-input"
+            placeholder="Digite seu e-mail"
+            required
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="adminPassword" class="form-label">Senha</label>
+          <input
+            type="password"
+            id="adminPassword"
+            name="admin_pass_nocache"
+            class="form-input"
+            placeholder="Digite sua senha"
+            required
+            autocomplete="new-password"
+          />
+        </div>
+
+        <button type="submit" class="btn-primary" id="btnAdminLogin">
+          <i class="bi bi-shield-lock-fill"></i>
+          <span>Entrar no Painel</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. DASHBOARD ADMINISTRATIVO (SÓ APARECE APÓS ENTRAR COM E-MAIL E SENHA) -->
+    <div class="admin-dashboard hidden" id="dashboardSection">
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <span class="topbar-logo"
+            >BOX<span class="brand-blue">Figuras</span></span
+          >
+          <span class="admin-badge">Painel Admin</span>
+        </div>
+
+        <div class="topbar-actions">
+          <a href="index.html#catalogo" class="btn-outline">
+            <i class="bi bi-box-arrow-up-right"></i>
+            <span>Ver Site</span>
+          </a>
+          <button type="button" class="btn-outline" id="btnAdminLogout">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Sair</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="admin-container">
+        <!-- Indicadores -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <span class="stat-label">Figuras Geradas Ativas</span>
+            <span class="stat-value" id="statTotalFiguras">0 / 50</span>
+            <span class="stat-sub">Limpeza automática acima de 50</span>
+          </div>
+
+          <div class="stat-card">
+            <span class="stat-label">Peso Estimado (WebP)</span>
+            <span class="stat-value" id="statPesoTotal">0 KB</span>
+            <span class="stat-sub">Formato 512x512 otimizado</span>
+          </div>
+        </div>
+
+        <!-- Barra de Ações -->
+        <div class="section-toolbar">
+          <div class="section-title-group">
+            <h1 class="section-title">Moderação de Figuras Geradas</h1>
+            <p class="section-desc">
+              Apague rapidamente qualquer figurinha imprópria enviada pelos
+              usuários.
+            </p>
+          </div>
+
+          <div class="toolbar-buttons">
+            <button type="button" class="btn-outline" id="btnRefreshList">
+              <i class="bi bi-arrow-clockwise"></i>
+              <span>Atualizar</span>
+            </button>
+            <button type="button" class="btn-danger-outline" id="btnDeleteAll">
+              <i class="bi bi-trash3-fill"></i>
+              <span>Apagar Todas</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grade de Figurinhas para Moderar -->
+        <section class="moderation-grid" id="moderationGrid">
+          <!-- Renderizado via JS -->
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal de Visualização Ampliada -->
+    <!-- Modal de Visualização Ampliada -->
+    <div class="modal-backdrop hidden" id="inspectModal">
+      <div class="modal-card">
+        <div class="modal-card-top">
+          <span id="inspectModalInfo"></span>
+          <button type="button" class="modal-close-btn" id="btnCloseInspect">
+            &times;
+          </button>
+        </div>
+        <div class="modal-big-img">
+          <img id="inspectModalImg" src="" alt="Prévia ampliada" />
+        </div>
+        <button
+          type="button"
+          class="btn-danger-outline btn-full-center"
+          id="btnInspectDelete"
+        >
+          <i class="bi bi-trash3-fill"></i>
+          <span>Excluir</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Toast de Feedback -->
+    <div class="admin-toast" id="adminToast"></div>
+<script type="module">
+    import { app, rtdb } from './js/firebaseConfig.js';
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      setPersistence,
+      inMemoryPersistence
+    } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+    import {
+      ref,
+      get,
+      remove,
+      query,
+      orderByChild
+    } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+
+    const auth = getAuth(app);
+    const LIMITE_MAXIMO = 50;
+
+    // Sessão apenas em memória: saiu/fechou/recarregou, exige login novamente
+    await setPersistence(auth, inMemoryPersistence);
+
+    const loginSection = document.getElementById('loginSection');
+    const dashboardSection = document.getElementById('dashboardSection');
+    const loginForm = document.getElementById('adminLoginForm');
+    const inputEmail = document.getElementById('adminEmail');
+    const inputPassword = document.getElementById('adminPassword');
+    const btnAdminLogin = document.getElementById('btnAdminLogin');
+    const moderationGrid = document.getElementById('moderationGrid');
+    const statTotal = document.getElementById('statTotalFiguras');
+    const statPeso = document.getElementById('statPesoTotal');
+    const statFonte = document.getElementById('statFonteDados');
+    const inspectModal = document.getElementById('inspectModal');
+    const inspectImg = document.getElementById('inspectModalImg');
+    const inspectInfo = document.getElementById('inspectModalInfo');
+    const btnInspectDelete = document.getElementById('btnInspectDelete');
+
+    let idInspecionado = null;
+
+    function limparCamposLogin() {
+      if (loginForm) loginForm.reset();
+      if (inputEmail) inputEmail.value = '';
+      if (inputPassword) inputPassword.value = '';
+    }
+
+    function bloquearTelaImediatamente(motivoToast) {
+      fecharInspecao();
+      if (moderationGrid) moderationGrid.innerHTML = '';
+      dashboardSection?.classList.add('hidden');
+      loginSection?.classList.remove('hidden');
+      limparCamposLogin();
+      if (motivoToast) mostrarToast(motivoToast);
+    }
+
+    // Garante campos vazios assim que abre a página e após o navegador tentar preencher
+    limparCamposLogin();
+    setTimeout(limparCamposLogin, 80);
+    setTimeout(limparCamposLogin, 300);
+
+    const AdminDataService = {
+      async autenticar(email, senha) {
+        if (!navigator.onLine) {
+          throw new Error('offline');
+        }
+        const cred = await signInWithEmailAndPassword(auth, email, senha);
+        return cred.user;
+      },
+
+      async sair() {
+        try {
+          await signOut(auth);
+        } catch (err) {
+          console.warn('Sessão finalizada localmente:', err);
+        }
+      },
+
+      async listarFiguras() {
+        const figurasRef = query(ref(rtdb, 'figuras_geradas'), orderByChild('criadoEm'));
+        const snapshot = await get(figurasRef);
+        const lista = [];
+
+        snapshot.forEach((childSnap) => {
+          const val = childSnap.val();
+          if (val && val.img) {
+            lista.push({
+              id: childSnap.key,
+              img: val.img,
+              criadoEm: val.criadoEm || 0
+            });
+          }
+        });
+
+        lista.sort((a, b) => b.criadoEm - a.criadoEm);
+
+        if (lista.length > LIMITE_MAXIMO) {
+          const excedentes = lista.slice(LIMITE_MAXIMO);
+          for (const extra of excedentes) {
+            await remove(ref(rtdb, `figuras_geradas/${extra.id}`));
+          }
+          return lista.slice(0, LIMITE_MAXIMO);
+        }
+
+        return lista;
+      },
+
+      async apagarFiguraPorId(id) {
+        if (!id) return;
+        await remove(ref(rtdb, `figuras_geradas/${id}`));
+      },
+
+      async apagarTodas() {
+        await remove(ref(rtdb, 'figuras_geradas'));
+      }
+    };
+
+    function mostrarToast(msg) {
+      const toast = document.getElementById('adminToast');
+      if (!toast) return;
+      toast.textContent = msg;
+      toast.classList.add('show');
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    function formatarDataHora(timestamp) {
+      if (!timestamp) return 'Recente';
+      const d = new Date(timestamp);
+      return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) +
+        ' ' +
+        d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    function calcularPesoKB(lista) {
+      let bytes = 0;
+      lista.forEach(item => {
+        if (item && item.img) {
+          bytes += Math.round((item.img.length * 3) / 4);
+        }
+      });
+      if (bytes >= 1024 * 1024) {
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+      }
+      return Math.round(bytes / 1024) + ' KB';
+    }
+
+    async function renderizarPainel() {
+      if (!navigator.onLine) {
+        await AdminDataService.sair();
+        bloquearTelaImediatamente('Conexão perdida. Painel encerrado.');
+        return;
+      }
+
+      try {
+        const lista = await AdminDataService.listarFiguras();
+
+        if (statTotal) statTotal.textContent = `${lista.length} / ${LIMITE_MAXIMO}`;
+        if (statPeso) statPeso.textContent = calcularPesoKB(lista);
+        if (statFonte) statFonte.textContent = 'Firebase RTDB';
+
+        if (!moderationGrid) return;
+
+        if (lista.length === 0) {
+          moderationGrid.innerHTML = `
+            <div class="empty-mod-state">
+              Nenhuma figurinha gerada encontrada no banco de dados.
+            </div>
+          `;
+          return;
+        }
+
+        moderationGrid.innerHTML = '';
+        const fragmento = document.createDocumentFragment();
+
+        lista.forEach((item, index) => {
+          const card = document.createElement('article');
+          card.className = 'mod-card';
+
+          const thumbBox = document.createElement('div');
+          thumbBox.className = 'mod-thumb-box';
+          thumbBox.title = 'Clique para ampliar';
+          thumbBox.addEventListener('click', () => abrirInspecao(item, index));
+
+          const img = document.createElement('img');
+          img.src = item.img;
+          img.alt = `Figurinha ${index + 1}`;
+          img.loading = 'lazy';
+          thumbBox.appendChild(img);
+
+          const meta = document.createElement('div');
+          meta.className = 'mod-meta';
+          meta.innerHTML = `
+            <span>#${index + 1}</span>
+            <span>${formatarDataHora(item.criadoEm)}</span>
+          `;
+
+          const actions = document.createElement('div');
+          actions.className = 'mod-actions';
+
+          const btnView = document.createElement('button');
+          btnView.type = 'button';
+          btnView.className = 'btn-mod-view';
+          btnView.innerHTML = '<i class="bi bi-eye"></i> Ver';
+          btnView.addEventListener('click', () => abrirInspecao(item, index));
+
+          const btnDel = document.createElement('button');
+          btnDel.type = 'button';
+          btnDel.className = 'btn-mod-delete';
+          btnDel.innerHTML = '<i class="bi bi-trash3"></i> Apagar';
+          btnDel.addEventListener('click', async () => {
+            await AdminDataService.apagarFiguraPorId(item.id);
+            mostrarToast('Figurinha excluída do Firebase.');
+            renderizarPainel();
+          });
+
+          actions.appendChild(btnView);
+          actions.appendChild(btnDel);
+
+          card.appendChild(thumbBox);
+          card.appendChild(meta);
+          card.appendChild(actions);
+          fragmento.appendChild(card);
+        });
+
+        moderationGrid.appendChild(fragmento);
+      } catch (err) {
+        console.error('Erro ao carregar dados do Firebase:', err);
+        mostrarToast('Erro ao carregar figurinhas. Verifique as permissões.');
+      }
+    }
+
+    function abrirInspecao(item, index) {
+      idInspecionado = item.id;
+      if (inspectImg) inspectImg.src = item.img;
+      if (inspectInfo) inspectInfo.textContent = `#${index + 1} • ${formatarDataHora(item.criadoEm)}`;
+      if (inspectModal) inspectModal.classList.remove('hidden');
+    }
+
+    function fecharInspecao() {
+      idInspecionado = null;
+      if (inspectModal) inspectModal.classList.add('hidden');
+      if (inspectImg) inspectImg.src = '';
+    }
+
+    onAuthStateChanged(auth, (user) => {
+      if (user && navigator.onLine) {
+        limparCamposLogin();
+        loginSection.classList.add('hidden');
+        dashboardSection.classList.remove('hidden');
+        renderizarPainel();
+      } else {
+        bloquearTelaImediatamente();
+      }
+    });
+
+    // Encerra o painel imediatamente se a internet cair
+    window.addEventListener('offline', async () => {
+      await AdminDataService.sair();
+      bloquearTelaImediatamente('Sem internet. Painel encerrado por segurança.');
+    });
+
+    // Encerra o painel ao sair da página, fechar aba ou navegar para fora
+    window.addEventListener('pagehide', () => {
+      AdminDataService.sair();
+      bloquearTelaImediatamente();
+    });
+
+    // Garante tela limpa caso volte pelo botão "Voltar" do navegador
+    window.addEventListener('pageshow', (e) => {
+      if (e.persisted || !auth.currentUser) {
+        AdminDataService.sair();
+        bloquearTelaImediatamente();
+      }
+    });
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!navigator.onLine) {
+          mostrarToast('Sem conexão com a internet.');
+          return;
+        }
+
+        const email = inputEmail.value.trim();
+        const senha = inputPassword.value;
+
+        if (btnAdminLogin) btnAdminLogin.disabled = true;
+        try {
+          await AdminDataService.autenticar(email, senha);
+          limparCamposLogin();
+          mostrarToast('Acesso liberado.');
+        } catch (err) {
+          console.error(err);
+          limparCamposLogin();
+          mostrarToast('E-mail ou senha inválidos.');
+        } finally {
+          if (btnAdminLogin) btnAdminLogin.disabled = false;
+        }
+      });
+    }
+
+    document.getElementById('btnAdminLogout')?.addEventListener('click', async () => {
+      await AdminDataService.sair();
+      bloquearTelaImediatamente('Sessão encerrada.');
+    });
+
+    document.getElementById('btnRefreshList')?.addEventListener('click', () => {
+      renderizarPainel();
+      mostrarToast('Lista atualizada.');
+    });
+
+    document.getElementById('btnDeleteAll')?.addEventListener('click', async () => {
+      const confirmar = confirm('Tem certeza que deseja apagar TODAS as figurinhas geradas do Firebase?');
+      if (!confirmar) return;
+      await AdminDataService.apagarTodas();
+      renderizarPainel();
+      mostrarToast('Todas as figurinhas foram removidas.');
+    });
+
+    document.getElementById('btnCloseInspect')?.addEventListener('click', fecharInspecao);
+    inspectModal?.addEventListener('click', (e) => {
+      if (e.target === inspectModal) fecharInspecao();
+    });
+
+    btnInspectDelete?.addEventListener('click', async () => {
+      if (!idInspecionado) return;
+      await AdminDataService.apagarFiguraPorId(idInspecionado);
+      fecharInspecao();
+      renderizarPainel();
+      mostrarToast('Figurinha excluída.');
+    });
+  </script>
+
+
+
+  </body>
+</html>

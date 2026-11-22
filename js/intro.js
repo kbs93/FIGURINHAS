@@ -13,31 +13,7 @@ const listaAnimacao = [
   "8.webp",
   "9.webp",
   "10.webp",
-  "11.webp",
-  "12.webp",
-  "13.webp",
-  "14.webp",
-  "15.webp",
-  "16.webp",
-  "17.webp",
-  "18.webp",
-  "19.webp",
-  "20.webp",
-  "21.webp",
-  "22.webp",
-  "23.webp",
-  "24.webp",
-  "25.webp",
-  "26.webp",
-  "27.webp",
-  "28.webp",
-  "29.webp",
-  "30.webp",
-  "31.webp",
-  "32.webp",
-  "33.webp",
-  "34.webp",
-  "35.webp",
+
   
   
 ];
@@ -99,53 +75,54 @@ function iniciarAnimacaoFigurinhasNaCaixa() {
   const containerCaixa = document.querySelector('.box-stickers-stream');
   if (!containerCaixa) return;
 
-  let spawnLayer = containerCaixa.querySelector('.stickers-3d-stream');
-  if (!spawnLayer) {
-    spawnLayer = document.createElement('div');
-    spawnLayer.className = 'stickers-3d-stream';
-    spawnLayer.style.position = 'absolute';
-    spawnLayer.style.top = '0';
-    spawnLayer.style.left = '0';
-    spawnLayer.style.width = '100%';
-    spawnLayer.style.height = '100%';
-    spawnLayer.style.transformStyle = 'preserve-3d';
-    spawnLayer.style.pointerEvents = 'none';
-    containerCaixa.appendChild(spawnLayer);
-  }
-
   let indexAtual = 0;
   const lados = ['side-left', 'side-center', 'side-right'];
   let ladoIndex = 0;
+  let timerId = null;
 
   function lancarProximaFigurinha() {
+    const intro = document.getElementById('introScreen');
+    if (document.hidden || (intro && intro.classList.contains('hidden'))) {
+      return;
+    }
+
     const nomeFigura = listaAnimacao[indexAtual];
     const ladoClasse = lados[ladoIndex % 3];
 
-    // Cria e injeta imediatamente no DOM
-    const img = document.createElement('img');
+const img = document.createElement('img');
     img.className = `box-sticker-item ${ladoClasse}`;
     img.src = `animacao/${nomeFigura}`;
+    img.alt = "";
+    img.setAttribute('aria-hidden', 'true');
+    img.setAttribute('role', 'presentation');
+    
+    // Força aceleração e contexto 3D limpo no WebKit do iPhone
+ img.style.display = 'block';
 
-    // Remove do DOM assim que a animação CSS terminar
-    img.addEventListener('animationend', () => {
-      img.remove();
-    });
+    function limparElemento() {
+      img.removeEventListener('animationend', limparElemento);
+      img.removeEventListener('webkitAnimationEnd', limparElemento);
+      if (img.parentNode) {
+        img.remove();
+      }
+    }
 
-    spawnLayer.appendChild(img);
+    img.addEventListener('animationend', limparElemento);
+    img.addEventListener('webkitAnimationEnd', limparElemento);
 
-    // Avança para o próximo lado (esquerda -> centro -> direita)
+    containerCaixa.appendChild(img);
+
     ladoIndex++;
-
-    // Avança estritamente para a próxima figura de 1 a 30
     indexAtual++;
     if (indexAtual >= listaAnimacao.length) {
-      indexAtual = 0; // Só recomeça na 1 depois de rodar as 30
+      indexAtual = 0;
     }
   }
 
-  // Espera a caixa cair e abrir (1.2s) e solta 1 figurinha por vez a cada 320ms
+  // Espera a caixa assentar e abre um intervalo suave de 600ms (ritmo estável para o iOS)
   setTimeout(() => {
     lancarProximaFigurinha();
-    setInterval(lancarProximaFigurinha, 320);
+    if (timerId) clearInterval(timerId);
+    timerId = setInterval(lancarProximaFigurinha, 600);
   }, 1200);
 }
